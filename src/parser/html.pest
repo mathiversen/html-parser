@@ -3,21 +3,21 @@ WHITESPACE = _{ " " | "\t" | "\r" | "\n" }
 // ATTRIBUTE
 attribute_key = { 'a'..'z'+ }
 attribute_value = { (!"\"" ~ ANY)+ }
-attribute = _{ attribute_key ~ ("=" ~ "\"" ~ attribute_value* ~ "\"")* }
+attribute = { attribute_key ~ ("=" ~ "\"" ~ attribute_value* ~ "\"")* }
 
 element_name = @{ 'a'..'z'+ }
 element_open_start = _{ "<" ~ PUSH(element_name) ~  attribute* ~ ">"}
 element_open_end = _{ "</" ~ POP ~ ">"}
-element_open = _{ element_open_start ~ (!element_open_end ~ ANY)* ~ element_open_end }
+element_open = { element_open_start ~ element* ~ element_open_end }
 
-element_closed = _{ "<" ~ element_name ~ attribute* ~ "/>" }
+element_closed = { "<" ~ element_name ~ attribute* ~ "/>" }
 
-element = { element_open | element_closed }
+element = _{ element_open | element_closed }
 
 // COMMENT
 comment_tag_start = _{ "<!--" }
 comment_tag_end = _{ "-->" }
-comment = !{ comment_tag_start ~ (!comment_tag_end ~ ANY)* ~ comment_tag_end }
+comment = _{ comment_tag_start ~ (!comment_tag_end ~ ANY)* ~ comment_tag_end }
 
 // DOCUMENT
 doctype_name = { "html" }
@@ -27,7 +27,7 @@ document_fragment = { element+ }
 
 document = {
     comment*
-    ~ doctype
+    ~ doctype?
     ~ comment*
     ~ element?
     ~ comment*
