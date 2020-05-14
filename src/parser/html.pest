@@ -1,31 +1,34 @@
 WHITESPACE = _{ " " | "\t" | "\r" | "\n" }
 
-// ATTRIBUTE
-attribute_key = { 'a'..'z'+ }
-attribute_value = { (!"\"" ~ ANY)+ }
-attribute = { attribute_key ~ ("=" ~ "\"" ~ attribute_value* ~ "\"")* }
-
-element_name = @{ 'a'..'z'+ }
-element_open_start = _{ "<" ~ PUSH(element_name) ~  attribute* ~ ">"}
-element_open_end = _{ "</" ~ POP ~ ">"}
-element_open = { element_open_start ~ element* ~ element_open_end }
-
-element_closed = { "<" ~ element_name ~ attribute* ~ "/>" }
-
-element = _{ element_open | element_closed }
-
 // COMMENT
 comment_tag_start = _{ "<!--" }
 comment_tag_end = _{ "-->" }
 comment = _{ comment_tag_start ~ (!comment_tag_end ~ ANY)* ~ comment_tag_end }
 
+// ATTRIBUTE
+attribute_key = { 'a'..'z'+ }
+attribute_value = { (!"\"" ~ ANY)+ }
+attribute = { attribute_key ~ ("=" ~ "\"" ~ attribute_value* ~ "\"")* }
+
+// ELEMENT
+element_tag_start = _{ "<" }
+element_name = { 'a'..'z'+ }
+element_open_start = _{ element_tag_start ~ PUSH(element_name) ~  attribute* ~ ">"}
+element_open_end = _{ "</" ~ POP ~ ">"}
+element_open = _{ element_open_start ~ node* ~ element_open_end }
+element_closed = _{ element_tag_start ~ element_name ~ attribute* ~ "/>" }
+element = { element_open | element_closed }
+
+text = { (!(element_tag_start | comment_tag_start ) ~ ANY)+ }
+node = _{ text | element | comment }
+
 // DOCUMENT
 doctype_name = { "html" }
 doctype = _{ "<!doctype" ~ doctype_name ~ ">"}
 
-document_fragment = { element+ }
+document_fragment = _{ element+ }
 
-document = {
+document = _{
     comment*
     ~ doctype?
     ~ comment*
