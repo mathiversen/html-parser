@@ -1,0 +1,14 @@
+[package]
+name = "html_parser"
+version = "0.1.0"
+authors = ["Mathias Iversen <work@mathiasiversen.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+indoc = "0.3.5"
+pest = "2.1.3"
+pest_derive = "2.1.0"
+anyhow = "1.0.30"
+thiserror = "1.0.17"

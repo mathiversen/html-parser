@@ -1,0 +1,1 @@
+root = { SOI ~ "hello world" ~ EOI }
