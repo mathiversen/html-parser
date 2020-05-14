@@ -1,0 +1,9 @@
+node = { "<div/>" }
+document_type = { "<!DOCTYPE html/>"}
+document = { document_type? ~ node* }
+
+root = {
+    SOI
+    ~ document
+    ~ EOI
+}
