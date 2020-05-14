@@ -10,7 +10,7 @@ pub fn error_msg(error: PestError<Rule>) -> Result<()> {
         Rule::EOI => "end of input".to_string(),
         // TODO: For a better experience the "x" case should be removed
         // an the match should be exhaustive
-        x => format!("{:?} [ Default error ]", x),
+        x => format!("{:?} [ Default ]", x),
     });
     return Err(Error::Parsing(message.to_string()).into());
 }

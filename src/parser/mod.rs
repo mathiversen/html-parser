@@ -1,5 +1,5 @@
 use anyhow::Result;
-use pest::{iterators::Pair, Parser};
+use pest::{iterators::Pair, iterators::Pairs, Parser};
 use pest_derive::Parser;
 
 use crate::error::Error;
