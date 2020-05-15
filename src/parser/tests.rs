@@ -23,12 +23,22 @@ fn it_can_parse_one_element_mixed_case() -> Result<()> {
     Ok(())
 }
 #[test]
+fn it_can_parse_one_element_mixed_case_numbers() -> Result<()> {
+    assert_eq!((), HtmlParser::parse("<Header1></Header1>", false)?);
+    Ok(())
+}
+#[test]
+fn it_can_parse_one_element_mixed_case_numbers_symbols() -> Result<()> {
+    assert_eq!((), HtmlParser::parse("<Head_er-1></Head_er-1>", false)?);
+    Ok(())
+}
+#[test]
 fn it_errors_when_case_dont_match() -> Result<()> {
     assert!(HtmlParser::parse("<html></Html>", false).is_err());
     Ok(())
 }
 #[test]
-fn it_errors_on_element_without_matching_name() -> Result<()> {
+fn it_errors_when_element_name_dont_match() -> Result<()> {
     assert!(HtmlParser::parse("<html></div>", false).is_err());
     Ok(())
 }
@@ -90,6 +100,11 @@ fn it_can_parse_open_element_attribute_single_quote() -> Result<()> {
 #[test]
 fn it_can_parse_closed_element_attribute_single_quote() -> Result<()> {
     assert_eq!((), HtmlParser::parse("<img alt='cat'/>", false)?);
+    Ok(())
+}
+#[test]
+fn it_can_parse_attribute_key_mixed_case_symbols() -> Result<()> {
+    assert_eq!((), HtmlParser::parse("<div data-cat='morris'/>", false)?);
     Ok(())
 }
 #[test]
@@ -215,7 +230,6 @@ fn it_can_parse_style_with_content() -> Result<()> {
     assert_eq!((), HtmlParser::parse(markup, false)?);
     Ok(())
 }
-#[ignore]
 #[test]
 fn it_can_parse_simple_html_page() -> Result<()> {
     let markup = indoc!(
