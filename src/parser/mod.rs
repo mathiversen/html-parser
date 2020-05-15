@@ -15,12 +15,14 @@ pub struct PestRules;
 pub struct HtmlParser {}
 
 impl HtmlParser {
-    pub fn parse(input: &str) -> Result<()> {
+    pub fn parse(input: &str, debug: bool) -> Result<()> {
         let mut pairs = match PestRules::parse(Rule::root, input) {
             Ok(pairs) => pairs,
             Err(error) => return fmt::error_msg(error),
         };
-        dbg!(pairs);
+        if debug {
+            dbg!(pairs);
+        }
         Ok(())
     }
 }
