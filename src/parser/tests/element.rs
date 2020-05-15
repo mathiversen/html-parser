@@ -1,4 +1,4 @@
-use super::*;
+use crate::parser::HtmlParser;
 use anyhow::Result;
 use indoc::indoc;
 
@@ -80,71 +80,6 @@ fn it_can_parse_element_comment_text() -> Result<()> {
 #[test]
 fn it_can_parse_nested_elements() -> Result<()> {
     assert_eq!((), HtmlParser::parse("<div><div></div></div>", false)?);
-    Ok(())
-}
-#[test]
-fn it_can_parse_open_element_attribute_double_quote() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<div id=\"one\"></div>", false)?);
-    Ok(())
-}
-#[test]
-fn it_can_parse_closed_element_attribute_double_quote() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<img alt=\"cat\" />", false)?);
-    Ok(())
-}
-#[test]
-fn it_can_parse_open_element_attribute_single_quote() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<div id='one'></div>", false)?);
-    Ok(())
-}
-#[test]
-fn it_can_parse_closed_element_attribute_single_quote() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<img alt='cat'/>", false)?);
-    Ok(())
-}
-#[test]
-fn it_can_parse_attribute_key_mixed_case_symbols() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<div data-cat='morris'/>", false)?);
-    Ok(())
-}
-#[test]
-fn it_can_parse_multiple_attributes_single_quote() -> Result<()> {
-    assert_eq!(
-        (),
-        HtmlParser::parse("<img alt='cat' title='morris'/>", false)?
-    );
-    Ok(())
-}
-#[test]
-fn it_can_parse_multiple_attributes_single_quote_multiple_spaces() -> Result<()> {
-    assert_eq!(
-        (),
-        HtmlParser::parse("<img alt='cat'   title='morris'  />", false)?
-    );
-    Ok(())
-}
-#[test]
-fn it_can_parse_multiple_attributes_double_quote() -> Result<()> {
-    assert_eq!(
-        (),
-        HtmlParser::parse("<img alt=\"cat\" title=\"morris\"/>", false)?
-    );
-    Ok(())
-}
-
-#[test]
-fn it_can_parse_multiple_attribute_values_single_quote() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<img alt='cat dog'/>", false)?);
-    Ok(())
-}
-#[test]
-fn it_can_parse_multiple_attribute_values_double_quote() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<img alt=\"cat dog\"/>", false)?);
-    Ok(())
-}
-#[test]
-fn it_can_parse_empty_attributes() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<img hidden/>", false)?);
     Ok(())
 }
 #[test]
@@ -296,7 +231,6 @@ fn hejsan() -> Result<()> {
     assert_eq!((), HtmlParser::parse(&contents, false)?);
     Ok(())
 }
-
 #[ignore]
 #[async_std::test]
 async fn it_can_parse_bytesafes_homepage() -> Result<()> {
@@ -308,8 +242,7 @@ async fn it_can_parse_bytesafes_homepage() -> Result<()> {
             .expect("Could not get site")
     });
     let page = response.await;
-    println!("{}", page);
-    // let x = HtmlParser::parse(&page, true)?;
+    let x = HtmlParser::parse(&page, true)?;
     assert!(true);
     Ok(())
 }
