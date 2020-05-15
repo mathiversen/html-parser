@@ -1,39 +1,73 @@
 WHITESPACE = _{ " " | "\t" | "\r" | "\n" }
 
-// COMMENT
-comment_tag_start = _{ "<!--" }
-comment_tag_end = _{ "-->" }
-comment = _{ comment_tag_start ~ (!comment_tag_end ~ ANY)* ~ comment_tag_end }
-
-// ATTRIBUTE
-attribute_key = { 'a'..'z'+ }
-attribute_value = { (!"\"" ~ ANY)+ }
-attribute = { attribute_key ~ ("=" ~ "\"" ~ attribute_value* ~ "\"")* }
+// SYMBOLS
+chevron_left = _{ "<" }
+chevron_left_closed = _{ "</" }
+chevron_left_bang = _{ "<!" }
+chevron_right = _{ ">" }
+chevron_right_closed = _{ "/>" }
+equal = _{ "=" }
+quote_dubble = _{ "\"" }
+quote_single = _{ "'" }
+quote = _{ quote_dubble | quote_single }
 
 // ELEMENT
-element_tag_start = _{ "<" }
-element_name = { 'a'..'z'+ }
-element_open_start = _{ element_tag_start ~ PUSH(element_name) ~  attribute* ~ ">"}
-element_open_end = _{ "</" ~ POP ~ ">"}
-element_open = _{ element_open_start ~ node* ~ element_open_end }
-element_closed = _{ element_tag_start ~ element_name ~ attribute* ~ "/>" }
-element = { element_open | element_closed }
+html_void_elements = { // aka self-closing <img alt="">
+    "area"
+    | "base"
+    | "br"
+    | "col"
+    | "command"
+    | "embed"
+    | "hr"
+    | "img"
+    | "input"
+    | "keygen"
+    | "link"
+    | "meta"
+    | "param"
+    | "source"
+    | "track"
+    | "wbr"
+}
 
-text = { (!(element_tag_start | comment_tag_start ) ~ ANY)+ }
-node = _{ text | element | comment }
+element_name = @{ ASCII_ALPHA+ }
+
+element_open_start = @{ chevron_left ~ WHITESPACE* ~ PUSH(element_name) ~ attribute* ~ WHITESPACE* ~ chevron_right}
+element_open_end = @{ chevron_left_closed ~ WHITESPACE* ~ POP ~ WHITESPACE* ~ chevron_right}
+
+element_open = ${ element_open_start ~ node* ~ element_open_end }
+element_closed = ${ chevron_left ~ WHITESPACE* ~ element_name ~ attribute* ~ WHITESPACE* ~ chevron_right_closed }
+element_void = ${ chevron_left ~ WHITESPACE* ~ html_void_elements ~ attribute* ~ WHITESPACE* ~ chevron_right }
+
+// COMMENT
+comment_tag_start = @{ chevron_left_bang ~ "--" }
+comment_tag_end = @{ "--" ~ chevron_right }
+
+// ATTRIBUTE
+attribute_key = @{ ASCII_ALPHA+ }
+attribute_value = @{ (!PEEK ~ ANY)+ }
+attribute = ${ WHITESPACE ~ attribute_key ~ (equal ~ PUSH(quote) ~ attribute_value* ~ POP)* }
+
+// NODE
+node_element = { element_open | element_closed | element_void }
+node_text = { (!(chevron_left | comment_tag_start ) ~ ANY)+ }
+node_comment = @{ comment_tag_start ~ (!comment_tag_end ~ ANY)* ~ comment_tag_end }
+node = _{ node_text | node_element | node_comment }
 
 // DOCUMENT
-doctype_name = { "html" }
-doctype = _{ "<!doctype" ~ doctype_name ~ ">"}
+doctype_type = { "html" }
+doctype_name = { "doctype" | "DOCTYPE" }
+doctype = _{ chevron_left_bang ~ doctype_name ~ doctype_type ~ chevron_right}
 
-document_fragment = _{ element+ }
+document_fragment = _{ node+ }
 
 document = _{
-    comment*
+    node_comment*
     ~ doctype?
-    ~ comment*
-    ~ element?
-    ~ comment*
+    ~ node_comment*
+    ~ node_element?
+    ~ node_comment*
 }
 
 // ROOT (DOCUMENT FRAGMENT OR DOCUMENT)
