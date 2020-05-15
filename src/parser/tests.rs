@@ -111,7 +111,15 @@ fn it_can_parse_attribute_key_mixed_case_symbols() -> Result<()> {
 fn it_can_parse_multiple_attributes_single_quote() -> Result<()> {
     assert_eq!(
         (),
-        HtmlParser::parse("<img alt='cat bog sheep-123'/>", false)?
+        HtmlParser::parse("<img alt='cat' title='morris'/>", false)?
+    );
+    Ok(())
+}
+#[test]
+fn it_can_parse_multiple_attributes_single_quote_multiple_spaces() -> Result<()> {
+    assert_eq!(
+        (),
+        HtmlParser::parse("<img alt='cat'   title='morris'  />", false)?
     );
     Ok(())
 }
@@ -119,8 +127,19 @@ fn it_can_parse_multiple_attributes_single_quote() -> Result<()> {
 fn it_can_parse_multiple_attributes_double_quote() -> Result<()> {
     assert_eq!(
         (),
-        HtmlParser::parse("<img alt=\"cat bog sheep-123\"/>", false)?
+        HtmlParser::parse("<img alt=\"cat\" title=\"morris\"/>", false)?
     );
+    Ok(())
+}
+
+#[test]
+fn it_can_parse_multiple_attribute_values_single_quote() -> Result<()> {
+    assert_eq!((), HtmlParser::parse("<img alt='cat dog'/>", false)?);
+    Ok(())
+}
+#[test]
+fn it_can_parse_multiple_attribute_values_double_quote() -> Result<()> {
+    assert_eq!((), HtmlParser::parse("<img alt=\"cat dog\"/>", false)?);
     Ok(())
 }
 #[test]
@@ -261,5 +280,36 @@ fn it_can_parse_simple_html_page() -> Result<()> {
         "#
     );
     assert_eq!((), HtmlParser::parse(markup, false)?);
+    Ok(())
+}
+
+#[ignore]
+#[test]
+fn hejsan() -> Result<()> {
+    use std::fs::File;
+    use std::io::prelude::*;
+
+    let mut file = File::open("misc/test_1.html")?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    // println!("{}", &contents);
+    assert_eq!((), HtmlParser::parse(&contents, false)?);
+    Ok(())
+}
+
+#[ignore]
+#[async_std::test]
+async fn it_can_parse_bytesafes_homepage() -> Result<()> {
+    let response = async_std::task::spawn(async {
+        let bytesafe_url = "https://gill.net.in/";
+        surf::get(bytesafe_url)
+            .recv_string()
+            .await
+            .expect("Could not get site")
+    });
+    let page = response.await;
+    println!("{}", page);
+    // let x = HtmlParser::parse(&page, true)?;
+    assert!(true);
     Ok(())
 }

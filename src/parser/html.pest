@@ -13,7 +13,7 @@ quote_single = _{ "'" }
 quote = _{ quote_dubble | quote_single }
 
 // ELEMENT
-html_void_elements = { // aka self-closing <img alt="">
+element_void_name = { // aka self-closing <img alt="">
     "area"
     | "base"
     | "br"
@@ -34,12 +34,12 @@ html_void_elements = { // aka self-closing <img alt="">
 
 element_name = @{ ASCII_ALPHA ~ text_chars* }
 
-element_open_start = @{ chevron_left ~ WHITESPACE* ~ PUSH(element_name) ~ attribute* ~ WHITESPACE* ~ chevron_right}
+element_open_start = ${ chevron_left ~ WHITESPACE* ~ PUSH(element_name) ~ (WHITESPACE* ~ attribute)* ~ WHITESPACE* ~ chevron_right}
 element_open_end = @{ chevron_left_closed ~ WHITESPACE* ~ POP ~ WHITESPACE* ~ chevron_right}
 
-element_open = ${ element_open_start ~ node* ~ element_open_end }
-element_closed = ${ chevron_left ~ WHITESPACE* ~ element_name ~ attribute* ~ WHITESPACE* ~ chevron_right_closed }
-element_void = ${ chevron_left ~ WHITESPACE* ~ html_void_elements ~ attribute* ~ WHITESPACE* ~ chevron_right }
+element_open = _{ element_open_start ~ node* ~ element_open_end }
+element_closed = _{ chevron_left ~ WHITESPACE* ~ element_name ~ (WHITESPACE* ~ attribute)* ~ WHITESPACE* ~ chevron_right_closed }
+element_void = { chevron_left ~ WHITESPACE* ~ element_void_name ~ (WHITESPACE* ~ attribute)* ~ WHITESPACE* ~ chevron_right }
 
 // COMMENT
 comment_tag_start = @{ chevron_left_bang ~ "--" }
@@ -48,17 +48,17 @@ comment_tag_end = @{ "--" ~ chevron_right }
 // ATTRIBUTE
 attribute_key = @{ ASCII_ALPHA ~ text_chars* }
 attribute_value = @{ (!PEEK ~ ANY)+ }
-attribute = ${ WHITESPACE ~ attribute_key ~ (equal ~ PUSH(quote) ~ attribute_value* ~ POP)* }
+attribute = _{ attribute_key ~ (equal ~ PUSH(quote) ~ attribute_value* ~ POP)* }
 
 // NODE
-node_element = { element_open | element_closed | element_void }
+node_element = _{ element_open | element_closed | element_void }
 node_text = { (!(chevron_left | comment_tag_start ) ~ ANY)+ }
 node_comment = @{ comment_tag_start ~ (!comment_tag_end ~ ANY)* ~ comment_tag_end }
 node = _{ node_text | node_element | node_comment }
 
 // DOCUMENT
-doctype_type = { "html" }
-doctype_name = { "doctype" | "DOCTYPE" }
+doctype_type = _{ "html" }
+doctype_name = _{ "doctype" | "DOCTYPE" }
 doctype = _{ chevron_left_bang ~ doctype_name ~ doctype_type ~ chevron_right}
 
 document_fragment = _{ node+ }
