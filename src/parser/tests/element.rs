@@ -190,27 +190,28 @@ fn it_can_parse_simple_html_page() -> Result<()> {
         r#"
             <!DOCTYPE html>
             <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Document</title>
-                <style>
-                    body {
-                        background: black;
-                    }
-            
-                    h1 {
-                        color: white;
-                    }
-                </style>
-            </head>
-            <body>
-                <h1>Hello world</h1>
-                <script>
-                    const title = document.querySelector("h1")
-                    title.innerText = "Hello from script"
-                </script>
-            </body>
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Document</title>
+                    <style>
+                        body {
+                            background: black;
+                        }
+                
+                        h1 {
+                            color: white;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>Hello world</h1>
+                    <!-- There should be more text here -->
+                    <script>
+                        const title = document.querySelector("h1")
+                        title.innerText = "Hello from script"
+                    </script>
+                </body>
             </html>        
         "#
     );
@@ -218,22 +219,8 @@ fn it_can_parse_simple_html_page() -> Result<()> {
     Ok(())
 }
 
-#[ignore]
-#[test]
-fn hejsan() -> Result<()> {
-    use std::fs::File;
-    use std::io::prelude::*;
-
-    let mut file = File::open("misc/test_1.html")?;
-    let mut contents = String::new();
-    file.read_to_string(&mut contents)?;
-    // println!("{}", &contents);
-    assert_eq!((), HtmlParser::parse(&contents, false)?);
-    Ok(())
-}
-#[ignore]
 #[async_std::test]
-async fn it_can_parse_bytesafes_homepage() -> Result<()> {
+async fn it_can_parse_gill() -> Result<()> {
     let response = async_std::task::spawn(async {
         let bytesafe_url = "https://gill.net.in/";
         surf::get(bytesafe_url)
@@ -242,7 +229,82 @@ async fn it_can_parse_bytesafes_homepage() -> Result<()> {
             .expect("Could not get site")
     });
     let page = response.await;
-    let x = HtmlParser::parse(&page, true)?;
+    let _x = HtmlParser::parse(&page, false)?;
+    assert!(true);
+    Ok(())
+}
+
+#[async_std::test]
+async fn it_can_parse_facebook() -> Result<()> {
+    let response = async_std::task::spawn(async {
+        let bytesafe_url = "https://www.facebook.com/";
+        surf::get(bytesafe_url)
+            .recv_string()
+            .await
+            .expect("Could not get site")
+    });
+    let page = response.await;
+    let _x = HtmlParser::parse(&page, false)?;
+    assert!(true);
+    Ok(())
+}
+
+#[async_std::test]
+async fn it_can_parse_mathias() -> Result<()> {
+    let response = async_std::task::spawn(async {
+        let mathias_url = "http://mathiasiversen.com/";
+        surf::get(mathias_url)
+            .recv_string()
+            .await
+            .expect("Could not get site")
+    });
+    let page = response.await;
+    let _x = HtmlParser::parse(&page, false)?;
+    assert!(true);
+    Ok(())
+}
+
+#[async_std::test]
+async fn it_can_parse_jamiller() -> Result<()> {
+    let response = async_std::task::spawn(async {
+        let mathias_url = "https://jamiller.me/";
+        surf::get(mathias_url)
+            .recv_string()
+            .await
+            .expect("Could not get site")
+    });
+    let page = response.await;
+    let _x = HtmlParser::parse(&page, false)?;
+    assert!(true);
+    Ok(())
+}
+
+#[async_std::test]
+async fn it_can_parse_bytesafe() -> Result<()> {
+    let response = async_std::task::spawn(async {
+        let mathias_url = "https://www.spotify.com/se/";
+        surf::get(mathias_url)
+            .recv_string()
+            .await
+            .expect("Could not get site")
+    });
+    let page = response.await;
+    let _x = HtmlParser::parse(&page, false)?;
+    assert!(true);
+    Ok(())
+}
+
+#[async_std::test]
+async fn it_can_parse_amazon() -> Result<()> {
+    let response = async_std::task::spawn(async {
+        let mathias_url = "https://www.amazon.com/";
+        surf::get(mathias_url)
+            .recv_string()
+            .await
+            .expect("Could not get site")
+    });
+    let page = response.await;
+    let _x = HtmlParser::parse(&page, false)?;
     assert!(true);
     Ok(())
 }

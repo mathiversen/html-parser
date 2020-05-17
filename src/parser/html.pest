@@ -1,19 +1,38 @@
+// ROOT (DOCUMENT FRAGMENT OR DOCUMENT)
+html = _{
+    SOI
+    ~ node_comment*
+    ~ doctype?
+    ~ node*
+    ~ EOI
+}
 
-// SYMBOLS / CHARACTERS
-WHITESPACE = _{ " " | "\t" | "\r" | "\n" }
-text_chars = _{'a'..'z' | 'A'..'Z' | "_" | "-" | '0'..'9'}
-chevron_left = _{ "<" }
-chevron_left_closed = _{ "</" }
-chevron_left_bang = _{ "<!" }
-chevron_right = _{ ">" }
-chevron_right_closed = _{ "/>" }
-equal = _{ "=" }
-quote_dubble = _{ "\"" }
-quote_single = _{ "'" }
-quote = _{ quote_dubble | quote_single }
+// DOCUMENT
+doctype = _{ chevron_left_bang ~ doctype_name ~ doctype_type ~ chevron_right}
+doctype_name = _{ "doctype" | "DOCTYPE" }
+doctype_type = _{ "html" }
+
+// NODE
+node = _{ node_comment | node_element | node_text }
+node_comment = _{ comment_tag_start ~ (!comment_tag_end ~ ANY)* ~ comment_tag_end }
+node_text = { (!(chevron_left | comment_tag_start ) ~ ANY)+ }
+node_element = { el_void | el_xml | el_script | el_open }
+
+// ATTRIBUTE
+attribute_key = { ASCII_ALPHA ~ text_chars* }
+attribute_value = { !PEEK ~ ANY }
+attribute = { attribute_key ~ (equal ~ PUSH(quote) ~ attribute_value* ~ POP)* }
+
+// COMMENT
+comment_tag_start = @{ chevron_left_bang ~ "--" }
+comment_tag_end = @{ "--" ~ chevron_right }
 
 // ELEMENT
-element_void_name = { // aka self-closing <img alt="">
+el_name = @{ ASCII_ALPHA ~ text_chars* }
+
+// Void element aka self-closing element
+// Ex: <hr>
+el_void_name = @{
     "area"
     | "base"
     | "br"
@@ -31,49 +50,40 @@ element_void_name = { // aka self-closing <img alt="">
     | "track"
     | "wbr"
 }
+el_void = _{ chevron_left ~ el_void_name ~ attribute* ~ (chevron_right | chevron_right_closed) }
 
-element_name = @{ ASCII_ALPHA ~ text_chars* }
+// Open elements are default element that can take children 
+// and have both a start tag and an end tag
+// Ex: <html lang="en"></html>
+el_open = _{ el_open_start ~ (!el_open_end ~ node)* ~ el_open_end }
+el_open_start = _{ chevron_left ~ PUSH(el_name) ~ attribute* ~ chevron_right}
+el_open_end = { chevron_left_closed ~ POP ~ chevron_right}
 
-element_open_start = ${ chevron_left ~ WHITESPACE* ~ PUSH(element_name) ~ (WHITESPACE* ~ attribute)* ~ WHITESPACE* ~ chevron_right}
-element_open_end = @{ chevron_left_closed ~ WHITESPACE* ~ POP ~ WHITESPACE* ~ chevron_right}
+// Script elements are elements with text/script content that
+// might interfere with the normal html syntax
+el_script_name = _{ "style" | "script" }
+el_script = _{ el_script_start ~ (!el_script_end ~ ANY)* ~ el_script_end }
+el_script_start = _{ chevron_left ~ PUSH(el_script_name) ~ attribute* ~ chevron_right}
+el_script_end = _{ chevron_left_closed ~ POP ~ chevron_right}
 
-element_open = _{ element_open_start ~ node* ~ element_open_end }
-element_closed = _{ chevron_left ~ WHITESPACE* ~ element_name ~ (WHITESPACE* ~ attribute)* ~ WHITESPACE* ~ chevron_right_closed }
-element_void = { chevron_left ~ WHITESPACE* ~ element_void_name ~ (WHITESPACE* ~ attribute)* ~ WHITESPACE* ~ chevron_right }
+// XML processing instruction
+// Ex: <?xml version="1.0" ?>
+el_xml = { chevron_left_question ~ "xml" ~ attribute* ~ chevron_right_question }
 
-// COMMENT
-comment_tag_start = @{ chevron_left_bang ~ "--" }
-comment_tag_end = @{ "--" ~ chevron_right }
+// SYMBOLS / CHARACTERS
+text_chars = _{'a'..'z' | 'A'..'Z' | "_" | "-" | ":" |'0'..'9'}
 
-// ATTRIBUTE
-attribute_key = @{ ASCII_ALPHA ~ text_chars* }
-attribute_value = @{ (!PEEK ~ ANY)+ }
-attribute = _{ attribute_key ~ (equal ~ PUSH(quote) ~ attribute_value* ~ POP)* }
+chevron_left = _{ "<" }
+chevron_left_closed = _{ "</" }
+chevron_left_bang = _{ "<!" }
+chevron_left_question = _{ "<?" }
 
-// NODE
-node_element = _{ element_open | element_closed | element_void }
-node_text = { (!(chevron_left | comment_tag_start ) ~ ANY)+ }
-node_comment = @{ comment_tag_start ~ (!comment_tag_end ~ ANY)* ~ comment_tag_end }
-node = _{ node_text | node_element | node_comment }
+chevron_right = _{ ">" }
+chevron_right_closed = _{ "/>" }
+chevron_right_question = _{ "?>" }
 
-// DOCUMENT
-doctype_type = _{ "html" }
-doctype_name = _{ "doctype" | "DOCTYPE" }
-doctype = _{ chevron_left_bang ~ doctype_name ~ doctype_type ~ chevron_right}
-
-document_fragment = _{ node+ }
-
-document = _{
-    node_comment*
-    ~ doctype?
-    ~ node_comment*
-    ~ node_element?
-    ~ node_comment*
-}
-
-// ROOT (DOCUMENT FRAGMENT OR DOCUMENT)
-root = _{
-    SOI
-    ~ document_fragment | document
-    ~ EOI
-}
+equal = _{ "=" }
+quote_dubble = _{ "\"" }
+quote_single = _{ "'" }
+quote = _{ quote_dubble | quote_single }
+WHITESPACE = _{ " " | "\t" | "\r" | "\n" }

@@ -24,7 +24,7 @@ fn it_can_parse_closed_element_attribute_single_quote() -> Result<()> {
 }
 #[test]
 fn it_can_parse_attribute_key_mixed_case_symbols() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<div data-cat='morris'/>", false)?);
+    assert_eq!((), HtmlParser::parse("<img data-cat='morris'/>", false)?);
     Ok(())
 }
 #[test]
