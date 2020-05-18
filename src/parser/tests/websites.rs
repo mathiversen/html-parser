@@ -47,9 +47,9 @@ async fn it_can_parse_mathias() -> Result<()> {
             .expect("Could not get site")
     });
     let page = response.await;
-    let _x = HtmlParser::parse(&page, false)?;
-    assert!(true);
-    Ok(())
+    let x = HtmlParser::parse(&page, false);
+    assert!(x.is_ok());
+    x
 }
 
 #[async_std::test]
@@ -62,9 +62,9 @@ async fn it_can_parse_spotify() -> Result<()> {
             .expect("Could not get site")
     });
     let page = response.await;
-    let _x = HtmlParser::parse(&page, false)?;
-    assert!(true);
-    Ok(())
+    let x = HtmlParser::parse(&page, false);
+    assert!(x.is_ok());
+    x
 }
 
 #[async_std::test]
@@ -77,9 +77,9 @@ async fn it_can_parse_facebook() -> Result<()> {
             .expect("Could not get site")
     });
     let page = response.await;
-    let _x = HtmlParser::parse(&page, false)?;
-    assert!(true);
-    Ok(())
+    let x = HtmlParser::parse(&page, false);
+    assert!(x.is_ok());
+    x
 }
 
 #[async_std::test]
@@ -92,9 +92,9 @@ async fn it_can_parse_amazon() -> Result<()> {
             .expect("Could not get site")
     });
     let page = response.await;
-    let _x = HtmlParser::parse(&page, false)?;
-    assert!(true);
-    Ok(())
+    let x = HtmlParser::parse(&page, false);
+    assert!(x.is_ok());
+    x
 }
 
 #[async_std::test]
@@ -107,9 +107,9 @@ async fn it_can_parse_apple() -> Result<()> {
             .expect("Could not get site")
     });
     let page = response.await;
-    let _x = HtmlParser::parse(&page, false)?;
-    assert!(true);
-    Ok(())
+    let x = HtmlParser::parse(&page, false);
+    assert!(x.is_ok());
+    x
 }
 
 #[async_std::test]
@@ -122,7 +122,7 @@ async fn it_can_parse_nytimes() -> Result<()> {
             .expect("Could not get site")
     });
     let page = response.await;
-    let _x = HtmlParser::parse(&page, false)?;
-    assert!(true);
-    Ok(())
+    let x = HtmlParser::parse(&page, false);
+    assert!(x.is_ok());
+    x
 }
