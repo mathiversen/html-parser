@@ -83,9 +83,9 @@ async fn it_can_parse_facebook() -> Result<()> {
 }
 
 #[async_std::test]
-async fn it_can_parse_bytesafe() -> Result<()> {
+async fn it_can_parse_amazon() -> Result<()> {
     let response = async_std::task::spawn(async {
-        let url = "https://www.bytesafe.dev";
+        let url = "https://www.amazon.com/";
         surf::get(url)
             .recv_string()
             .await
@@ -98,9 +98,24 @@ async fn it_can_parse_bytesafe() -> Result<()> {
 }
 
 #[async_std::test]
-async fn it_can_parse_amazon() -> Result<()> {
+async fn it_can_parse_apple() -> Result<()> {
     let response = async_std::task::spawn(async {
-        let url = "https://www.amazon.com/";
+        let url = "https://www.apple.com/";
+        surf::get(url)
+            .recv_string()
+            .await
+            .expect("Could not get site")
+    });
+    let page = response.await;
+    let _x = HtmlParser::parse(&page, false)?;
+    assert!(true);
+    Ok(())
+}
+
+#[async_std::test]
+async fn it_can_parse_nytimes() -> Result<()> {
+    let response = async_std::task::spawn(async {
+        let url = "https://www.nytimes.com/";
         surf::get(url)
             .recv_string()
             .await
