@@ -2,7 +2,7 @@ use html_parser::prelude::*;
 use indoc::indoc;
 
 #[test]
-fn it_can_parse_svg() -> Result<()> {
+fn it_can_parse_svg() {
     let svg = indoc!(
         r#"
         <svg  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -10,6 +10,5 @@ fn it_can_parse_svg() -> Result<()> {
         </svg>
     "#
     );
-    assert_eq!((), Ast::parse(&svg, false)?);
-    Ok(())
+    assert!(Ast::parse(&svg, false).is_ok());
 }

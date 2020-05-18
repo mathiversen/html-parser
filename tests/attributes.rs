@@ -1,74 +1,68 @@
 use html_parser::prelude::*;
 
 #[test]
-fn it_can_parse_double_quote() -> Result<()> {
-    assert_eq!((), Ast::parse("<div id=\"one\"></div>", false)?);
-    Ok(())
+fn it_can_parse_double_quote() {
+    let markup = "<div id=\"one\"></div>";
+    assert!(Ast::parse(markup, false).is_ok());
 }
 #[test]
-fn it_can_parse_single_quote() -> Result<()> {
-    assert_eq!((), Ast::parse("<div id='one'></div>", false)?);
-    Ok(())
+fn it_can_parse_single_quote() {
+    let markup = "<div id='one'></div>";
+    assert!(Ast::parse(markup, false).is_ok());
 }
 #[test]
-fn it_can_parse_no_quote_no_space() -> Result<()> {
-    assert_eq!((), Ast::parse("<div id=one></div>", false)?);
-    Ok(())
+fn it_can_parse_no_quote_no_space() {
+    let markup = "<div id=one></div>";
+    assert!(Ast::parse(markup, false).is_ok());
 }
 #[test]
-fn it_can_parse_no_quote_space() -> Result<()> {
-    assert_eq!((), Ast::parse("<div id=one ></div>", false)?);
-    Ok(())
+fn it_can_parse_no_quote_space() {
+    let markup = "<div id=one ></div>";
+    assert!(Ast::parse(markup, false).is_ok());
 }
 #[test]
-fn it_can_parse_closed_element_attribute_double_quote() -> Result<()> {
-    assert_eq!((), Ast::parse("<img alt=\"cat\" />", false)?);
-    Ok(())
+fn it_can_parse_closed_element_attribute_double_quote() {
+    let markup = "<img alt=\"cat\" />";
+    assert!(Ast::parse(markup, false).is_ok());
 }
 #[test]
-fn it_can_parse_closed_element_attribute_single_quote() -> Result<()> {
-    assert_eq!((), Ast::parse("<img alt='cat'/>", false)?);
-    Ok(())
+fn it_can_parse_closed_element_attribute_single_quote() {
+    let markup = "<img alt='cat'/>";
+    assert!(Ast::parse(markup, false).is_ok());
 }
 #[test]
-fn it_can_parse_attribute_key_mixed_case_symbols() -> Result<()> {
-    assert_eq!((), Ast::parse("<img data-cat='morris'/>", false)?);
-    Ok(())
+fn it_can_parse_attribute_key_mixed_case_symbols() {
+    let markup = "<img data-cat='morris'/>";
+    assert!(Ast::parse(markup, false).is_ok());
 }
 #[test]
-fn it_can_parse_multiple_attributes_single_quote() -> Result<()> {
-    assert_eq!((), Ast::parse("<img alt='cat' title='morris'/>", false)?);
-    Ok(())
+fn it_can_parse_multiple_attributes_single_quote() {
+    let markup = "<img alt='cat' title='morris'/>";
+    assert!(Ast::parse(markup, false).is_ok());
 }
 #[test]
-fn it_can_parse_multiple_attributes_single_quote_multiple_spaces() -> Result<()> {
-    assert_eq!(
-        (),
-        Ast::parse("<img alt='cat'   title='morris'  />", false)?
-    );
-    Ok(())
+fn it_can_parse_multiple_attributes_single_quote_multiple_spaces() {
+    let markup = "<img alt='cat'   title='morris'  />";
+    assert!(Ast::parse(markup, false).is_ok());
 }
 #[test]
-fn it_can_parse_multiple_attributes_double_quote() -> Result<()> {
-    assert_eq!(
-        (),
-        Ast::parse("<img alt=\"cat\" title=\"morris\"/>", false)?
-    );
-    Ok(())
+fn it_can_parse_multiple_attributes_double_quote() {
+    let markup = "<img alt=\"cat\" title=\"morris\"/>";
+    assert!(Ast::parse(markup, false).is_ok());
 }
 
 #[test]
-fn it_can_parse_multiple_attribute_values_single_quote() -> Result<()> {
-    assert_eq!((), Ast::parse("<img alt='cat dog'/>", false)?);
-    Ok(())
+fn it_can_parse_multiple_attribute_values_single_quote() {
+    let markup = "<img alt='cat dog'/>";
+    assert!(Ast::parse(markup, false).is_ok());
 }
 #[test]
-fn it_can_parse_multiple_attribute_values_double_quote() -> Result<()> {
-    assert_eq!((), Ast::parse("<img alt=\"cat dog\"/>", false)?);
-    Ok(())
+fn it_can_parse_multiple_attribute_values_double_quote() {
+    let markup = "<img alt=\"cat dog\"/>";
+    assert!(Ast::parse(markup, false).is_ok());
 }
 #[test]
-fn it_can_parse_empty_attributes() -> Result<()> {
-    assert_eq!((), Ast::parse("<img hidden/>", false)?);
-    Ok(())
+fn it_can_parse_empty_attributes() {
+    let markup = "<img hidden/>";
+    assert!(Ast::parse(markup, false).is_ok());
 }

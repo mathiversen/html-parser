@@ -4,7 +4,7 @@ use surf;
 use indoc::indoc;
 
 #[test]
-fn it_can_parse_simple_html_page() -> Result<()> {
+fn it_can_parse_simple_html_page() {
     let markup = indoc!(
         r#"
             <!DOCTYPE html>
@@ -34,12 +34,11 @@ fn it_can_parse_simple_html_page() -> Result<()> {
             </html>        
         "#
     );
-    assert_eq!((), Ast::parse(markup, false)?);
-    Ok(())
+    assert!(Ast::parse(markup, false).is_ok());
 }
 
 #[async_std::test]
-async fn it_can_parse_mathias() -> Result<()> {
+async fn it_can_parse_mathias() {
     let response = async_std::task::spawn(async {
         let url = "http://mathiasiversen.com/";
         surf::get(url)
@@ -48,13 +47,11 @@ async fn it_can_parse_mathias() -> Result<()> {
             .expect("Could not get site")
     });
     let page = response.await;
-    let x = Ast::parse(&page, false);
-    assert!(x.is_ok());
-    x
+    assert!(Ast::parse(&page, false).is_ok());
 }
 
 #[async_std::test]
-async fn it_can_parse_spotify() -> Result<()> {
+async fn it_can_parse_spotify() {
     let response = async_std::task::spawn(async {
         let bytesafe_url = "https://www.spotify.com/se";
         surf::get(bytesafe_url)
@@ -63,13 +60,11 @@ async fn it_can_parse_spotify() -> Result<()> {
             .expect("Could not get site")
     });
     let page = response.await;
-    let x = Ast::parse(&page, false);
-    assert!(x.is_ok());
-    x
+    assert!(Ast::parse(&page, false).is_ok());
 }
 
 #[async_std::test]
-async fn it_can_parse_facebook() -> Result<()> {
+async fn it_can_parse_facebook() {
     let response = async_std::task::spawn(async {
         let bytesafe_url = "https://www.facebook.com/";
         surf::get(bytesafe_url)
@@ -78,13 +73,11 @@ async fn it_can_parse_facebook() -> Result<()> {
             .expect("Could not get site")
     });
     let page = response.await;
-    let x = Ast::parse(&page, false);
-    assert!(x.is_ok());
-    x
+    assert!(Ast::parse(&page, false).is_ok());
 }
 
 #[async_std::test]
-async fn it_can_parse_amazon() -> Result<()> {
+async fn it_can_parse_amazon() {
     let response = async_std::task::spawn(async {
         let url = "https://www.amazon.com/";
         surf::get(url)
@@ -93,13 +86,11 @@ async fn it_can_parse_amazon() -> Result<()> {
             .expect("Could not get site")
     });
     let page = response.await;
-    let x = Ast::parse(&page, false);
-    assert!(x.is_ok());
-    x
+    assert!(Ast::parse(&page, false).is_ok());
 }
 
 #[async_std::test]
-async fn it_can_parse_apple() -> Result<()> {
+async fn it_can_parse_apple() {
     let response = async_std::task::spawn(async {
         let url = "https://www.apple.com/";
         surf::get(url)
@@ -108,13 +99,11 @@ async fn it_can_parse_apple() -> Result<()> {
             .expect("Could not get site")
     });
     let page = response.await;
-    let x = Ast::parse(&page, false);
-    assert!(x.is_ok());
-    x
+    assert!(Ast::parse(&page, false).is_ok());
 }
 
 #[async_std::test]
-async fn it_can_parse_nytimes() -> Result<()> {
+async fn it_can_parse_nytimes() {
     let response = async_std::task::spawn(async {
         let url = "https://www.nytimes.com/";
         surf::get(url)
@@ -123,7 +112,5 @@ async fn it_can_parse_nytimes() -> Result<()> {
             .expect("Could not get site")
     });
     let page = response.await;
-    let x = Ast::parse(&page, false);
-    assert!(x.is_ok());
-    x
+    assert!(Ast::parse(&page, false).is_ok());
 }
