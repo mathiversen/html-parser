@@ -33,7 +33,7 @@ fn it_can_parse_simple_html_page() -> Result<()> {
             </html>        
         "#
     );
-    assert_eq!((), HtmlParser::parse(markup, true)?);
+    assert_eq!((), HtmlParser::parse(markup, false)?);
     Ok(())
 }
 

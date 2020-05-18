@@ -10,11 +10,10 @@ html = _{
 }
 
 //
-// DOCUMENTS
+// DOCTYPE
 //
-doctype = _{ chevron_left_bang ~ doctype_name ~ doctype_type ~ chevron_right}
 doctype_name = _{ "doctype" | "DOCTYPE" }
-doctype_type = _{ "html" }
+doctype = _{ chevron_left_bang ~ doctype_name ~ attr* ~ chevron_right}
 
 //
 // NODES
@@ -29,6 +28,15 @@ node_element = { el_void | el_void_xml | el_process_instruct | el_raw_text | el_
 //
 comment_tag_start = @{ chevron_left_bang ~ "--" }
 comment_tag_end = @{ "--" ~ chevron_right }
+
+//
+// ATTRIBUTES
+//
+attr_key = { ASCII_ALPHA ~ text_chars* }
+attr_value = { (!PEEK ~ ANY)* }
+attr_quoted =  _{PUSH(quote) ~ attr_value ~ POP }
+attr_non_quoted = _{ (!WHITESPACE ~ ANY)* }
+attr = { attr_key ~ (equal ~ (attr_quoted | attr_non_quoted))? }
 
 //
 // ELEMENTS
@@ -56,7 +64,7 @@ el_void_name_html = @{
     | "wbr"
     | "meta"
 }
-// NOTE: This should not have to be a rule, but people doesn't know html...
+// NOTE: This should not have to be a rule, but people doesn't know what void elements are...
 el_void_name_svg = @{
     "path"
     | "polygon"
@@ -88,15 +96,6 @@ el_process_instruct = { chevron_left_question ~ "xml" ~ attr* ~ chevron_right_qu
 // Catch dangling elements
 // Ex: <div/></div>
 el_dangling = { chevron_left_closed ~ el_name ~ chevron_right}
-
-//
-// ELEMENT ATTRIBUTE
-//
-attr_key = { ASCII_ALPHA ~ text_chars* }
-attr_value = { (!PEEK ~ ANY)* }
-attr_quoted =  _{PUSH(quote) ~ attr_value ~ POP }
-attr_non_quoted = _{ (!WHITESPACE ~ ANY)* }
-attr = { attr_key ~ (equal ~ (attr_quoted | attr_non_quoted))? }
 
 //
 // SYMBOLS / CHARACTERS

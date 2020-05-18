@@ -1,6 +1,5 @@
 use crate::parser::HtmlParser;
 use anyhow::Result;
-use indoc::indoc;
 
 #[test]
 fn it_can_parse_open_element_attribute_double_quote() -> Result<()> {
