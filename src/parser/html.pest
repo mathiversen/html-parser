@@ -1,18 +1,51 @@
-WHITESPACE = _{ " " | "\t" | "\r" | "\n" }
+//
+// HTML
+//
+html = _{
+    SOI
+    ~ node_comment*
+    ~ doctype?
+    ~ node*
+    ~ EOI
+}
 
-// SYMBOLS
-chevron_left = _{ "<" }
-chevron_left_closed = _{ "</" }
-chevron_left_bang = _{ "<!" }
-chevron_right = _{ ">" }
-chevron_right_closed = _{ "/>" }
-equal = _{ "=" }
-quote_dubble = _{ "\"" }
-quote_single = _{ "'" }
-quote = _{ quote_dubble | quote_single }
+//
+// DOCTYPE
+//
+doctype_name = _{ "doctype" | "DOCTYPE" }
+doctype = _{ chevron_left_bang ~ doctype_name ~ attr* ~ chevron_right}
 
-// ELEMENT
-html_void_elements = { // aka self-closing <img alt="">
+//
+// NODES
+//
+node = _{ node_comment | node_element | node_text | WHITESPACE}
+node_comment = _{ comment_tag_start ~ (!comment_tag_end ~ ANY)* ~ comment_tag_end }
+node_text = { (!(chevron_left | comment_tag_start ) ~ ANY)+ }
+node_element = { el_void | el_void_xml | el_process_instruct | el_raw_text | el_normal | el_dangling }
+
+//
+// COMMENTS
+//
+comment_tag_start = @{ chevron_left_bang ~ "--" }
+comment_tag_end = @{ "--" ~ chevron_right }
+
+//
+// ATTRIBUTES
+//
+attr_key = { ASCII_ALPHA ~ text_chars* }
+attr_value = { (!PEEK ~ ANY)* }
+attr_quoted =  _{PUSH(quote) ~ attr_value ~ POP }
+attr_non_quoted = _{ (!WHITESPACE ~ ANY)* }
+attr = { attr_key ~ (equal ~ (attr_quoted | attr_non_quoted))? }
+
+//
+// ELEMENTS
+//
+el_name = @{ ASCII_ALPHA ~ text_chars* }
+
+// Void element aka self-closing element
+// Ex: <hr>
+el_void_name_html = @{
     "area"
     | "base"
     | "br"
@@ -29,50 +62,57 @@ html_void_elements = { // aka self-closing <img alt="">
     | "source"
     | "track"
     | "wbr"
+    | "meta"
 }
-
-element_name = @{ ASCII_ALPHA+ }
-
-element_open_start = @{ chevron_left ~ WHITESPACE* ~ PUSH(element_name) ~ attribute* ~ WHITESPACE* ~ chevron_right}
-element_open_end = @{ chevron_left_closed ~ WHITESPACE* ~ POP ~ WHITESPACE* ~ chevron_right}
-
-element_open = ${ element_open_start ~ node* ~ element_open_end }
-element_closed = ${ chevron_left ~ WHITESPACE* ~ element_name ~ attribute* ~ WHITESPACE* ~ chevron_right_closed }
-element_void = ${ chevron_left ~ WHITESPACE* ~ html_void_elements ~ attribute* ~ WHITESPACE* ~ chevron_right }
-
-// COMMENT
-comment_tag_start = @{ chevron_left_bang ~ "--" }
-comment_tag_end = @{ "--" ~ chevron_right }
-
-// ATTRIBUTE
-attribute_key = @{ ASCII_ALPHA+ }
-attribute_value = @{ (!PEEK ~ ANY)+ }
-attribute = ${ WHITESPACE ~ attribute_key ~ (equal ~ PUSH(quote) ~ attribute_value* ~ POP)* }
-
-// NODE
-node_element = { element_open | element_closed | element_void }
-node_text = { (!(chevron_left | comment_tag_start ) ~ ANY)+ }
-node_comment = @{ comment_tag_start ~ (!comment_tag_end ~ ANY)* ~ comment_tag_end }
-node = _{ node_text | node_element | node_comment }
-
-// DOCUMENT
-doctype_type = { "html" }
-doctype_name = { "doctype" | "DOCTYPE" }
-doctype = _{ chevron_left_bang ~ doctype_name ~ doctype_type ~ chevron_right}
-
-document_fragment = _{ node+ }
-
-document = _{
-    node_comment*
-    ~ doctype?
-    ~ node_comment*
-    ~ node_element?
-    ~ node_comment*
+// NOTE: This should not have to be a rule, but people doesn't know what void elements are...
+el_void_name_svg = @{
+    "path"
+    | "polygon"
+    | "rect"
+    | "circle"
 }
+el_void_name = @{ el_void_name_html | el_void_name_svg }
+el_void = _{ chevron_left ~ el_void_name ~ attr* ~ (chevron_right | chevron_right_closed) }
+el_void_xml = _{ chevron_left ~ el_name ~ attr* ~ chevron_right_closed }
 
-// ROOT (DOCUMENT FRAGMENT OR DOCUMENT)
-root = _{
-    SOI
-    ~ document_fragment | document
-    ~ EOI
-}
+// Open elements are default element that can take children 
+// and have both a start tag and an end tag
+// Ex: <html lang="en"></html>
+el_normal = _{ el_normal_start ~ (!el_normal_end ~ node)* ~ el_normal_end }
+el_normal_start = _{ chevron_left ~ PUSH(el_name) ~ attr* ~ chevron_right}
+el_normal_end = { chevron_left_closed ~ POP ~ chevron_right}
+
+// Raw text elements are elements with text/script content that
+// might interfere with the normal html syntax
+el_raw_text_name = _{ "style" | "script" }
+el_raw_text = _{ el_raw_text_start ~ (!el_raw_text_end ~ ANY)* ~ el_raw_text_end }
+el_raw_text_start = _{ chevron_left ~ PUSH(el_raw_text_name) ~ attr* ~ chevron_right}
+el_raw_text_end = _{ chevron_left_closed ~ POP ~ chevron_right}
+
+// XML processing instruction
+// Ex: <?xml version="1.0" ?>
+el_process_instruct = { chevron_left_question ~ "xml" ~ attr* ~ chevron_right_question }
+
+// Catch dangling elements
+// Ex: <div/></div>
+el_dangling = { chevron_left_closed ~ el_name ~ chevron_right}
+
+//
+// SYMBOLS / CHARACTERS
+//
+text_chars = _{'a'..'z' | 'A'..'Z' | "_" | "-" | ":" |'0'..'9'}
+
+chevron_left = _{ "<" }
+chevron_left_closed = _{ "</" }
+chevron_left_bang = _{ "<!" }
+chevron_left_question = _{ "<?" }
+
+chevron_right = _{ ">" }
+chevron_right_closed = _{ "/>" }
+chevron_right_question = _{ "?>" }
+
+equal = _{ "=" }
+quote_dubble = _{ "\"" }
+quote_single = _{ "'" }
+quote = _{ quote_dubble | quote_single }
+WHITESPACE = _{ " " | "\t" | "\r" | "\n" }

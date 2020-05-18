@@ -1,4 +1,4 @@
-use super::*;
+use crate::parser::HtmlParser;
 use anyhow::Result;
 use indoc::indoc;
 
@@ -23,12 +23,22 @@ fn it_can_parse_one_element_mixed_case() -> Result<()> {
     Ok(())
 }
 #[test]
+fn it_can_parse_one_element_mixed_case_numbers() -> Result<()> {
+    assert_eq!((), HtmlParser::parse("<Header1></Header1>", false)?);
+    Ok(())
+}
+#[test]
+fn it_can_parse_one_element_mixed_case_numbers_symbols() -> Result<()> {
+    assert_eq!((), HtmlParser::parse("<Head_er-1></Head_er-1>", false)?);
+    Ok(())
+}
+#[test]
 fn it_errors_when_case_dont_match() -> Result<()> {
     assert!(HtmlParser::parse("<html></Html>", false).is_err());
     Ok(())
 }
 #[test]
-fn it_errors_on_element_without_matching_name() -> Result<()> {
+fn it_errors_when_element_name_dont_match() -> Result<()> {
     assert!(HtmlParser::parse("<html></div>", false).is_err());
     Ok(())
 }
@@ -70,47 +80,6 @@ fn it_can_parse_element_comment_text() -> Result<()> {
 #[test]
 fn it_can_parse_nested_elements() -> Result<()> {
     assert_eq!((), HtmlParser::parse("<div><div></div></div>", false)?);
-    Ok(())
-}
-#[test]
-fn it_can_parse_open_element_attribute_double_quote() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<div id=\"one\"></div>", false)?);
-    Ok(())
-}
-#[test]
-fn it_can_parse_closed_element_attribute_double_quote() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<img alt=\"cat\" />", false)?);
-    Ok(())
-}
-#[test]
-fn it_can_parse_open_element_attribute_single_quote() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<div id='one'></div>", false)?);
-    Ok(())
-}
-#[test]
-fn it_can_parse_closed_element_attribute_single_quote() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<img alt='cat'/>", false)?);
-    Ok(())
-}
-#[test]
-fn it_can_parse_multiple_attributes_single_quote() -> Result<()> {
-    assert_eq!(
-        (),
-        HtmlParser::parse("<img alt='cat bog sheep-123'/>", false)?
-    );
-    Ok(())
-}
-#[test]
-fn it_can_parse_multiple_attributes_double_quote() -> Result<()> {
-    assert_eq!(
-        (),
-        HtmlParser::parse("<img alt=\"cat bog sheep-123\"/>", false)?
-    );
-    Ok(())
-}
-#[test]
-fn it_can_parse_empty_attributes() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<img hidden/>", false)?);
     Ok(())
 }
 #[test]
@@ -210,40 +179,6 @@ fn it_can_parse_style_with_content() -> Result<()> {
                     color: var(--text-color);
                 }
             </style>
-        "#
-    );
-    assert_eq!((), HtmlParser::parse(markup, false)?);
-    Ok(())
-}
-#[ignore]
-#[test]
-fn it_can_parse_simple_html_page() -> Result<()> {
-    let markup = indoc!(
-        r#"
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Document</title>
-                <style>
-                    body {
-                        background: black;
-                    }
-            
-                    h1 {
-                        color: white;
-                    }
-                </style>
-            </head>
-            <body>
-                <h1>Hello world</h1>
-                <script>
-                    const title = document.querySelector("h1")
-                    title.innerText = "Hello from script"
-                </script>
-            </body>
-            </html>        
         "#
     );
     assert_eq!((), HtmlParser::parse(markup, false)?);
