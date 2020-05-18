@@ -1,5 +1,6 @@
-use crate::parser::HtmlParser;
-use anyhow::Result;
+use html_parser::prelude::*;
+use async_std;
+use surf;
 use indoc::indoc;
 
 #[test]
@@ -33,7 +34,7 @@ fn it_can_parse_simple_html_page() -> Result<()> {
             </html>        
         "#
     );
-    assert_eq!((), HtmlParser::parse(markup, false)?);
+    assert_eq!((), Ast::parse(markup, false)?);
     Ok(())
 }
 
@@ -47,7 +48,7 @@ async fn it_can_parse_mathias() -> Result<()> {
             .expect("Could not get site")
     });
     let page = response.await;
-    let x = HtmlParser::parse(&page, false);
+    let x = Ast::parse(&page, false);
     assert!(x.is_ok());
     x
 }
@@ -62,7 +63,7 @@ async fn it_can_parse_spotify() -> Result<()> {
             .expect("Could not get site")
     });
     let page = response.await;
-    let x = HtmlParser::parse(&page, false);
+    let x = Ast::parse(&page, false);
     assert!(x.is_ok());
     x
 }
@@ -77,7 +78,7 @@ async fn it_can_parse_facebook() -> Result<()> {
             .expect("Could not get site")
     });
     let page = response.await;
-    let x = HtmlParser::parse(&page, false);
+    let x = Ast::parse(&page, false);
     assert!(x.is_ok());
     x
 }
@@ -92,7 +93,7 @@ async fn it_can_parse_amazon() -> Result<()> {
             .expect("Could not get site")
     });
     let page = response.await;
-    let x = HtmlParser::parse(&page, false);
+    let x = Ast::parse(&page, false);
     assert!(x.is_ok());
     x
 }
@@ -107,7 +108,7 @@ async fn it_can_parse_apple() -> Result<()> {
             .expect("Could not get site")
     });
     let page = response.await;
-    let x = HtmlParser::parse(&page, false);
+    let x = Ast::parse(&page, false);
     assert!(x.is_ok());
     x
 }
@@ -122,7 +123,7 @@ async fn it_can_parse_nytimes() -> Result<()> {
             .expect("Could not get site")
     });
     let page = response.await;
-    let x = HtmlParser::parse(&page, false);
+    let x = Ast::parse(&page, false);
     assert!(x.is_ok());
     x
 }

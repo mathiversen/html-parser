@@ -3,15 +3,16 @@
 //
 html = _{
     SOI
-    ~ node_comment*
-    ~ doctype?
-    ~ node*
+    ~ (document | document_fragment)
     ~ EOI
 }
 
 //
 // DOCTYPE
 //
+document = _{ node_comment* ~ doctype ~ node_element ~ node_comment*}
+document_fragment = _{ node_comment* ~ node* }
+
 doctype_name = _{ "doctype" | "DOCTYPE" }
 doctype = _{ chevron_left_bang ~ doctype_name ~ attr* ~ chevron_right_normal}
 

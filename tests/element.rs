@@ -1,92 +1,91 @@
-use crate::parser::HtmlParser;
-use anyhow::Result;
+use html_parser::prelude::*;
 use indoc::indoc;
 
 #[test]
 fn it_can_parse_empty_document() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("", false)?);
+    assert_eq!((), Ast::parse("", false)?);
     Ok(())
 }
 #[test]
 fn it_can_parse_one_element() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<html></html>", false)?);
+    assert_eq!((), Ast::parse("<html></html>", false)?);
     Ok(())
 }
 #[test]
 fn it_can_parse_one_element_upper_case() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<HTML></HTML>", false)?);
+    assert_eq!((), Ast::parse("<HTML></HTML>", false)?);
     Ok(())
 }
 #[test]
 fn it_can_parse_one_element_mixed_case() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<Html></Html>", false)?);
+    assert_eq!((), Ast::parse("<Html></Html>", false)?);
     Ok(())
 }
 #[test]
 fn it_can_parse_one_element_mixed_case_numbers() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<Header1></Header1>", false)?);
+    assert_eq!((), Ast::parse("<Header1></Header1>", false)?);
     Ok(())
 }
 #[test]
 fn it_can_parse_one_element_mixed_case_numbers_symbols() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<Head_er-1></Head_er-1>", false)?);
+    assert_eq!((), Ast::parse("<Head_er-1></Head_er-1>", false)?);
     Ok(())
 }
 #[test]
 fn it_errors_when_case_dont_match() -> Result<()> {
-    assert!(HtmlParser::parse("<html></Html>", false).is_err());
+    assert!(Ast::parse("<html></Html>", false).is_err());
     Ok(())
 }
 #[test]
 fn it_errors_when_element_name_dont_match() -> Result<()> {
-    assert!(HtmlParser::parse("<html></div>", false).is_err());
+    assert!(Ast::parse("<html></div>", false).is_err());
     Ok(())
 }
 #[test]
 fn it_can_parse_multiple_elements() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<div></div><div></div>", false)?);
+    assert_eq!((), Ast::parse("<div></div><div></div>", false)?);
     Ok(())
 }
 #[test]
 fn it_errors_when_multiple_elements_dont_match() -> Result<()> {
-    assert!(HtmlParser::parse("<div></span><div></div>", false).is_err());
+    assert!(Ast::parse("<div></span><div></div>", false).is_err());
     Ok(())
 }
 #[test]
 fn it_can_parse_one_comment() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<!-- hello !\"#/()= -->", false)?);
+    assert_eq!((), Ast::parse("<!-- hello !\"#/()= -->", false)?);
     Ok(())
 }
 #[test]
 fn it_can_parse_multiple_comments() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<!--x--><!--y--><!--z-->", false)?);
+    assert_eq!((), Ast::parse("<!--x--><!--y--><!--z-->", false)?);
     Ok(())
 }
 #[test]
 fn it_can_parse_one_text() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("hello world", false)?);
+    assert_eq!((), Ast::parse("hello world", false)?);
     Ok(())
 }
 #[test]
 fn it_can_parse_multiple_rows_of_text() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("hello\nworld\n!", false)?);
+    assert_eq!((), Ast::parse("hello\nworld\n!", false)?);
     Ok(())
 }
 #[test]
 fn it_can_parse_element_comment_text() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<div></div><!--x-->hello", false)?);
+    assert_eq!((), Ast::parse("<div></div><!--x-->hello", false)?);
     Ok(())
 }
 #[test]
 fn it_can_parse_nested_elements() -> Result<()> {
-    assert_eq!((), HtmlParser::parse("<div><div></div></div>", false)?);
+    assert_eq!((), Ast::parse("<div><div></div></div>", false)?);
     Ok(())
 }
 #[test]
 fn it_can_parse_nested_elements_comments_text() -> Result<()> {
     assert_eq!(
         (),
-        HtmlParser::parse("<p id='body'><i>hello</i><!--x-->world</p>", false)?
+        Ast::parse("<p id='body'><i>hello</i><!--x-->world</p>", false)?
     );
     Ok(())
 }
@@ -101,7 +100,7 @@ fn it_can_parse_nested_and_indented() -> Result<()> {
             </p>
         "#
     );
-    assert_eq!((), HtmlParser::parse(markup, false)?);
+    assert_eq!((), Ast::parse(markup, false)?);
     Ok(())
 }
 #[test]
@@ -128,7 +127,7 @@ fn it_can_parse_deeply_nested() -> Result<()> {
             </div>
         "#
     );
-    assert_eq!((), HtmlParser::parse(markup, false)?);
+    assert_eq!((), Ast::parse(markup, false)?);
     Ok(())
 }
 #[test]
@@ -162,7 +161,7 @@ fn it_can_parse_script_with_content() -> Result<()> {
             </script>
         "#
     );
-    assert_eq!((), HtmlParser::parse(markup, false)?);
+    assert_eq!((), Ast::parse(markup, false)?);
     Ok(())
 }
 #[test]
@@ -181,6 +180,6 @@ fn it_can_parse_style_with_content() -> Result<()> {
             </style>
         "#
     );
-    assert_eq!((), HtmlParser::parse(markup, false)?);
+    assert_eq!((), Ast::parse(markup, false)?);
     Ok(())
 }

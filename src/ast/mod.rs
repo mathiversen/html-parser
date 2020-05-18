@@ -1,24 +1,20 @@
 use anyhow::Result;
-use pest::{iterators::Pair, iterators::Pairs, Parser};
-use pest_derive::Parser;
+use pest::{iterators::Pair, iterators::Pairs, Parser as PestParser};
 
 use crate::error::Error;
+use crate::parser::Parser;
+use crate::Rule;
 
-mod fmt;
-#[cfg(test)]
-mod tests;
+mod format_error_msg;
+use format_error_msg::format_error_msg;
 
-#[derive(Parser)]
-#[grammar = "parser/html.pest"]
-pub struct PestRules;
+pub struct Ast {}
 
-pub struct HtmlParser {}
-
-impl HtmlParser {
+impl Ast {
     pub fn parse(input: &str, debug: bool) -> Result<()> {
-        let pairs = match PestRules::parse(Rule::html, input) {
+        let pairs = match Parser::parse(Rule::html, input) {
             Ok(pairs) => pairs,
-            Err(error) => return fmt::error_msg(error),
+            Err(error) => return format_error_msg(error),
         };
         if debug {
             dbg!(&pairs);

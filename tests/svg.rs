@@ -1,5 +1,4 @@
-use crate::parser::HtmlParser;
-use anyhow::Result;
+use html_parser::prelude::*;
 use indoc::indoc;
 
 #[test]
@@ -11,6 +10,6 @@ fn it_can_parse_svg() -> Result<()> {
         </svg>
     "#
     );
-    assert_eq!((), HtmlParser::parse(&svg, false)?);
+    assert_eq!((), Ast::parse(&svg, false)?);
     Ok(())
 }
