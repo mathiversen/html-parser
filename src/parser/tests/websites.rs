@@ -92,7 +92,7 @@ async fn it_can_parse_bytesafe() -> Result<()> {
             .expect("Could not get site")
     });
     let page = response.await;
-    let _x = HtmlParser::parse(&page, false);
+    let _x = HtmlParser::parse(&page, false)?;
     assert!(true);
     Ok(())
 }

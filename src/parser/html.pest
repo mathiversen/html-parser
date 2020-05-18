@@ -18,16 +18,22 @@ doctype = _{ chevron_left_bang ~ doctype_name ~ attr* ~ chevron_right_normal}
 //
 // NODES
 //
-node = _{ node_comment | node_element | node_text | WHITESPACE}
-node_comment = _{ comment_tag_start ~ (!comment_tag_end ~ ANY)* ~ comment_tag_end }
+node = _{ node_comment | node_element | node_text }
+node_comment = _{ comment_if | comment_normal }
 node_text = { (!(chevron_left_normal | comment_tag_start ) ~ ANY)+ } // NOTE: Should we be able to write < in text? ^^
 node_element = { el_void | el_void_xml | el_process_instruct | el_raw_text | el_normal | el_dangling }
 
 //
 // COMMENTS
 //
+comment_normal = _{ comment_tag_start ~ (!comment_tag_end ~ ANY)* ~ comment_tag_end }
 comment_tag_start = @{ chevron_left_bang ~ "--" }
 comment_tag_end = @{ "--" ~ chevron_right_normal }
+
+// Compatability with old IE browsers... This is not necessary for newer browsers
+comment_if = { comment_if_start ~ (!comment_if_end ~ ANY)* ~ comment_if_end }
+comment_if_start = { comment_tag_start ~ "[if" }
+comment_if_end = { chevron_left_bang ~ "[endif]" ~ comment_tag_end }
 
 //
 // ATTRIBUTES
