@@ -1,4 +1,6 @@
-// ROOT (DOCUMENT FRAGMENT OR DOCUMENT)
+//
+// HTML
+//
 html = _{
     SOI
     ~ node_comment*
@@ -7,32 +9,35 @@ html = _{
     ~ EOI
 }
 
-// DOCUMENT
+//
+// DOCUMENTS
+//
 doctype = _{ chevron_left_bang ~ doctype_name ~ doctype_type ~ chevron_right}
 doctype_name = _{ "doctype" | "DOCTYPE" }
 doctype_type = _{ "html" }
 
-// NODE
-node = _{ node_comment | node_element | node_text }
+//
+// NODES
+//
+node = _{ node_comment | node_element | node_text | WHITESPACE}
 node_comment = _{ comment_tag_start ~ (!comment_tag_end ~ ANY)* ~ comment_tag_end }
 node_text = { (!(chevron_left | comment_tag_start ) ~ ANY)+ }
-node_element = { el_void | el_xml | el_script | el_open }
+node_element = { el_void | el_void_xml | el_process_instruct | el_raw_text | el_normal | el_dangling }
 
-// ATTRIBUTE
-attribute_key = { ASCII_ALPHA ~ text_chars* }
-attribute_value = { !PEEK ~ ANY }
-attribute = { attribute_key ~ (equal ~ PUSH(quote) ~ attribute_value* ~ POP)* }
-
-// COMMENT
+//
+// COMMENTS
+//
 comment_tag_start = @{ chevron_left_bang ~ "--" }
 comment_tag_end = @{ "--" ~ chevron_right }
 
-// ELEMENT
+//
+// ELEMENTS
+//
 el_name = @{ ASCII_ALPHA ~ text_chars* }
 
 // Void element aka self-closing element
 // Ex: <hr>
-el_void_name = @{
+el_void_name_html = @{
     "area"
     | "base"
     | "br"
@@ -49,28 +54,53 @@ el_void_name = @{
     | "source"
     | "track"
     | "wbr"
+    | "meta"
 }
-el_void = _{ chevron_left ~ el_void_name ~ attribute* ~ (chevron_right | chevron_right_closed) }
+// NOTE: This should not have to be a rule, but people doesn't know html...
+el_void_name_svg = @{
+    "path"
+    | "polygon"
+    | "rect"
+    | "circle"
+}
+el_void_name = @{ el_void_name_html | el_void_name_svg }
+el_void = _{ chevron_left ~ el_void_name ~ attr* ~ (chevron_right | chevron_right_closed) }
+el_void_xml = _{ chevron_left ~ el_name ~ attr* ~ chevron_right_closed }
 
 // Open elements are default element that can take children 
 // and have both a start tag and an end tag
 // Ex: <html lang="en"></html>
-el_open = _{ el_open_start ~ (!el_open_end ~ node)* ~ el_open_end }
-el_open_start = _{ chevron_left ~ PUSH(el_name) ~ attribute* ~ chevron_right}
-el_open_end = { chevron_left_closed ~ POP ~ chevron_right}
+el_normal = _{ el_normal_start ~ (!el_normal_end ~ node)* ~ el_normal_end }
+el_normal_start = _{ chevron_left ~ PUSH(el_name) ~ attr* ~ chevron_right}
+el_normal_end = { chevron_left_closed ~ POP ~ chevron_right}
 
-// Script elements are elements with text/script content that
+// Raw text elements are elements with text/script content that
 // might interfere with the normal html syntax
-el_script_name = _{ "style" | "script" }
-el_script = _{ el_script_start ~ (!el_script_end ~ ANY)* ~ el_script_end }
-el_script_start = _{ chevron_left ~ PUSH(el_script_name) ~ attribute* ~ chevron_right}
-el_script_end = _{ chevron_left_closed ~ POP ~ chevron_right}
+el_raw_text_name = _{ "style" | "script" }
+el_raw_text = _{ el_raw_text_start ~ (!el_raw_text_end ~ ANY)* ~ el_raw_text_end }
+el_raw_text_start = _{ chevron_left ~ PUSH(el_raw_text_name) ~ attr* ~ chevron_right}
+el_raw_text_end = _{ chevron_left_closed ~ POP ~ chevron_right}
 
 // XML processing instruction
 // Ex: <?xml version="1.0" ?>
-el_xml = { chevron_left_question ~ "xml" ~ attribute* ~ chevron_right_question }
+el_process_instruct = { chevron_left_question ~ "xml" ~ attr* ~ chevron_right_question }
 
+// Catch dangling elements
+// Ex: <div/></div>
+el_dangling = { chevron_left_closed ~ el_name ~ chevron_right}
+
+//
+// ELEMENT ATTRIBUTE
+//
+attr_key = { ASCII_ALPHA ~ text_chars* }
+attr_value = { (!PEEK ~ ANY)* }
+attr_quoted =  _{PUSH(quote) ~ attr_value ~ POP }
+attr_non_quoted = _{ (!WHITESPACE ~ ANY)* }
+attr = { attr_key ~ (equal ~ (attr_quoted | attr_non_quoted))? }
+
+//
 // SYMBOLS / CHARACTERS
+//
 text_chars = _{'a'..'z' | 'A'..'Z' | "_" | "-" | ":" |'0'..'9'}
 
 chevron_left = _{ "<" }

@@ -41,15 +41,15 @@ impl HtmlParser {
                 Rule::el_name | Rule::el_void_name => {
                     collector.push(pair.as_str().to_string());
                 }
-                Rule::attribute => {
+                Rule::attr => {
                     Self::node_builder(pair.into_inner(), collector)?;
                 }
-                Rule::attribute_key | Rule::attribute_value => {
+                Rule::attr_key | Rule::attr_value => {
                     collector.push(format!("{}", pair.as_str().to_string()))
                 }
                 Rule::comment_tag_start => (),
                 Rule::comment_tag_end => (),
-                Rule::el_open_end => collector.push(format!("{}", pair.as_str().to_string())),
+                Rule::el_normal_end => collector.push(format!("{}", pair.as_str().to_string())),
                 Rule::EOI => (),
                 _ => unreachable!("unknown tpl rule: {:?}", pair.as_rule()),
             };
