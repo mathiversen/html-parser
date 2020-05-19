@@ -1,10 +1,10 @@
-use html_parser::prelude::*;
 use async_std;
-use surf;
+use html_parser::prelude::*;
 use indoc::indoc;
+use surf;
 
 #[test]
-fn it_can_parse_simple_html_page() {
+fn it_can_parse_simple() -> Result<()> {
     let markup = indoc!(
         r#"
             <!DOCTYPE html>
@@ -34,7 +34,8 @@ fn it_can_parse_simple_html_page() {
             </html>        
         "#
     );
-    assert!(Ast::parse(markup, false).is_ok());
+    Ast::parse(markup, true)?;
+    Ok(())
 }
 
 #[async_std::test]
