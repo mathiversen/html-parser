@@ -108,6 +108,8 @@ impl Ast {
         }
     }
 
+    // TODO: This function always return a node, even if the node is a dangling element
+    // instead we should probably return an option an only append to node_tree in case it's Some?
     fn build_node_element(pairs: Pairs<Rule>) -> Result<Node> {
         let mut element = Element::default();
         for pair in pairs {
