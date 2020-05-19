@@ -8,13 +8,11 @@ html = _{
 }
 
 //
-// DOCTYPE
+// DOCUMENT
 //
-document = _{ node_comment* ~ doctype ~ node_element ~ node_comment*}
-document_fragment = _{ node_comment* ~ node* }
-
-doctype_name = _{ "doctype" | "DOCTYPE" }
-doctype = _{ chevron_left_bang ~ doctype_name ~ attr* ~ chevron_right_normal}
+document = { node_comment* ~ doctype? ~ node_element ~ node_comment*}
+document_fragment = { node_comment* ~ node* }
+doctype = { chevron_left_bang ~ ^"doctype" ~ attr* ~ chevron_right_normal}
 
 //
 // NODES
@@ -28,13 +26,13 @@ node_element = { el_void | el_void_xml | el_process_instruct | el_raw_text | el_
 // COMMENTS
 //
 comment_normal = _{ comment_tag_start ~ (!comment_tag_end ~ ANY)* ~ comment_tag_end }
-comment_tag_start = @{ chevron_left_bang ~ "--" }
-comment_tag_end = @{ "--" ~ chevron_right_normal }
+comment_tag_start = _{ chevron_left_bang ~ "--" }
+comment_tag_end = _{ "--" ~ chevron_right_normal }
 
 // Compatability with old IE browsers... This is not necessary for newer browsers
-comment_if = { comment_if_start ~ (!comment_if_end ~ ANY)* ~ comment_if_end }
-comment_if_start = { comment_tag_start ~ "[if" }
-comment_if_end = { chevron_left_bang ~ "[endif]" ~ comment_tag_end }
+comment_if = _{ comment_if_start ~ (!comment_if_end ~ ANY)* ~ comment_if_end }
+comment_if_start = _{ comment_tag_start ~ "[" ~ ^"if" }
+comment_if_end = _{ chevron_left_bang ~ "[" ~ ^"endif" ~ "]" ~ comment_tag_end }
 
 //
 // ATTRIBUTES
@@ -53,30 +51,30 @@ el_name = @{ ASCII_ALPHA ~ text_chars* }
 // Void element aka self-closing element
 // Ex: <hr>
 el_void_name_html = @{
-    "area"
-    | "base"
-    | "br"
-    | "col"
-    | "command"
-    | "embed"
-    | "hr"
-    | "img"
-    | "input"
-    | "keygen"
-    | "link"
-    | "meta"
-    | "param"
-    | "source"
-    | "track"
-    | "wbr"
-    | "meta"
+    ^"area"
+    | ^"base"
+    | ^"br"
+    | ^"col"
+    | ^"command"
+    | ^"embed"
+    | ^"hr"
+    | ^"img"
+    | ^"input"
+    | ^"keygen"
+    | ^"link"
+    | ^"meta"
+    | ^"param"
+    | ^"source"
+    | ^"track"
+    | ^"wbr"
+    | ^"meta"
 }
 // NOTE: This should not have to be a rule, but people doesn't know what void elements are...
 el_void_name_svg = @{
-    "path"
-    | "polygon"
-    | "rect"
-    | "circle"
+    ^"path"
+    | ^"polygon"
+    | ^"rect"
+    | ^"circle"
 }
 el_void_name = @{ el_void_name_html | el_void_name_svg }
 el_void = _{ chevron_left_normal ~ el_void_name ~ attr* ~ (chevron_right_normal | chevron_right_closed) }
@@ -91,7 +89,7 @@ el_normal_end = { chevron_left_closed ~ POP ~ chevron_right_normal}
 
 // Raw text elements are elements with text/script content that
 // might interfere with the normal html syntax
-el_raw_text_name = _{ "style" | "script" }
+el_raw_text_name = { ^"style" | ^"script" }
 el_raw_text = _{ el_raw_text_start ~ (!el_raw_text_end ~ ANY)* ~ el_raw_text_end }
 el_raw_text_start = _{ chevron_left_normal ~ PUSH(el_raw_text_name) ~ attr* ~ chevron_right_normal}
 el_raw_text_end = _{ chevron_left_closed ~ POP ~ chevron_right_normal}
