@@ -1,5 +1,4 @@
 use html_parser::prelude::*;
-use indoc::indoc;
 use insta::assert_debug_snapshot;
 
 #[test]

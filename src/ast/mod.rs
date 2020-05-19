@@ -1,9 +1,7 @@
 use anyhow::Result;
-use pest::{iterators::Pair, iterators::Pairs, Parser as PestParser};
+use pest::{iterators::Pairs, Parser as PestParser};
 use serde::Serialize;
-use std::collections::HashMap;
 use std::default::Default;
-use std::time::{Duration, Instant};
 
 use crate::error::Error;
 use crate::parser::Parser;
@@ -94,19 +92,16 @@ impl Ast {
             _ => {
                 ast.tree_type = AstType::DocumentFragment;
                 for node in &ast.nodes {
-                    match node {
-                        Node::Element(ref el) => {
-                            let name = el.name.clone().to_lowercase();
-                            if name == "html" || name == "body" || name == "head" {
-                                return Err(Error::Parsing(format!(
-                                    "A document fragment should not include {}",
-                                    name
-                                ))
-                                .into());
-                            }
+                    if let Node::Element(ref el) = node {
+                        let name = el.name.clone().to_lowercase();
+                        if name == "html" || name == "body" || name == "head" {
+                            return Err(Error::Parsing(format!(
+                                "A document fragment should not include {}",
+                                name
+                            ))
+                            .into());
                         }
-                        _ => (),
-                    };
+                    }
                 }
                 Ok(ast)
             }
