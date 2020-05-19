@@ -1,4 +1,4 @@
-use html_parser::prelude::*;
+use html_parser::HtmlParser;
 use indoc::indoc;
 
 #[test]
@@ -10,5 +10,5 @@ fn it_can_parse_svg() {
         </svg>
     "#
     );
-    assert!(Ast::parse(&svg).is_ok());
+    assert!(HtmlParser::parse(&svg).is_ok());
 }

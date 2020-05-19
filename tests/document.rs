@@ -1,11 +1,11 @@
-use html_parser::prelude::*;
+use html_parser::{HtmlParser, Result};
 use indoc::indoc;
 use insta::assert_debug_snapshot;
 
 #[test]
 fn it_can_parse_minimal_document() -> Result<()> {
     let markup = "<!DOCTYPE html><html></html>";
-    let ast = Ast::parse(markup)?;
+    let ast = HtmlParser::parse(markup)?;
     assert_debug_snapshot!(ast);
     Ok(())
 }
@@ -25,12 +25,12 @@ fn it_can_parse_document_with_comments() -> Result<()> {
         <!-- comment -->
     "#
     );
-    let ast = Ast::parse(markup)?;
+    let ast = HtmlParser::parse(markup)?;
     assert_debug_snapshot!(ast);
     Ok(())
 }
 #[test]
 fn it_error_when_doctype_and_multiple_html() {
     let markup = "<!DOCTYPE html><html></html><html></html>";
-    assert!(Ast::parse(markup).is_err());
+    assert!(HtmlParser::parse(markup).is_err());
 }

@@ -8,7 +8,7 @@ use crate::parser::Parser;
 use crate::Rule;
 
 mod formatting;
-mod node;
+pub mod node;
 use node::{Element, ElementVariant, Node};
 
 // TODO: Parse doctype attribute

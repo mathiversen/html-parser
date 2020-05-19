@@ -1,53 +1,53 @@
-use html_parser::prelude::*;
+use html_parser::{HtmlParser, Result};
 use indoc::indoc;
 use insta::assert_debug_snapshot;
 
 #[test]
 fn it_can_parse_one_element() -> Result<()> {
     let markup = "<html></html>";
-    let ast = Ast::parse(markup)?;
+    let ast = HtmlParser::parse(markup)?;
     assert_debug_snapshot!(ast);
     Ok(())
 }
 #[test]
 fn it_can_parse_one_element_upper_case() -> Result<()> {
     let markup = "<HTML></HTML>";
-    let ast = Ast::parse(markup)?;
+    let ast = HtmlParser::parse(markup)?;
     assert_debug_snapshot!(ast);
     Ok(())
 }
 #[test]
 fn it_can_parse_one_element_mixed_case() -> Result<()> {
     let markup = "<Html></Html>";
-    let ast = Ast::parse(markup)?;
+    let ast = HtmlParser::parse(markup)?;
     assert_debug_snapshot!(ast);
     Ok(())
 }
 #[test]
 fn it_can_parse_one_element_mixed_case_numbers() -> Result<()> {
     let markup = "<Header1></Header1>";
-    let ast = Ast::parse(markup)?;
+    let ast = HtmlParser::parse(markup)?;
     assert_debug_snapshot!(ast);
     Ok(())
 }
 #[test]
 fn it_can_parse_one_element_mixed_case_numbers_symbols() -> Result<()> {
     let markup = "<Head_Er-1></Head_Er-1>";
-    let ast = Ast::parse(markup)?;
+    let ast = HtmlParser::parse(markup)?;
     assert_debug_snapshot!(ast);
     Ok(())
 }
 #[test]
 fn it_can_parse_multiple_elements() -> Result<()> {
     let markup = "<div/><div/>";
-    let ast = Ast::parse(markup)?;
+    let ast = HtmlParser::parse(markup)?;
     assert_debug_snapshot!(ast);
     Ok(())
 }
 #[test]
 fn it_can_parse_multiple_open_elements() -> Result<()> {
     let markup = "<div></div><div></div>";
-    let ast = Ast::parse(markup)?;
+    let ast = HtmlParser::parse(markup)?;
     assert_debug_snapshot!(ast);
     Ok(())
 }
@@ -60,7 +60,7 @@ fn it_can_parse_nested_elements() -> Result<()> {
         </div>
     "
     );
-    let ast = Ast::parse(markup)?;
+    let ast = HtmlParser::parse(markup)?;
     assert_debug_snapshot!(ast);
     Ok(())
 }
@@ -78,7 +78,7 @@ fn it_can_parse_nested_elements_mixed_children() -> Result<()> {
         </div>
     "
     );
-    let ast = Ast::parse(markup)?;
+    let ast = HtmlParser::parse(markup)?;
     assert_debug_snapshot!(ast);
     Ok(())
 }
@@ -106,7 +106,7 @@ fn it_can_parse_deeply_nested() -> Result<()> {
             </div>
         "#
     );
-    let ast = Ast::parse(markup)?;
+    let ast = HtmlParser::parse(markup)?;
     assert_debug_snapshot!(ast);
     Ok(())
 }
@@ -141,7 +141,7 @@ fn it_can_parse_script_with_content() -> Result<()> {
             </script>
         "#
     );
-    let ast = Ast::parse(markup)?;
+    let ast = HtmlParser::parse(markup)?;
     assert_debug_snapshot!(ast);
     Ok(())
 }
@@ -161,15 +161,15 @@ fn it_can_parse_style_with_content() -> Result<()> {
             </style>
         "#
     );
-    let ast = Ast::parse(markup)?;
+    let ast = HtmlParser::parse(markup)?;
     assert_debug_snapshot!(ast);
     Ok(())
 }
 #[test]
 fn it_errors_when_multiple_elements_dont_match() {
-    assert!(Ast::parse("<div></span><div></div>").is_err());
+    assert!(HtmlParser::parse("<div></span><div></div>").is_err());
 }
 #[test]
 fn it_errors_when_multiple_nested_elements_dont_match() {
-    assert!(Ast::parse("<div><div><div><div></div></div_error></div></div>").is_err());
+    assert!(HtmlParser::parse("<div><div><div><div></div></div_error></div></div>").is_err());
 }
