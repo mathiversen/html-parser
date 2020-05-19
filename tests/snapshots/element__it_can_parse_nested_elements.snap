@@ -1,0 +1,26 @@
+---
+source: tests/element.rs
+expression: ast
+---
+Ast {
+    tree_type: DocumentFragment,
+    nodes: [
+        Element(
+            Element {
+                name: "div",
+                variant: Normal,
+                attributes: {},
+                nodes: [
+                    Element(
+                        Element {
+                            name: "div",
+                            variant: Void,
+                            attributes: {},
+                            nodes: [],
+                        },
+                    ),
+                ],
+            },
+        ),
+    ],
+}

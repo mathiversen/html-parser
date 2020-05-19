@@ -3,15 +3,15 @@
 //
 html = _{
     SOI
-    ~ (document | document_fragment)
+    ~ node_comment*
+    ~ doctype?
+    ~ node*
     ~ EOI
 }
 
 //
-// DOCUMENT
+// DOCTYPE
 //
-document = { node_comment* ~ doctype? ~ node_element ~ node_comment*}
-document_fragment = { node_comment* ~ node* }
 doctype = { chevron_left_bang ~ ^"doctype" ~ attr* ~ chevron_right_normal}
 
 //
@@ -37,9 +37,9 @@ comment_if_end = _{ chevron_left_bang ~ "[" ~ ^"endif" ~ "]" ~ comment_tag_end }
 //
 // ATTRIBUTES
 //
-attr = { attr_key ~ (equal ~ (attr_quoted | attr_non_quoted))? }
+attr = { attr_key ~ (equal ~ (attr_non_quoted | attr_quoted ))? }
 attr_quoted =  _{PUSH(quote) ~ attr_value ~ POP }
-attr_non_quoted = _{ (!(WHITESPACE | chevron_right_normal) ~ ANY)* }
+attr_non_quoted = @{ !quote ~ (!(WHITESPACE | chevron_right) ~ ANY)* }
 attr_key = { ASCII_ALPHA ~ text_chars* }
 attr_value = { (!PEEK ~ ANY)* }
 
@@ -116,6 +116,11 @@ chevron_left_question = _{ "<?" }
 chevron_right_normal = _{ ">" }
 chevron_right_closed = _{ "/>" }
 chevron_right_question = _{ "?>" }
+chevron_right = _{
+    chevron_right_normal
+    | chevron_right_closed
+    | chevron_right_question
+}
 
 equal = _{ "=" }
 quote_dubble = _{ "\"" }

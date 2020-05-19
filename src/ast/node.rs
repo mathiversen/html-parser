@@ -1,18 +1,21 @@
+use serde::Serialize;
 use std::collections::HashMap;
 use std::default::Default;
-#[derive(Debug)]
+
+#[derive(Debug, Serialize)]
 pub enum Node {
     Text(String),
     Element(Element),
     Comment(String),
 }
-#[derive(Debug)]
+
+#[derive(Debug, Serialize)]
 pub enum ElementVariant {
     Normal,
     Void,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Element {
     pub name: String,
     pub variant: ElementVariant,

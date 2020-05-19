@@ -1,89 +1,89 @@
 use html_parser::prelude::*;
 use indoc::indoc;
+use insta::assert_debug_snapshot;
 
 #[test]
-fn it_can_parse_empty_document() {
-    assert!(Ast::parse("", false).is_ok());
+fn it_can_parse_one_element() -> Result<()> {
+    let markup = "<html></html>";
+    let ast = Ast::parse(markup)?;
+    assert_debug_snapshot!(ast);
+    Ok(())
 }
 #[test]
-fn it_can_parse_one_element() {
-    assert!(Ast::parse("<html></html>", false).is_ok());
+fn it_can_parse_one_element_upper_case() -> Result<()> {
+    let markup = "<HTML></HTML>";
+    let ast = Ast::parse(markup)?;
+    assert_debug_snapshot!(ast);
+    Ok(())
 }
 #[test]
-fn it_can_parse_one_element_upper_case() {
-    assert!(Ast::parse("<HTML></HTML>", false).is_ok());
+fn it_can_parse_one_element_mixed_case() -> Result<()> {
+    let markup = "<Html></Html>";
+    let ast = Ast::parse(markup)?;
+    assert_debug_snapshot!(ast);
+    Ok(())
 }
 #[test]
-fn it_can_parse_one_element_mixed_case() {
-    assert!(Ast::parse("<Html></Html>", false).is_ok());
+fn it_can_parse_one_element_mixed_case_numbers() -> Result<()> {
+    let markup = "<Header1></Header1>";
+    let ast = Ast::parse(markup)?;
+    assert_debug_snapshot!(ast);
+    Ok(())
 }
 #[test]
-fn it_can_parse_one_element_mixed_case_numbers() {
-    assert!(Ast::parse("<Header1></Header1>", false).is_ok());
+fn it_can_parse_one_element_mixed_case_numbers_symbols() -> Result<()> {
+    let markup = "<Head_Er-1></Head_Er-1>";
+    let ast = Ast::parse(markup)?;
+    assert_debug_snapshot!(ast);
+    Ok(())
 }
 #[test]
-fn it_can_parse_one_element_mixed_case_numbers_symbols() {
-    assert!(Ast::parse("<Head_er-1></Head_er-1>", false).is_ok());
+fn it_can_parse_multiple_elements() -> Result<()> {
+    let markup = "<div/><div/>";
+    let ast = Ast::parse(markup)?;
+    assert_debug_snapshot!(ast);
+    Ok(())
 }
 #[test]
-fn it_errors_when_case_dont_match() {
-    assert!(Ast::parse("<html></Html>", false).is_err());
+fn it_can_parse_multiple_open_elements() -> Result<()> {
+    let markup = "<div></div><div></div>";
+    let ast = Ast::parse(markup)?;
+    assert_debug_snapshot!(ast);
+    Ok(())
 }
 #[test]
-fn it_errors_when_element_name_dont_match() {
-    assert!(Ast::parse("<html></div>", false).is_err());
-}
-#[test]
-fn it_can_parse_multiple_elements() {
-    assert!(Ast::parse("<div></div><div></div>", false).is_ok());
-}
-#[test]
-fn it_errors_when_multiple_elements_dont_match() {
-    assert!(Ast::parse("<div></span><div></div>", false).is_err());
-}
-#[test]
-fn it_can_parse_one_comment() {
-    assert!(Ast::parse("<!-- hello !\"#/()= -->", false).is_ok());
-}
-#[test]
-fn it_can_parse_multiple_comments() {
-    assert!(Ast::parse("<!--x--><!--y--><!--z-->", false).is_ok());
-}
-#[test]
-fn it_can_parse_one_text() {
-    assert!(Ast::parse("hello world", false).is_ok());
-}
-#[test]
-fn it_can_parse_multiple_rows_of_text() {
-    assert!(Ast::parse("hello\nworld\n!", false).is_ok());
-}
-#[test]
-fn it_can_parse_element_comment_text() {
-    assert!(Ast::parse("<div></div><!--x-->hello", false).is_ok());
-}
-#[test]
-fn it_can_parse_nested_elements() {
-    assert!(Ast::parse("<div><div></div></div>", false).is_ok());
-}
-#[test]
-fn it_can_parse_nested_elements_comments_text() {
-    assert!(Ast::parse("<p id='body'><i>hello</i><!--x-->world</p>", false).is_ok());
-}
-#[test]
-fn it_can_parse_nested_and_indented() {
+fn it_can_parse_nested_elements() -> Result<()> {
     let markup = indoc!(
-        r#"
-            <p id='body'>
-                <i>hello</i>
-                <!--x-->
-                world
-            </p>
-        "#
+        r"
+        <div>
+            <div />
+        </div>
+    "
     );
-    assert!(Ast::parse(markup, false).is_ok());
+    let ast = Ast::parse(markup)?;
+    assert_debug_snapshot!(ast);
+    Ok(())
 }
 #[test]
-fn it_can_parse_deeply_nested() {
+fn it_can_parse_nested_elements_mixed_children() -> Result<()> {
+    let markup = indoc!(
+        r"
+        <div>
+            <!--comment-->
+            <div/>
+            Hello
+            <div>
+                World
+            </div>
+        </div>
+    "
+    );
+    let ast = Ast::parse(markup)?;
+    assert_debug_snapshot!(ast);
+    Ok(())
+}
+#[test]
+fn it_can_parse_deeply_nested() -> Result<()> {
     let markup = indoc!(
         r#"
             <div class='1'>
@@ -106,10 +106,12 @@ fn it_can_parse_deeply_nested() {
             </div>
         "#
     );
-    assert!(Ast::parse(markup, false).is_ok());
+    let ast = Ast::parse(markup)?;
+    assert_debug_snapshot!(ast);
+    Ok(())
 }
 #[test]
-fn it_can_parse_script_with_content() {
+fn it_can_parse_script_with_content() -> Result<()> {
     let markup = indoc!(
         r#"
             <script>
@@ -139,10 +141,12 @@ fn it_can_parse_script_with_content() {
             </script>
         "#
     );
-    assert!(Ast::parse(markup, false).is_ok());
+    let ast = Ast::parse(markup)?;
+    assert_debug_snapshot!(ast);
+    Ok(())
 }
 #[test]
-fn it_can_parse_style_with_content() {
+fn it_can_parse_style_with_content() -> Result<()> {
     let markup = indoc!(
         r#"
             <style>
@@ -157,5 +161,15 @@ fn it_can_parse_style_with_content() {
             </style>
         "#
     );
-    assert!(Ast::parse(markup, false).is_ok());
+    let ast = Ast::parse(markup)?;
+    assert_debug_snapshot!(ast);
+    Ok(())
+}
+#[test]
+fn it_errors_when_multiple_elements_dont_match() {
+    assert!(Ast::parse("<div></span><div></div>").is_err());
+}
+#[test]
+fn it_errors_when_multiple_nested_elements_dont_match() {
+    assert!(Ast::parse("<div><div><div><div></div></div_error></div></div>").is_err());
 }

@@ -1,0 +1,24 @@
+---
+source: tests/element_attributes.rs
+expression: ast
+---
+Ast {
+    tree_type: DocumentFragment,
+    nodes: [
+        Element(
+            Element {
+                name: "div",
+                variant: Normal,
+                attributes: {
+                    "cat": Some(
+                        "mjau",
+                    ),
+                    "dog": Some(
+                        "woff",
+                    ),
+                },
+                nodes: [],
+            },
+        ),
+    ],
+}

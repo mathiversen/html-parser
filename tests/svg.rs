@@ -10,5 +10,5 @@ fn it_can_parse_svg() {
         </svg>
     "#
     );
-    assert!(Ast::parse(&svg, false).is_ok());
+    assert!(Ast::parse(&svg).is_ok());
 }

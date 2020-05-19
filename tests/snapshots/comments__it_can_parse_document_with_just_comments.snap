@@ -1,0 +1,8 @@
+---
+source: tests/comments.rs
+expression: ast
+---
+Ast {
+    tree_type: Empty,
+    nodes: [],
+}

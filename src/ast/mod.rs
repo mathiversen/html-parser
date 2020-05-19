@@ -1,6 +1,8 @@
 use anyhow::Result;
 use pest::{iterators::Pair, iterators::Pairs, Parser as PestParser};
+use serde::Serialize;
 use std::collections::HashMap;
+use std::default::Default;
 use std::time::{Duration, Instant};
 
 use crate::error::Error;
@@ -12,73 +14,103 @@ mod node;
 use node::{Element, ElementVariant, Node};
 
 // TODO: Parse doctype attribute
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Serialize)]
 pub enum AstType {
     Document,
     DocumentFragment,
+    Empty,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Ast {
-    pub time_parsing: u128,
-    pub tree_type: Option<AstType>,
+    pub tree_type: AstType,
     pub nodes: Vec<Node>,
 }
 
+impl Default for Ast {
+    fn default() -> Self {
+        Self {
+            tree_type: AstType::Empty,
+            nodes: vec![],
+        }
+    }
+}
+
 impl Ast {
-    pub fn parse(input: &str, debug: bool) -> Result<Self> {
-        let now = Instant::now();
+    pub fn parse(input: &str) -> Result<Self> {
         let pairs = match Parser::parse(Rule::html, input) {
             Ok(pairs) => pairs,
             Err(error) => return formatting::error_msg(error),
         };
-
-        let mut ast = Self {
-            time_parsing: now.elapsed().as_millis(),
-            tree_type: None,
-            nodes: vec![],
-        };
-
-        Self::build_root(&mut ast, pairs)?;
-
-        if debug {
-            dbg!(&ast);
-        }
-
-        Ok(ast)
+        Self::build_ast(pairs)
     }
 
-    fn build_root(self: &mut Self, pairs: Pairs<Rule>) -> Result<()> {
+    fn build_ast(pairs: Pairs<Rule>) -> Result<Self> {
+        let mut ast = Self::default();
         for pair in pairs {
             match pair.as_rule() {
-                Rule::document => {
-                    self.tree_type = Some(AstType::Document);
-                    self.nodes.extend(Self::build_document(pair.into_inner())?);
+                Rule::doctype => {
+                    ast.tree_type = AstType::DocumentFragment;
                 }
-                Rule::document_fragment => {
-                    self.tree_type = Some(AstType::DocumentFragment);
-                    self.nodes.extend(Self::build_document(pair.into_inner())?);
-                }
-                Rule::EOI => (),
-                _ => unreachable!("[build root] unknown rule: {:?}", pair.as_rule()),
-            };
-        }
-        Ok(())
-    }
-
-    fn build_document(pairs: Pairs<Rule>) -> Result<Vec<Node>> {
-        let mut nodes = vec![];
-        for pair in pairs {
-            match pair.as_rule() {
-                Rule::doctype => (),
                 Rule::node_element => {
                     let node = Self::build_node_element(pair.into_inner())?;
-                    nodes.push(node);
+                    ast.nodes.push(node);
                 }
-                _ => unreachable!("[build document] unknown rule: {:?}", pair.as_rule()),
+                Rule::node_text => {
+                    ast.nodes.push(Node::Text(pair.as_str().to_string()));
+                }
+                Rule::EOI => break,
+                _ => unreachable!("[build ast] unknown rule: {:?}", pair.as_rule()),
             };
         }
-        Ok(nodes)
+
+        // TODO: This needs to be cleaned up / what logic should apply when parsing fragment vs document?
+        match ast.nodes.len() {
+            0 => {
+                ast.tree_type = AstType::Empty;
+                Ok(ast)
+            }
+            1 => match ast.nodes[0] {
+                Node::Element(ref el) => {
+                    let name = el.name.to_lowercase();
+                    if name == "html" {
+                        ast.tree_type = AstType::Document;
+                        Ok(ast)
+                    } else if ast.tree_type == AstType::Document && name != "html" {
+                        Err(
+                            Error::Parsing("A document can only have html as root".to_string())
+                                .into(),
+                        )
+                    } else {
+                        ast.tree_type = AstType::DocumentFragment;
+                        Ok(ast)
+                    }
+                }
+                _ => {
+                    ast.tree_type = AstType::DocumentFragment;
+                    Ok(ast)
+                }
+            },
+            _ => {
+                ast.tree_type = AstType::DocumentFragment;
+                for node in &ast.nodes {
+                    match node {
+                        Node::Element(ref el) => {
+                            let name = el.name.clone().to_lowercase();
+                            if name == "html" || name == "body" || name == "head" {
+                                return Err(Error::Parsing(format!(
+                                    "A document fragment should not include {}",
+                                    name
+                                ))
+                                .into());
+                            }
+                        }
+                        _ => (),
+                    };
+                }
+                Ok(ast)
+            }
+        }
     }
 
     fn build_node_element(pairs: Pairs<Rule>) -> Result<Node> {
@@ -118,7 +150,7 @@ impl Ast {
                 Rule::attr_key => {
                     attribute.0 = pair.as_str().to_string();
                 }
-                Rule::attr_value => {
+                Rule::attr_value | Rule::attr_non_quoted => {
                     attribute.1 = Some(pair.as_str().to_string());
                 }
                 _ => unreachable!("unknown tpl rule: {:?}", pair.as_rule()),

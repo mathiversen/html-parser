@@ -1,0 +1,17 @@
+---
+source: tests/element.rs
+expression: ast
+---
+Ast {
+    tree_type: Document,
+    nodes: [
+        Element(
+            Element {
+                name: "html",
+                variant: Normal,
+                attributes: {},
+                nodes: [],
+            },
+        ),
+    ],
+}
