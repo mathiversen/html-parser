@@ -53,13 +53,11 @@ impl Ast {
             match pair.as_rule() {
                 Rule::document => {
                     self.tree_type = Some(AstType::Document);
-                    self.nodes
-                        .extend(Self::build_document(pair.into_inner(), true)?);
+                    self.nodes.extend(Self::build_document(pair.into_inner())?);
                 }
                 Rule::document_fragment => {
                     self.tree_type = Some(AstType::DocumentFragment);
-                    self.nodes
-                        .extend(Self::build_document(pair.into_inner(), false)?);
+                    self.nodes.extend(Self::build_document(pair.into_inner())?);
                 }
                 Rule::EOI => (),
                 _ => unreachable!("[build root] unknown rule: {:?}", pair.as_rule()),
@@ -91,7 +89,7 @@ impl Ast {
                     let child_element = Self::build_node_element(pair.into_inner())?;
                     element.nodes.push(child_element)
                 }
-                Rule::node_text => {
+                Rule::node_text | Rule::el_raw_text_content => {
                     element.nodes.push(Node::Text(pair.as_str().to_string()));
                 }
                 Rule::el_name | Rule::el_void_name | Rule::el_raw_text_name => {
@@ -101,7 +99,10 @@ impl Ast {
                     let new_attribute = Self::build_attribute(pair.into_inner())?;
                     element.attributes.insert(new_attribute.0, new_attribute.1);
                 }
-                Rule::el_normal_end => break,
+                Rule::el_normal_end => {
+                    element.variant = ElementVariant::Normal;
+                    break;
+                }
                 Rule::el_dangling => (),
                 Rule::EOI => (),
                 _ => unreachable!("unknown tpl rule: {:?}", pair.as_rule()),
@@ -123,7 +124,6 @@ impl Ast {
                 _ => unreachable!("unknown tpl rule: {:?}", pair.as_rule()),
             }
         }
-        assert_ne!(attribute.0, "");
         Ok(attribute)
     }
 }

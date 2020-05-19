@@ -90,7 +90,8 @@ el_normal_end = { chevron_left_closed ~ POP ~ chevron_right_normal}
 // Raw text elements are elements with text/script content that
 // might interfere with the normal html syntax
 el_raw_text_name = { ^"style" | ^"script" }
-el_raw_text = _{ el_raw_text_start ~ (!el_raw_text_end ~ ANY)* ~ el_raw_text_end }
+el_raw_text_content = { (!el_raw_text_end ~ ANY)* }
+el_raw_text = _{ el_raw_text_start ~ el_raw_text_content ~ el_raw_text_end }
 el_raw_text_start = _{ chevron_left_normal ~ PUSH(el_raw_text_name) ~ attr* ~ chevron_right_normal}
 el_raw_text_end = _{ chevron_left_closed ~ POP ~ chevron_right_normal}
 
