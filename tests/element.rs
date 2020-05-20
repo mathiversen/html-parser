@@ -166,6 +166,19 @@ fn it_can_parse_style_with_content() -> Result<()> {
     Ok(())
 }
 #[test]
+fn it_skips_dangling_elements() -> Result<()> {
+    let markup = indoc!(
+        "
+        <div id='123'></div>
+        </div>
+        <div id='321'></div>
+    "
+    );
+    let ast = HtmlParser::parse(markup)?;
+    assert_debug_snapshot!(ast);
+    Ok(())
+}
+#[test]
 fn it_errors_when_multiple_elements_dont_match() {
     assert!(HtmlParser::parse("<div></span><div></div>").is_err());
 }

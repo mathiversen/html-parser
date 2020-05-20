@@ -51,8 +51,9 @@ impl Ast {
                     ast.tree_type = AstType::DocumentFragment;
                 }
                 Rule::node_element => {
-                    let node = Self::build_node_element(pair.into_inner())?;
-                    ast.nodes.push(node);
+                    if let Some(node) = Self::build_node_element(pair.into_inner())? {
+                        ast.nodes.push(node);
+                    }
                 }
                 Rule::node_text => {
                     ast.nodes.push(Node::Text(pair.as_str().to_string()));
@@ -62,7 +63,8 @@ impl Ast {
             };
         }
 
-        // TODO: This needs to be cleaned up / what logic should apply when parsing fragment vs document?
+        // TODO: This needs to be cleaned up
+        // What logic should apply when parsing fragment vs document?
         match ast.nodes.len() {
             0 => {
                 ast.tree_type = AstType::Empty;
@@ -108,15 +110,14 @@ impl Ast {
         }
     }
 
-    // TODO: This function always return a node, even if the node is a dangling element
-    // instead we should probably return an option an only append to node_tree in case it's Some?
-    fn build_node_element(pairs: Pairs<Rule>) -> Result<Node> {
+    fn build_node_element(pairs: Pairs<Rule>) -> Result<Option<Node>> {
         let mut element = Element::default();
         for pair in pairs {
             match pair.as_rule() {
                 Rule::node_element | Rule::el_raw_text => {
-                    let child_element = Self::build_node_element(pair.into_inner())?;
-                    element.nodes.push(child_element)
+                    if let Some(child_element) = Self::build_node_element(pair.into_inner())? {
+                        element.nodes.push(child_element)
+                    }
                 }
                 Rule::node_text | Rule::el_raw_text_content => {
                     element.nodes.push(Node::Text(pair.as_str().to_string()));
@@ -137,7 +138,11 @@ impl Ast {
                 _ => unreachable!("unknown tpl rule: {:?}", pair.as_rule()),
             }
         }
-        Ok(Node::Element(element))
+        if element.name != "" {
+            Ok(Some(Node::Element(element)))
+        } else {
+            Ok(None)
+        }
     }
 
     fn build_attribute(pairs: Pairs<Rule>) -> Result<(String, Option<String>)> {
