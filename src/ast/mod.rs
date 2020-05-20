@@ -65,6 +65,8 @@ impl Ast {
 
         // TODO: This needs to be cleaned up
         // What logic should apply when parsing fragment vs document?
+        // I had some of this logic inside the grammar before, but i thought it would be a bit clearer
+        // to just have everyting here when we construct the ast
         match ast.nodes.len() {
             0 => {
                 ast.tree_type = AstType::Empty;
