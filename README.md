@@ -1,41 +1,46 @@
 # Html parser
 
-_WIP - work in progress_
+_WIP - work in progress, use at your own risk_
 
-This library aims to be a smal but functional html parser.
-
-Even tough the name is `html parser` the goal (for now) is not to be a 100% complient html parser or replace any of the top modern parsers that are currently used in the popular browsers. If you're looking for something that is battle tested and used in serious projects, then I recommend you to have a look at https://github.com/servo/html5ever or similar. The goal was rather to learn how to build a parser/construct an ast and to build a lib that can be used by other programs.
+A simple and extensible html parser.
 
 ## How to use
 
 ```rust
     use html_parser::HtmlParser;
 
-    let html = "
-        <html>
-            <head>
-                <title>Html parser</title>
-            </head>
-            <body>
-                <h1>Hello world</h1>
-            <body>
-        </html>";
+    fn main() {
+        let html = "
+            <!doctype html>
+            <html>
+                <head>
+                    <title>Html parser</title>
+                </head>
+                <body>
+                    <h1>Hello world</h1>
+                <body>
+            </html>";
 
-    let ast = HtmlParser::parse(html)?;
+        let json = HtmlParser::parse(html)?.to_json_pretty();
+        println!("{}", json);
+    }
 ```
+
+## Library goal
+
+The goal for this library is not to replace any of the top modern parsers that are currently used in popular browsers. If you're looking for something that is battle tested and used in serious projects, then I recommend you to have a look at https://github.com/servo/html5ever or similar. My initial goal with this project was to learn more about parsing and to build something useful. If you feel that the solution can be improved, please read more under contributions.
 
 ## How does it work?
 
 In short:
 
-- Parse text with grammar defined in `grammar.pest`.
-- Translate the outcome of that grammar and build an `AST` (Abstract Syntax Tree).
+- It Parses text with grammar defined in `grammar.pest`.
+- It then translate the outcome of that grammar and builds an `AST` (Abstract Syntax Tree).
+- The `AST` can be consumed as json
 
 The library is highly dependant on the fantastic general purpose parser Pest, and you can find out more about this library at their official website https://pest.rs/ or at the documentation https://docs.rs/crate/pest/. If you want to know in detail how this parser is constructed then you should navigate to the `grammar.pest` file inside of the `src` directory.
 
-I've tried to be explicit about each pair of rules but html is a very tricky protocol to parse, especially if you want to make it work with any website that you find on the web, since the protocl is very forgiving and many websites also includes related protocols such as xhtml (html with xml-complient syntax) and css, svg, script-tags that include javascript etc.
-
-Once the text has gone through the parser and constructed a tree with identified pairs it then goes through the process of constructing the `AST`. I've then constructed the tree in such a way that every identified part of the text gets classified into nodes, and there can be text-nodes and element-nodes. I decided to hide the comment-nodes from the `AST`, the motivation behind this is that I don't consider them as useful other than in the context of commentating on the html itself.
+I've tried to be explicit about each pair of rules but html is a very tricky protocol to parse, especially if you want to make it work with any website that you find on the web, since the protocol is very forgiving and many websites also include related protocols such as xhtml (html with xml-complient syntax) and css, svg, script-tags that include javascript etc.
 
 ## Contributions
 
