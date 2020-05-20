@@ -2,7 +2,7 @@
 source: tests/document_empty.rs
 expression: ast
 ---
-Ast {
-    tree_type: Empty,
-    nodes: [],
+{
+  "treeType": "empty",
+  "nodes": []
 }

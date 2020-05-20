@@ -29,26 +29,23 @@ fn it_can_parse_attribute_key_mixed_case_symbols() -> Result<()> {
     assert_json_snapshot!(ast);
     Ok(())
 }
-#[ignore]
 #[test]
 fn it_can_parse_multiple_attributes_single_quote() -> Result<()> {
-    let markup = "<div cat='mjau' dog='woff'></div>";
+    let markup = "<div cat='mjau' dog='woff' ape=oh></div>";
     let ast = HtmlParser::parse(markup)?;
     assert_json_snapshot!(ast);
     Ok(())
 }
-#[ignore]
 #[test]
 fn it_can_parse_multiple_attributes_double_quote() -> Result<()> {
-    let markup = "<div cat=\"mjau\" dog=\"woff\"></div>";
+    let markup = "<div cat=\"mjau\" dog=\"woff\" ape=\"oh\"></div>";
     let ast = HtmlParser::parse(markup)?;
     assert_json_snapshot!(ast);
     Ok(())
 }
-#[ignore]
 #[test]
 fn it_can_parse_multiple_attributes_no_quote() -> Result<()> {
-    let markup = "<div cat=mjau dog=woff></div>";
+    let markup = "<div cat=mjau dog=woff ape=oh></div>";
     let ast = HtmlParser::parse(markup)?;
     assert_json_snapshot!(ast);
     Ok(())

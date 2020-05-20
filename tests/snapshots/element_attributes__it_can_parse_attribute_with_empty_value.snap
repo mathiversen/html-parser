@@ -2,18 +2,18 @@
 source: tests/element_attributes.rs
 expression: ast
 ---
-Ast {
-    tree_type: DocumentFragment,
-    nodes: [
-        Element(
-            Element {
-                name: "img",
-                variant: Void,
-                attributes: {
-                    "hidden": None,
-                },
-                nodes: [],
-            },
-        ),
-    ],
+{
+  "treeType": "documentFragment",
+  "nodes": [
+    {
+      "element": {
+        "name": "img",
+        "variant": "void",
+        "attributes": {
+          "hidden": null
+        },
+        "nodes": []
+      }
+    }
+  ]
 }

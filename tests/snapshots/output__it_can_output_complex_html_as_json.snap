@@ -3,7 +3,7 @@ source: tests/output.rs
 expression: ast
 ---
 {
-  "tree_type": "document",
+  "treeType": "document",
   "nodes": [
     {
       "element": {

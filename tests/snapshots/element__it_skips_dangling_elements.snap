@@ -2,32 +2,28 @@
 source: tests/element.rs
 expression: ast
 ---
-Ast {
-    tree_type: DocumentFragment,
-    nodes: [
-        Element(
-            Element {
-                name: "div",
-                variant: Normal,
-                attributes: {
-                    "id": Some(
-                        "123",
-                    ),
-                },
-                nodes: [],
-            },
-        ),
-        Element(
-            Element {
-                name: "div",
-                variant: Normal,
-                attributes: {
-                    "id": Some(
-                        "321",
-                    ),
-                },
-                nodes: [],
-            },
-        ),
-    ],
+{
+  "treeType": "documentFragment",
+  "nodes": [
+    {
+      "element": {
+        "name": "div",
+        "variant": "normal",
+        "attributes": {
+          "id": "123"
+        },
+        "nodes": []
+      }
+    },
+    {
+      "element": {
+        "name": "div",
+        "variant": "normal",
+        "attributes": {
+          "id": "321"
+        },
+        "nodes": []
+      }
+    }
+  ]
 }

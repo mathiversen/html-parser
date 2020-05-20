@@ -22,6 +22,8 @@
 //!     }
 //!```
 
+#![allow(clippy::needless_doctest_main)]
+
 mod ast;
 mod error;
 mod parser;

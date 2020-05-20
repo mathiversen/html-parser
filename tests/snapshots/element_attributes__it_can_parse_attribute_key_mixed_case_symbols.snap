@@ -2,20 +2,18 @@
 source: tests/element_attributes.rs
 expression: ast
 ---
-Ast {
-    tree_type: DocumentFragment,
-    nodes: [
-        Element(
-            Element {
-                name: "div",
-                variant: Normal,
-                attributes: {
-                    "data-cat": Some(
-                        "morris",
-                    ),
-                },
-                nodes: [],
-            },
-        ),
-    ],
+{
+  "treeType": "documentFragment",
+  "nodes": [
+    {
+      "element": {
+        "name": "div",
+        "variant": "normal",
+        "attributes": {
+          "data-cat": "morris"
+        },
+        "nodes": []
+      }
+    }
+  ]
 }

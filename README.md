@@ -7,9 +7,9 @@ A simple and extensible html parser.
 ## How to use
 
 ```rust
-    use html_parser::HtmlParser;
+    use html_parser::{HtmlParser, Result};
 
-    fn main() {
+    fn main() -> Result<()> {
         let html = "
             <!doctype html>
             <html>
@@ -18,11 +18,12 @@ A simple and extensible html parser.
                 </head>
                 <body>
                     <h1>Hello world</h1>
-                <body>
+                </body>
             </html>";
 
-        let json = HtmlParser::parse(html)?.to_json_pretty();
+        let json = HtmlParser::parse(html)?.to_json_pretty()?;
         println!("{}", json);
+        Ok(())
     }
 ```
 
@@ -46,7 +47,7 @@ I've tried to be explicit about each pair of rules but html is a very tricky pro
 
 I would love to get some feedback if you find my little project useful. Please feel free to highlight issues with my code or even submit a PR in case you think you can improve it.
 
-## MIT License
+## License
 
 Copyright (c) 2020 Mathias Iversen
 

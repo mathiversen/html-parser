@@ -2,48 +2,34 @@
 source: tests/svg.rs
 expression: ast
 ---
-Ast {
-    tree_type: DocumentFragment,
-    nodes: [
-        Element(
-            Element {
-                name: "svg",
-                variant: Normal,
-                attributes: {
-                    "xmlns": Some(
-                        "http://www.w3.org/2000/svg",
-                    ),
-                    "xmlns:xlink": Some(
-                        "http://www.w3.org/1999/xlink",
-                    ),
-                },
-                nodes: [
-                    Element(
-                        Element {
-                            name: "rect",
-                            variant: Void,
-                            attributes: {
-                                "width": Some(
-                                    "100",
-                                ),
-                                "x": Some(
-                                    "10",
-                                ),
-                                "style": Some(
-                                    "stroke:#ff0000; fill: #0000ff",
-                                ),
-                                "y": Some(
-                                    "10",
-                                ),
-                                "height": Some(
-                                    "100",
-                                ),
-                            },
-                            nodes: [],
-                        },
-                    ),
-                ],
-            },
-        ),
-    ],
+{
+  "treeType": "documentFragment",
+  "nodes": [
+    {
+      "element": {
+        "name": "svg",
+        "variant": "normal",
+        "attributes": {
+          "xmlns": "http://www.w3.org/2000/svg",
+          "xmlns:xlink": "http://www.w3.org/1999/xlink"
+        },
+        "nodes": [
+          {
+            "element": {
+              "name": "rect",
+              "variant": "void",
+              "attributes": {
+                "height": "100",
+                "style": "stroke:#ff0000; fill: #0000ff",
+                "width": "100",
+                "x": "10",
+                "y": "10"
+              },
+              "nodes": []
+            }
+          }
+        ]
+      }
+    }
+  ]
 }

@@ -2,16 +2,16 @@
 source: tests/element.rs
 expression: ast
 ---
-Ast {
-    tree_type: Document,
-    nodes: [
-        Element(
-            Element {
-                name: "Html",
-                variant: Normal,
-                attributes: {},
-                nodes: [],
-            },
-        ),
-    ],
+{
+  "treeType": "document",
+  "nodes": [
+    {
+      "element": {
+        "name": "Html",
+        "variant": "normal",
+        "attributes": {},
+        "nodes": []
+      }
+    }
+  ]
 }
