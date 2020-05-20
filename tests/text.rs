@@ -1,12 +1,12 @@
 use html_parser::{HtmlParser, Result};
 use indoc::indoc;
-use insta::assert_debug_snapshot;
+use insta::assert_json_snapshot;
 
 #[test]
 fn it_can_parse_document_with_just_text() -> Result<()> {
     let markup = "hello world";
     let ast = HtmlParser::parse(markup)?;
-    assert_debug_snapshot!(ast);
+    assert_json_snapshot!(ast);
     Ok(())
 }
 
@@ -20,7 +20,7 @@ fn it_can_parse_document_with_text_and_line_breaks() -> Result<()> {
     "
     );
     let ast = HtmlParser::parse(markup)?;
-    assert_debug_snapshot!(ast);
+    assert_json_snapshot!(ast);
     Ok(())
 }
 
@@ -35,6 +35,6 @@ fn it_can_parse_document_with_multiple_text_elements() -> Result<()> {
     "
     );
     let ast = HtmlParser::parse(markup)?;
-    assert_debug_snapshot!(ast);
+    assert_json_snapshot!(ast);
     Ok(())
 }

@@ -1,25 +1,25 @@
 use html_parser::{HtmlParser, Result};
-use insta::assert_debug_snapshot;
+use insta::assert_json_snapshot;
 
 #[test]
 fn it_can_parse_single_div_as_fragment() -> Result<()> {
     let markup = "<div/>";
     let ast = HtmlParser::parse(markup)?;
-    assert_debug_snapshot!(ast);
+    assert_json_snapshot!(ast);
     Ok(())
 }
 #[test]
 fn it_can_parse_single_text_as_fragment() -> Result<()> {
     let markup = "hello";
     let ast = HtmlParser::parse(markup)?;
-    assert_debug_snapshot!(ast);
+    assert_json_snapshot!(ast);
     Ok(())
 }
 #[test]
 fn it_can_parse_text_comment_element_as_fragment() -> Result<()> {
     let markup = "hello<!--world?--><div/>";
     let ast = HtmlParser::parse(markup)?;
-    assert_debug_snapshot!(ast);
+    assert_json_snapshot!(ast);
     Ok(())
 }
 #[test]

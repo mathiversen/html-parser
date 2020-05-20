@@ -1,10 +1,10 @@
 use html_parser::{HtmlParser, Result};
-use insta::assert_debug_snapshot;
+use insta::assert_json_snapshot;
 
 #[test]
 fn it_can_parse_empty_document() -> Result<()> {
     let markup = "";
     let ast = HtmlParser::parse(markup)?;
-    assert_debug_snapshot!(ast);
+    assert_json_snapshot!(ast);
     Ok(())
 }
