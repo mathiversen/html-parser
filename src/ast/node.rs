@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use std::default::Default;
 
 #[derive(Debug, Serialize)]
-#[serde(rename_all = "lowercase")]
+#[serde(rename_all = "camelCase")]
 pub enum Node {
     Text(String),
     Element(Element),
@@ -11,14 +11,14 @@ pub enum Node {
 }
 
 #[derive(Debug, Serialize)]
-#[serde(rename_all = "lowercase")]
+#[serde(rename_all = "camelCase")]
 pub enum ElementVariant {
     Normal,
     Void,
 }
 
 #[derive(Debug, Serialize)]
-#[serde(rename_all = "lowercase")]
+#[serde(rename_all = "camelCase")]
 pub struct Element {
     pub name: String,
     pub variant: ElementVariant,

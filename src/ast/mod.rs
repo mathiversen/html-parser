@@ -13,7 +13,7 @@ use node::{Element, ElementVariant, Node};
 
 // TODO: Parse doctype attribute
 #[derive(Debug, PartialEq, Serialize)]
-#[serde(rename_all = "lowercase")]
+#[serde(rename_all = "camelCase")]
 pub enum AstType {
     Document,
     DocumentFragment,
@@ -21,7 +21,7 @@ pub enum AstType {
 }
 
 #[derive(Debug, Serialize)]
-#[serde(rename_all = "lowercase")]
+#[serde(rename_all = "camelCase")]
 pub struct Ast {
     pub tree_type: AstType,
     pub nodes: Vec<Node>,
