@@ -1,0 +1,74 @@
+---
+source: tests/output.rs
+expression: ast
+---
+{
+  "tree_type": "document",
+  "nodes": [
+    {
+      "element": {
+        "name": "html",
+        "variant": "normal",
+        "attributes": {
+          "lang": "sv"
+        },
+        "nodes": [
+          {
+            "element": {
+              "name": "head",
+              "variant": "normal",
+              "attributes": {},
+              "nodes": [
+                {
+                  "element": {
+                    "name": "title",
+                    "variant": "normal",
+                    "attributes": {},
+                    "nodes": [
+                      {
+                        "text": "Här kan man va"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "element": {
+              "name": "body",
+              "variant": "normal",
+              "attributes": {},
+              "nodes": [
+                {
+                  "element": {
+                    "name": "h1",
+                    "variant": "normal",
+                    "attributes": {},
+                    "nodes": [
+                      {
+                        "text": "Tjena världen!"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "element": {
+                    "name": "p",
+                    "variant": "normal",
+                    "attributes": {},
+                    "nodes": [
+                      {
+                        "text": "Tänkte bara informera om att Sverige är bättre än Finland i ishockey."
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -13,6 +13,7 @@ use node::{Element, ElementVariant, Node};
 
 // TODO: Parse doctype attribute
 #[derive(Debug, PartialEq, Serialize)]
+#[serde(rename_all = "lowercase")]
 pub enum AstType {
     Document,
     DocumentFragment,
@@ -20,6 +21,7 @@ pub enum AstType {
 }
 
 #[derive(Debug, Serialize)]
+#[serde(rename_all = "lowercase")]
 pub struct Ast {
     pub tree_type: AstType,
     pub nodes: Vec<Node>,
@@ -41,6 +43,14 @@ impl Ast {
             Err(error) => return formatting::error_msg(error),
         };
         Self::build_ast(pairs)
+    }
+
+    pub fn to_json(&self) -> Result<String> {
+        Ok(serde_json::to_string(self)?)
+    }
+
+    pub fn to_json_pretty(&self) -> Result<String> {
+        Ok(serde_json::to_string_pretty(self)?)
     }
 
     fn build_ast(pairs: Pairs<Rule>) -> Result<Self> {
