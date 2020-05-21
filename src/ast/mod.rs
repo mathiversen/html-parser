@@ -7,9 +7,12 @@ use crate::error::Error;
 use crate::parser::Parser;
 use crate::Rule;
 
-mod formatting;
+pub mod element;
+pub mod formatting;
 pub mod node;
-use node::{Element, ElementVariant, Node};
+
+use element::{Element, ElementVariant};
+use node::Node;
 
 #[derive(Debug, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
