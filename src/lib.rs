@@ -87,7 +87,8 @@ mod parser;
 
 use parser::Rule;
 
-pub use crate::ast::node::*;
+pub use crate::ast::element::{Element, ElementVariant};
+pub use crate::ast::node::Node;
 pub use crate::ast::Ast as HtmlParser;
 pub use crate::ast::AstVariant;
 pub use anyhow::Result;
