@@ -6,17 +6,12 @@ expression: ast
   "treeType": "documentFragment",
   "nodes": [
     {
-      "element": {
-        "id": null,
-        "name": "div",
-        "variant": "normal",
-        "attributes": {
-          "ape": "oh",
-          "cat": "mjau",
-          "dog": "woff"
-        },
-        "classes": [],
-        "nodes": []
+      "name": "div",
+      "variant": "normal",
+      "attributes": {
+        "ape": "oh",
+        "cat": "mjau",
+        "dog": "woff"
       }
     }
   ]

@@ -6,111 +6,77 @@ expression: ast
   "treeType": "documentFragment",
   "nodes": [
     {
-      "element": {
-        "id": null,
-        "name": "div",
-        "variant": "normal",
-        "attributes": {},
-        "classes": [
-          "1"
-        ],
-        "nodes": [
-          {
-            "element": {
-              "id": null,
+      "name": "div",
+      "variant": "normal",
+      "classes": [
+        "1"
+      ],
+      "nodes": [
+        {
+          "name": "div",
+          "variant": "normal",
+          "classes": [
+            "1"
+          ],
+          "nodes": [
+            {
               "name": "div",
               "variant": "normal",
-              "attributes": {},
               "classes": [
                 "1"
               ],
               "nodes": [
                 {
-                  "element": {
-                    "id": null,
-                    "name": "div",
-                    "variant": "normal",
-                    "attributes": {},
-                    "classes": [
-                      "1"
-                    ],
-                    "nodes": [
-                      {
-                        "element": {
-                          "id": null,
+                  "name": "div",
+                  "variant": "normal",
+                  "classes": [
+                    "1"
+                  ],
+                  "nodes": [
+                    {
+                      "name": "div",
+                      "variant": "normal",
+                      "classes": [
+                        "1"
+                      ],
+                      "nodes": [
+                        {
                           "name": "div",
                           "variant": "normal",
-                          "attributes": {},
                           "classes": [
                             "1"
                           ],
                           "nodes": [
                             {
-                              "element": {
-                                "id": null,
-                                "name": "div",
-                                "variant": "normal",
-                                "attributes": {},
-                                "classes": [
-                                  "1"
-                                ],
-                                "nodes": [
-                                  {
-                                    "element": {
-                                      "id": null,
-                                      "name": "div",
-                                      "variant": "normal",
-                                      "attributes": {},
-                                      "classes": [
-                                        "1"
-                                      ],
-                                      "nodes": [
-                                        {
-                                          "element": {
-                                            "id": null,
-                                            "name": "div",
-                                            "variant": "normal",
-                                            "attributes": {},
-                                            "classes": [
-                                              "1"
-                                            ],
-                                            "nodes": [
-                                              {
-                                                "element": {
-                                                  "id": null,
-                                                  "name": "div",
-                                                  "variant": "normal",
-                                                  "attributes": {},
-                                                  "classes": [
-                                                    "1"
-                                                  ],
-                                                  "nodes": [
-                                                    {
-                                                      "text": "hello world"
-                                                    }
-                                                  ]
-                                                }
-                                              }
-                                            ]
-                                          }
-                                        }
-                                      ]
-                                    }
-                                  }
-                                ]
-                              }
+                              "name": "div",
+                              "variant": "normal",
+                              "classes": [
+                                "1"
+                              ],
+                              "nodes": [
+                                {
+                                  "name": "div",
+                                  "variant": "normal",
+                                  "classes": [
+                                    "1"
+                                  ],
+                                  "nodes": [
+                                    "hello world"
+                                  ]
+                                }
+                              ]
                             }
                           ]
                         }
-                      }
-                    ]
-                  }
+                      ]
+                    }
+                  ]
                 }
               ]
             }
-          }
-        ]
-      }
+          ]
+        }
+      ]
     }
   ]
 }

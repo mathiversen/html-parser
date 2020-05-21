@@ -14,18 +14,26 @@ pub mod node;
 use element::{Element, ElementVariant};
 use node::Node;
 
+/// These are all of the types that the parsed html tree can have.
 #[derive(Debug, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub enum AstVariant {
+    /// This means that the parsed html had the representation that of an html document. The doctype is optional but a document should only have one root node with the name of html.
     Document,
+    /// A document fragment means that the parsed html did not have the representation of a document. A fragment can have multiple root nodes of any name except html, body or head.
     DocumentFragment,
+    /// An empty ast means that no normal or text elements where found inside of the parsed html string
     Empty,
 }
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Ast {
+    /// The type of the tree that was parsed
     pub tree_type: AstVariant,
+
+    /// All of the root nodes in the tree
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub nodes: Vec<Node>,
 }
 

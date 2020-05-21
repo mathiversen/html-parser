@@ -6,81 +6,46 @@ expression: ast
   "treeType": "document",
   "nodes": [
     {
-      "element": {
-        "id": null,
-        "name": "html",
-        "variant": "normal",
-        "attributes": {
-          "lang": "sv"
+      "name": "html",
+      "variant": "normal",
+      "attributes": {
+        "lang": "sv"
+      },
+      "nodes": [
+        {
+          "name": "head",
+          "variant": "normal",
+          "nodes": [
+            {
+              "name": "title",
+              "variant": "normal",
+              "nodes": [
+                "Här kan man va"
+              ]
+            }
+          ]
         },
-        "classes": [],
-        "nodes": [
-          {
-            "element": {
-              "id": null,
-              "name": "head",
+        {
+          "name": "body",
+          "variant": "normal",
+          "nodes": [
+            {
+              "name": "h1",
               "variant": "normal",
-              "attributes": {},
-              "classes": [],
               "nodes": [
-                {
-                  "element": {
-                    "id": null,
-                    "name": "title",
-                    "variant": "normal",
-                    "attributes": {},
-                    "classes": [],
-                    "nodes": [
-                      {
-                        "text": "Här kan man va"
-                      }
-                    ]
-                  }
-                }
+                "Tjena världen!"
+              ]
+            },
+            {
+              "name": "p",
+              "variant": "normal",
+              "nodes": [
+                "Tänkte bara informera om att Sverige är bättre än Finland i ishockey."
               ]
             }
-          },
-          {
-            "element": {
-              "id": null,
-              "name": "body",
-              "variant": "normal",
-              "attributes": {},
-              "classes": [],
-              "nodes": [
-                {
-                  "element": {
-                    "id": null,
-                    "name": "h1",
-                    "variant": "normal",
-                    "attributes": {},
-                    "classes": [],
-                    "nodes": [
-                      {
-                        "text": "Tjena världen!"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "element": {
-                    "id": null,
-                    "name": "p",
-                    "variant": "normal",
-                    "attributes": {},
-                    "classes": [],
-                    "nodes": [
-                      {
-                        "text": "Tänkte bara informera om att Sverige är bättre än Finland i ishockey."
-                      }
-                    ]
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      }
+          ]
+        }
+      ]
     }
   ]
 }

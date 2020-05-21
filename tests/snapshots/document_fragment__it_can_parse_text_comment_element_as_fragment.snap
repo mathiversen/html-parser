@@ -5,18 +5,10 @@ expression: ast
 {
   "treeType": "documentFragment",
   "nodes": [
+    "hello",
     {
-      "text": "hello"
-    },
-    {
-      "element": {
-        "id": null,
-        "name": "div",
-        "variant": "void",
-        "attributes": {},
-        "classes": [],
-        "nodes": []
-      }
+      "name": "div",
+      "variant": "void"
     }
   ]
 }

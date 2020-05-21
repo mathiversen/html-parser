@@ -6,14 +6,8 @@ expression: ast
   "treeType": "documentFragment",
   "nodes": [
     {
-      "element": {
-        "id": null,
-        "name": "Head_Er-1",
-        "variant": "normal",
-        "attributes": {},
-        "classes": [],
-        "nodes": []
-      }
+      "name": "Head_Er-1",
+      "variant": "normal"
     }
   ]
 }

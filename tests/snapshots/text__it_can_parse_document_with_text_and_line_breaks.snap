@@ -5,8 +5,6 @@ expression: ast
 {
   "treeType": "documentFragment",
   "nodes": [
-    {
-      "text": "hello world\nhere's another line for you!\nThe end"
-    }
+    "hello world\nhere's another line for you!\nThe end"
   ]
 }
