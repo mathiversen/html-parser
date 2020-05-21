@@ -10,7 +10,7 @@ A simple and general purpose html parser, using [Pest](https://pest.rs/).
 - It's not 100% complient with html
 - It's not a parser that includes node selection and dom manipulation
 
-If your requirements matches any of the above, then you're most likely looking for crates described below:
+If your requirements matches any of the above, then you're most likely looking for any of the following crates:
 
 - [html5ever](https://crates.io/crates/html5ever)
 - [kuchiki](https://crates.io/crates/kuchiki)
@@ -23,7 +23,7 @@ If your requirements matches any of the above, then you're most likely looking f
 - Parse html fragments
 - Parse custom, non-standard, elements
 - Doesn't include comments in the AST
-- Removed dangling elements
+- Removes dangling elements
 
 ## Examples
 
