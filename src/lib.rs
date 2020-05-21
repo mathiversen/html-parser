@@ -84,5 +84,5 @@ use parser::Rule;
 
 pub use crate::ast::node::*;
 pub use crate::ast::Ast as HtmlParser;
-pub use crate::ast::AstType;
+pub use crate::ast::AstVariant;
 pub use anyhow::Result;

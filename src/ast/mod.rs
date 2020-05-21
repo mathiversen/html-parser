@@ -11,10 +11,9 @@ mod formatting;
 pub mod node;
 use node::{Element, ElementVariant, Node};
 
-// TODO: Parse doctype attribute
 #[derive(Debug, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
-pub enum AstType {
+pub enum AstVariant {
     Document,
     DocumentFragment,
     Empty,
@@ -23,14 +22,14 @@ pub enum AstType {
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Ast {
-    pub tree_type: AstType,
+    pub tree_type: AstVariant,
     pub nodes: Vec<Node>,
 }
 
 impl Default for Ast {
     fn default() -> Self {
         Self {
-            tree_type: AstType::Empty,
+            tree_type: AstVariant::Empty,
             nodes: vec![],
         }
     }
@@ -58,7 +57,7 @@ impl Ast {
         for pair in pairs {
             match pair.as_rule() {
                 Rule::doctype => {
-                    ast.tree_type = AstType::DocumentFragment;
+                    ast.tree_type = AstVariant::DocumentFragment;
                 }
                 Rule::node_element => {
                     if let Some(node) = Self::build_node_element(pair.into_inner())? {
@@ -79,32 +78,32 @@ impl Ast {
         // to just have everyting here when we construct the ast
         match ast.nodes.len() {
             0 => {
-                ast.tree_type = AstType::Empty;
+                ast.tree_type = AstVariant::Empty;
                 Ok(ast)
             }
             1 => match ast.nodes[0] {
                 Node::Element(ref el) => {
                     let name = el.name.to_lowercase();
                     if name == "html" {
-                        ast.tree_type = AstType::Document;
+                        ast.tree_type = AstVariant::Document;
                         Ok(ast)
-                    } else if ast.tree_type == AstType::Document && name != "html" {
+                    } else if ast.tree_type == AstVariant::Document && name != "html" {
                         Err(
                             Error::Parsing("A document can only have html as root".to_string())
                                 .into(),
                         )
                     } else {
-                        ast.tree_type = AstType::DocumentFragment;
+                        ast.tree_type = AstVariant::DocumentFragment;
                         Ok(ast)
                     }
                 }
                 _ => {
-                    ast.tree_type = AstType::DocumentFragment;
+                    ast.tree_type = AstVariant::DocumentFragment;
                     Ok(ast)
                 }
             },
             _ => {
-                ast.tree_type = AstType::DocumentFragment;
+                ast.tree_type = AstVariant::DocumentFragment;
                 for node in &ast.nodes {
                     if let Node::Element(ref el) = node {
                         let name = el.name.clone().to_lowercase();
