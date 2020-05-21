@@ -2,7 +2,7 @@
 
 **WIP - work in progress, use at your own risk**
 
-A simple and general purpose html parser
+A simple and general purpose html parser, using [Pest](https://pest.rs/).
 
 ## What is it not
 
@@ -18,6 +18,14 @@ If your requirements matches any of the above, then you're most likely looking f
 - or other crates using the `html5ever` parser
 
 ## Features
+
+- Parse html document
+- Parse html fragments
+- Parse custom, non-standard, elements
+- Doesn't include comments in the AST
+- Removed dangling elements
+
+## Examples
 
 #### Parse html document
 

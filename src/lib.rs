@@ -6,7 +6,7 @@
 //!
 //! **WIP - work in progress, use at your own risk**
 //!
-//! A simple and general purpose html parser
+//! A simple and general purpose html parser, using [Pest](https://pest.rs/).
 //!
 //! ## What is it not
 //!
@@ -22,7 +22,13 @@
 //! - or other crates using the `html5ever` parser
 //!
 //! ## Features
+//! - Parse html document
+//! - Parse html fragments
+//! - Parse custom, non-standard, elements
+//! - Doesn't include comments in the AST
+//! - Removed dangling elements
 //!
+//! ## Examples
 //! #### Parse html document
 //!
 //! ```rust
@@ -71,7 +77,6 @@
 //! ```
 //!
 //! ## Contributions
-//!
 //! I would love to get some feedback if you find my little project useful. Please feel free to highlight issues with my code or submit a PR in case you want to improve it.
 
 #![allow(clippy::needless_doctest_main)]

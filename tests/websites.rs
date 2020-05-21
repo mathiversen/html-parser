@@ -102,6 +102,7 @@ async fn it_can_parse_apple() {
     assert!(HtmlParser::parse(&page).is_ok());
 }
 
+#[ignore]
 #[async_std::test]
 async fn it_can_parse_nytimes() {
     let response = async_std::task::spawn(async {
