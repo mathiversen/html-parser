@@ -7,67 +7,83 @@ expression: ast
   "nodes": [
     {
       "element": {
+        "id": null,
         "name": "div",
         "variant": "normal",
-        "attributes": {
-          "class": "1"
-        },
+        "attributes": {},
+        "classes": [
+          "1"
+        ],
         "nodes": [
           {
             "element": {
+              "id": null,
               "name": "div",
               "variant": "normal",
-              "attributes": {
-                "class": "1"
-              },
+              "attributes": {},
+              "classes": [
+                "1"
+              ],
               "nodes": [
                 {
                   "element": {
+                    "id": null,
                     "name": "div",
                     "variant": "normal",
-                    "attributes": {
-                      "class": "1"
-                    },
+                    "attributes": {},
+                    "classes": [
+                      "1"
+                    ],
                     "nodes": [
                       {
                         "element": {
+                          "id": null,
                           "name": "div",
                           "variant": "normal",
-                          "attributes": {
-                            "class": "1"
-                          },
+                          "attributes": {},
+                          "classes": [
+                            "1"
+                          ],
                           "nodes": [
                             {
                               "element": {
+                                "id": null,
                                 "name": "div",
                                 "variant": "normal",
-                                "attributes": {
-                                  "class": "1"
-                                },
+                                "attributes": {},
+                                "classes": [
+                                  "1"
+                                ],
                                 "nodes": [
                                   {
                                     "element": {
+                                      "id": null,
                                       "name": "div",
                                       "variant": "normal",
-                                      "attributes": {
-                                        "class": "1"
-                                      },
+                                      "attributes": {},
+                                      "classes": [
+                                        "1"
+                                      ],
                                       "nodes": [
                                         {
                                           "element": {
+                                            "id": null,
                                             "name": "div",
                                             "variant": "normal",
-                                            "attributes": {
-                                              "class": "1"
-                                            },
+                                            "attributes": {},
+                                            "classes": [
+                                              "1"
+                                            ],
                                             "nodes": [
                                               {
                                                 "element": {
+                                                  "id": null,
                                                   "name": "div",
                                                   "variant": "normal",
-                                                  "attributes": {
-                                                    "class": "1"
-                                                  },
+                                                  "attributes": {},
+                                                  "classes": [
+                                                    "1"
+                                                  ],
                                                   "nodes": [
                                                     {
                                                       "text": "hello world"

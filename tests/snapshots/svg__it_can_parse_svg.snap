@@ -7,15 +7,18 @@ expression: ast
   "nodes": [
     {
       "element": {
+        "id": null,
         "name": "svg",
         "variant": "normal",
         "attributes": {
           "xmlns": "http://www.w3.org/2000/svg",
           "xmlns:xlink": "http://www.w3.org/1999/xlink"
         },
+        "classes": [],
         "nodes": [
           {
             "element": {
+              "id": null,
               "name": "rect",
               "variant": "void",
               "attributes": {
@@ -25,6 +28,7 @@ expression: ast
                 "x": "10",
                 "y": "10"
               },
+              "classes": [],
               "nodes": []
             }
           }

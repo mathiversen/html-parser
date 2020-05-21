@@ -71,3 +71,18 @@ fn it_can_parse_attribute_with_empty_value() -> Result<()> {
     assert_json_snapshot!(ast);
     Ok(())
 }
+
+#[test]
+fn it_can_parse_id() -> Result<()> {
+    let markup = "<img id=a/>";
+    let ast = HtmlParser::parse(markup)?;
+    assert_json_snapshot!(ast);
+    Ok(())
+}
+#[test]
+fn it_can_parse_classes() -> Result<()> {
+    let markup = "<img class='a b c'/>";
+    let ast = HtmlParser::parse(markup)?;
+    assert_json_snapshot!(ast);
+    Ok(())
+}

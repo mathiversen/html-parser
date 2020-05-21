@@ -7,11 +7,13 @@ expression: ast
   "nodes": [
     {
       "element": {
+        "id": null,
         "name": "img",
         "variant": "void",
         "attributes": {
           "hidden": null
         },
+        "classes": [],
         "nodes": []
       }
     }

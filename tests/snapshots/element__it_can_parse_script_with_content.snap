@@ -7,9 +7,11 @@ expression: ast
   "nodes": [
     {
       "element": {
+        "id": null,
         "name": "script",
         "variant": "void",
         "attributes": {},
+        "classes": [],
         "nodes": [
           {
             "text": "const person_creator = ({ name, symtoms }) => {\n        let person = {}\n        person.name = name\n        person.symtoms = {}\n        for (symtom of symtoms) {\n            person.symtoms[symtom] = true\n        }\n        return person\n    }\n    \n    const main = () => {\n        let name = 'mathias'\n        let symtoms = ['Dunning-Kruger', 'ACDC', 'Slacker']\n    \n        setTimeout(() => {\n            let person = person_creator({ name, symtoms })\n            if (person.symtoms.hasOwnProperty('Dunning-Kruger')) {\n                console.log('yeah buddy, that\\'s right')\n            }\n        }, 1337)\n    }\n    \n    main()"

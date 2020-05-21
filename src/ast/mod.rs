@@ -141,7 +141,21 @@ impl Ast {
                 }
                 Rule::attr => {
                     let new_attribute = Self::build_attribute(pair.into_inner())?;
-                    element.attributes.insert(new_attribute.0, new_attribute.1);
+                    match new_attribute.0.as_str() {
+                        "id" => element.id = new_attribute.1,
+                        "class" => {
+                            if let Some(classes) = new_attribute.1 {
+                                let classes =
+                                    classes.split_whitespace().into_iter().collect::<Vec<_>>();
+                                for class in classes {
+                                    element.classes.push(class.to_string());
+                                }
+                            }
+                        }
+                        _ => {
+                            element.attributes.insert(new_attribute.0, new_attribute.1);
+                        }
+                    };
                 }
                 Rule::el_normal_end => {
                     element.variant = ElementVariant::Normal;

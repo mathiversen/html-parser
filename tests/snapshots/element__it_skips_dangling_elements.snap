@@ -7,21 +7,21 @@ expression: ast
   "nodes": [
     {
       "element": {
+        "id": "123",
         "name": "div",
         "variant": "normal",
-        "attributes": {
-          "id": "123"
-        },
+        "attributes": {},
+        "classes": [],
         "nodes": []
       }
     },
     {
       "element": {
+        "id": "321",
         "name": "div",
         "variant": "normal",
-        "attributes": {
-          "id": "321"
-        },
+        "attributes": {},
+        "classes": [],
         "nodes": []
       }
     }

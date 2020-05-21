@@ -16,18 +16,22 @@ pub enum ElementVariant {
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Element {
+    pub id: Option<String>,
     pub name: String,
     pub variant: ElementVariant,
     #[serde(serialize_with = "ordered_map")]
     pub attributes: AttributesMap,
+    pub classes: Vec<String>,
     pub nodes: Vec<Node>,
 }
 
 impl Default for Element {
     fn default() -> Self {
         Self {
+            id: None,
             name: "".to_string(),
             variant: ElementVariant::Void,
+            classes: vec![],
             attributes: HashMap::new(),
             nodes: vec![],
         }

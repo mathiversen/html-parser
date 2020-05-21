@@ -7,9 +7,11 @@ expression: ast
   "nodes": [
     {
       "element": {
+        "id": null,
         "name": "Header1",
         "variant": "normal",
         "attributes": {},
+        "classes": [],
         "nodes": []
       }
     }

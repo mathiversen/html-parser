@@ -1,5 +1,5 @@
 ---
-source: tests/document_fragment.rs
+source: tests/element_attributes.rs
 expression: ast
 ---
 {
@@ -8,10 +8,14 @@ expression: ast
     {
       "element": {
         "id": null,
-        "name": "div",
+        "name": "img",
         "variant": "void",
         "attributes": {},
-        "classes": [],
+        "classes": [
+          "a",
+          "b",
+          "c"
+        ],
         "nodes": []
       }
     }

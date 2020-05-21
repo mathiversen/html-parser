@@ -10,9 +10,11 @@ expression: ast
     },
     {
       "element": {
+        "id": null,
         "name": "div",
         "variant": "void",
         "attributes": {},
+        "classes": [],
         "nodes": []
       }
     },
