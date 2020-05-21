@@ -6,42 +6,22 @@ expression: ast
   "treeType": "documentFragment",
   "nodes": [
     {
-      "element": {
-        "id": null,
-        "name": "div",
-        "variant": "normal",
-        "attributes": {},
-        "classes": [],
-        "nodes": [
-          {
-            "element": {
-              "id": null,
-              "name": "div",
-              "variant": "void",
-              "attributes": {},
-              "classes": [],
-              "nodes": []
-            }
-          },
-          {
-            "text": "Hello"
-          },
-          {
-            "element": {
-              "id": null,
-              "name": "div",
-              "variant": "normal",
-              "attributes": {},
-              "classes": [],
-              "nodes": [
-                {
-                  "text": "World"
-                }
-              ]
-            }
-          }
-        ]
-      }
+      "name": "div",
+      "variant": "normal",
+      "nodes": [
+        {
+          "name": "div",
+          "variant": "void"
+        },
+        "Hello",
+        {
+          "name": "div",
+          "variant": "normal",
+          "nodes": [
+            "World"
+          ]
+        }
+      ]
     }
   ]
 }

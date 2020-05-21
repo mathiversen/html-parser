@@ -6,14 +6,8 @@ expression: ast
   "treeType": "document",
   "nodes": [
     {
-      "element": {
-        "id": null,
-        "name": "HTML",
-        "variant": "normal",
-        "attributes": {},
-        "classes": [],
-        "nodes": []
-      }
+      "name": "HTML",
+      "variant": "normal"
     }
   ]
 }

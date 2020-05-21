@@ -6,18 +6,11 @@ expression: ast
   "treeType": "documentFragment",
   "nodes": [
     {
-      "element": {
-        "id": null,
-        "name": "style",
-        "variant": "void",
-        "attributes": {},
-        "classes": [],
-        "nodes": [
-          {
-            "text": ":root {\n        --background-color: black;\n        --text-color: white;\n    }\n    body {\n        background: var(--background-color);\n        color: var(--text-color);\n    }"
-          }
-        ]
-      }
+      "name": "style",
+      "variant": "void",
+      "nodes": [
+        ":root {\n        --background-color: black;\n        --text-color: white;\n    }\n    body {\n        background: var(--background-color);\n        color: var(--text-color);\n    }"
+      ]
     }
   ]
 }

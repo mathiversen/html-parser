@@ -3,6 +3,5 @@ source: tests/document_empty.rs
 expression: ast
 ---
 {
-  "treeType": "empty",
-  "nodes": []
+  "treeType": "empty"
 }

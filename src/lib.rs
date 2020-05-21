@@ -12,7 +12,7 @@
 //!
 //! - It's not a high-performance browser-grade parser
 //! - It's not 100% complient with html
-//! - It's not a parser that includes node selection and dom manipulation
+//! - It's not a parser that includes node selection or dom manipulation
 //!
 //! If your requirements matches any of the above, then you're most likely looking for crates described below:
 //!

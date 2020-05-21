@@ -5,21 +5,11 @@ expression: ast
 {
   "treeType": "documentFragment",
   "nodes": [
+    "hello world\nhere's another line for you!",
     {
-      "text": "hello world\nhere's another line for you!"
+      "name": "div",
+      "variant": "void"
     },
-    {
-      "element": {
-        "id": null,
-        "name": "div",
-        "variant": "void",
-        "attributes": {},
-        "classes": [],
-        "nodes": []
-      }
-    },
-    {
-      "text": "The end"
-    }
+    "The end"
   ]
 }
