@@ -4,69 +4,69 @@ use insta::assert_json_snapshot;
 
 #[test]
 fn it_can_parse_one_element() -> Result<()> {
-    let markup = "<html></html>";
-    let dom = Dom::parse(markup)?;
+    let html = "<html></html>";
+    let dom = Dom::parse(html)?;
     assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
 fn it_can_parse_one_element_upper_case() -> Result<()> {
-    let markup = "<HTML></HTML>";
-    let dom = Dom::parse(markup)?;
+    let html = "<HTML></HTML>";
+    let dom = Dom::parse(html)?;
     assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
 fn it_can_parse_one_element_mixed_case() -> Result<()> {
-    let markup = "<Html></Html>";
-    let dom = Dom::parse(markup)?;
+    let html = "<Html></Html>";
+    let dom = Dom::parse(html)?;
     assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
 fn it_can_parse_one_element_mixed_case_numbers() -> Result<()> {
-    let markup = "<Header1></Header1>";
-    let dom = Dom::parse(markup)?;
+    let html = "<Header1></Header1>";
+    let dom = Dom::parse(html)?;
     assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
 fn it_can_parse_one_element_mixed_case_numbers_symbols() -> Result<()> {
-    let markup = "<Head_Er-1></Head_Er-1>";
-    let dom = Dom::parse(markup)?;
+    let html = "<Head_Er-1></Head_Er-1>";
+    let dom = Dom::parse(html)?;
     assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
 fn it_can_parse_multiple_elements() -> Result<()> {
-    let markup = "<div/><div/>";
-    let dom = Dom::parse(markup)?;
+    let html = "<div/><div/>";
+    let dom = Dom::parse(html)?;
     assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
 fn it_can_parse_multiple_open_elements() -> Result<()> {
-    let markup = "<div></div><div></div>";
-    let dom = Dom::parse(markup)?;
+    let html = "<div></div><div></div>";
+    let dom = Dom::parse(html)?;
     assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
 fn it_can_parse_nested_elements() -> Result<()> {
-    let markup = indoc!(
+    let html = indoc!(
         r"
         <div>
             <div />
         </div>
     "
     );
-    let dom = Dom::parse(markup)?;
+    let dom = Dom::parse(html)?;
     assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
 fn it_can_parse_nested_elements_mixed_children() -> Result<()> {
-    let markup = indoc!(
+    let html = indoc!(
         r"
         <div>
             <!--comment-->
@@ -78,13 +78,13 @@ fn it_can_parse_nested_elements_mixed_children() -> Result<()> {
         </div>
     "
     );
-    let dom = Dom::parse(markup)?;
+    let dom = Dom::parse(html)?;
     assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
 fn it_can_parse_deeply_nested() -> Result<()> {
-    let markup = indoc!(
+    let html = indoc!(
         r#"
             <div class='1'>
                 <div class='1'>
@@ -106,13 +106,13 @@ fn it_can_parse_deeply_nested() -> Result<()> {
             </div>
         "#
     );
-    let dom = Dom::parse(markup)?;
+    let dom = Dom::parse(html)?;
     assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
 fn it_can_parse_script_with_content() -> Result<()> {
-    let markup = indoc!(
+    let html = indoc!(
         r#"
             <script>
                 const person_creator = ({ name, symtoms }) => {
@@ -141,13 +141,13 @@ fn it_can_parse_script_with_content() -> Result<()> {
             </script>
         "#
     );
-    let dom = Dom::parse(markup)?;
+    let dom = Dom::parse(html)?;
     assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
 fn it_can_parse_style_with_content() -> Result<()> {
-    let markup = indoc!(
+    let html = indoc!(
         r#"
             <style>
                 :root {
@@ -161,20 +161,20 @@ fn it_can_parse_style_with_content() -> Result<()> {
             </style>
         "#
     );
-    let dom = Dom::parse(markup)?;
+    let dom = Dom::parse(html)?;
     assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
 fn it_skips_dangling_elements() -> Result<()> {
-    let markup = indoc!(
+    let html = indoc!(
         "
         <div id='123'></div>
         </div>
         <div id='321'></div>
     "
     );
-    let dom = Dom::parse(markup)?;
+    let dom = Dom::parse(html)?;
     assert_json_snapshot!(dom);
     Ok(())
 }

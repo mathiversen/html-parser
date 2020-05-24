@@ -3,15 +3,15 @@ use insta::assert_json_snapshot;
 
 #[test]
 fn it_can_parse_document_with_just_one_comment() -> Result<()> {
-    let markup = "<!-- hello !\"#/()= -->";
-    let ast = Dom::parse(markup)?;
+    let html = "<!-- hello !\"#/()= -->";
+    let ast = Dom::parse(html)?;
     assert_json_snapshot!(ast);
     Ok(())
 }
 #[test]
 fn it_can_parse_document_with_just_comments() -> Result<()> {
-    let markup = "<!--x--><!--y--><!--z-->";
-    let ast = Dom::parse(markup)?;
+    let html = "<!--x--><!--y--><!--z-->";
+    let ast = Dom::parse(html)?;
     assert_json_snapshot!(ast);
     Ok(())
 }

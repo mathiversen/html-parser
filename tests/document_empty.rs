@@ -3,8 +3,8 @@ use insta::assert_json_snapshot;
 
 #[test]
 fn it_can_parse_empty_document() -> Result<()> {
-    let markup = "";
-    let dom = Dom::parse(markup)?;
+    let html = "";
+    let dom = Dom::parse(html)?;
     assert_json_snapshot!(dom);
     Ok(())
 }

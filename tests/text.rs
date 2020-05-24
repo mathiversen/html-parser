@@ -4,29 +4,29 @@ use insta::assert_json_snapshot;
 
 #[test]
 fn it_can_parse_document_with_just_text() -> Result<()> {
-    let markup = "hello world";
-    let dom = Dom::parse(markup)?;
+    let html = "hello world";
+    let dom = Dom::parse(html)?;
     assert_json_snapshot!(dom);
     Ok(())
 }
 
 #[test]
 fn it_can_parse_document_with_text_and_line_breaks() -> Result<()> {
-    let markup = indoc!(
+    let html = indoc!(
         r"
         hello world
         here's another line for you!
         The end
     "
     );
-    let dom = Dom::parse(markup)?;
+    let dom = Dom::parse(html)?;
     assert_json_snapshot!(dom);
     Ok(())
 }
 
 #[test]
 fn it_can_parse_document_with_multiple_text_elements() -> Result<()> {
-    let markup = indoc!(
+    let html = indoc!(
         r"
         hello world
         here's another line for you!
@@ -34,7 +34,7 @@ fn it_can_parse_document_with_multiple_text_elements() -> Result<()> {
         The end
     "
     );
-    let dom = Dom::parse(markup)?;
+    let dom = Dom::parse(html)?;
     assert_json_snapshot!(dom);
     Ok(())
 }

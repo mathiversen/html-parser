@@ -16,7 +16,7 @@ fn it_can_output_json_pretty() -> Result<()> {
 
 #[test]
 fn it_can_output_complex_html_as_json() -> Result<()> {
-    let markup = indoc!(
+    let html = indoc!(
         "<html lang=\"sv\">
         <head>
             <title>Här kan man va</title>
@@ -27,7 +27,7 @@ fn it_can_output_complex_html_as_json() -> Result<()> {
             </body>
         </html>"
     );
-    let dom = Dom::parse(markup)?;
+    let dom = Dom::parse(html)?;
     assert_json_snapshot!(dom);
     Ok(())
 }

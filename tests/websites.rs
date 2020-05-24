@@ -5,7 +5,7 @@ use surf;
 
 #[test]
 fn it_can_parse_simple() {
-    let markup = indoc!(
+    let html = indoc!(
         r#"
             <!DOCTYPE html>
             <html lang="en">
@@ -34,7 +34,7 @@ fn it_can_parse_simple() {
             </html>        
         "#
     );
-    assert!(Dom::parse(markup).is_ok());
+    assert!(Dom::parse(html).is_ok());
 }
 
 #[async_std::test]
