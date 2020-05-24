@@ -1,6 +1,6 @@
 ---
 source: tests/svg.rs
-expression: ast
+expression: dom
 ---
 {
   "treeType": "documentFragment",

@@ -5,8 +5,8 @@ use insta::assert_json_snapshot;
 #[test]
 fn it_can_parse_minimal_document() -> Result<()> {
     let markup = "<!DOCTYPE html><html></html>";
-    let ast = HtmlParser::parse(markup)?;
-    assert_json_snapshot!(ast);
+    let dom = HtmlParser::parse(markup)?;
+    assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
@@ -25,8 +25,8 @@ fn it_can_parse_document_with_comments() -> Result<()> {
         <!-- comment -->
     "#
     );
-    let ast = HtmlParser::parse(markup)?;
-    assert_json_snapshot!(ast);
+    let dom = HtmlParser::parse(markup)?;
+    assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]

@@ -1,6 +1,6 @@
 ---
 source: tests/comments.rs
-expression: ast
+expression: dom
 ---
 {
   "treeType": "empty"

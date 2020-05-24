@@ -27,7 +27,7 @@ fn it_can_output_complex_html_as_json() -> Result<()> {
             </body>
         </html>"
     );
-    let ast = HtmlParser::parse(markup)?;
-    assert_json_snapshot!(ast);
+    let dom = HtmlParser::parse(markup)?;
+    assert_json_snapshot!(dom);
     Ok(())
 }

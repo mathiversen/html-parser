@@ -22,7 +22,7 @@ If your requirements matches any of the above, then you're most likely looking f
 - Parse html document
 - Parse html fragments
 - Parse custom, non-standard, elements
-- Doesn't include comments in the AST
+- Doesn't include comments in the Dom (Document Object Model)
 - Removes dangling elements
 
 ## Examples

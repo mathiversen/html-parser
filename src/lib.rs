@@ -25,7 +25,7 @@
 //! - Parse html document
 //! - Parse html fragments
 //! - Parse custom, non-standard, elements
-//! - Doesn't include comments in the AST
+//! - Doesn't include comments in the Dom (Document Object Model)
 //! - Removed dangling elements
 //!
 //! ## Examples
@@ -81,14 +81,14 @@
 
 #![allow(clippy::needless_doctest_main)]
 
-mod ast;
+mod dom;
 mod error;
 mod parser;
 
 use parser::Rule;
 
-pub use crate::ast::element::{Element, ElementVariant};
-pub use crate::ast::node::Node;
-pub use crate::ast::Ast as HtmlParser;
-pub use crate::ast::AstVariant;
+pub use crate::dom::element::{Element, ElementVariant};
+pub use crate::dom::node::Node;
+pub use crate::dom::Dom as HtmlParser;
+pub use crate::dom::DomVariant;
 pub use anyhow::Result;

@@ -11,8 +11,8 @@ fn it_can_parse_svg() -> Result<()> {
         </svg>
     "#
     );
-    let ast = HtmlParser::parse(markup)?;
-    assert_json_snapshot!(ast);
+    let dom = HtmlParser::parse(markup)?;
+    assert_json_snapshot!(dom);
     Ok(())
 }
 

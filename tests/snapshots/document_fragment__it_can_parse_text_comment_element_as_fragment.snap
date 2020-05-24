@@ -1,6 +1,6 @@
 ---
 source: tests/document_fragment.rs
-expression: ast
+expression: dom
 ---
 {
   "treeType": "documentFragment",

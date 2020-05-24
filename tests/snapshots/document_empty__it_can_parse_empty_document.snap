@@ -1,6 +1,6 @@
 ---
 source: tests/document_empty.rs
-expression: ast
+expression: dom
 ---
 {
   "treeType": "empty"

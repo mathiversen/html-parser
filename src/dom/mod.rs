@@ -17,42 +17,42 @@ use node::Node;
 /// These are all of the types that the parsed html tree can have.
 #[derive(Debug, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
-pub enum AstVariant {
+pub enum DomVariant {
     /// This means that the parsed html had the representation that of an html document. The doctype is optional but a document should only have one root node with the name of html.
     Document,
     /// A document fragment means that the parsed html did not have the representation of a document. A fragment can have multiple root nodes of any name except html, body or head.
     DocumentFragment,
-    /// An empty ast means that no normal or text elements where found inside of the parsed html string
+    /// An empty dom means that no normal or text elements where found inside of the parsed html string
     Empty,
 }
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct Ast {
+pub struct Dom {
     /// The type of the tree that was parsed
-    pub tree_type: AstVariant,
+    pub tree_type: DomVariant,
 
     /// All of the root nodes in the tree
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub nodes: Vec<Node>,
 }
 
-impl Default for Ast {
+impl Default for Dom {
     fn default() -> Self {
         Self {
-            tree_type: AstVariant::Empty,
+            tree_type: DomVariant::Empty,
             nodes: vec![],
         }
     }
 }
 
-impl Ast {
+impl Dom {
     pub fn parse(input: &str) -> Result<Self> {
         let pairs = match Parser::parse(Rule::html, input) {
             Ok(pairs) => pairs,
             Err(error) => return formatting::error_msg(error),
         };
-        Self::build_ast(pairs)
+        Self::build_dom(pairs)
     }
 
     pub fn to_json(&self) -> Result<String> {
@@ -63,59 +63,59 @@ impl Ast {
         Ok(serde_json::to_string_pretty(self)?)
     }
 
-    fn build_ast(pairs: Pairs<Rule>) -> Result<Self> {
-        let mut ast = Self::default();
+    fn build_dom(pairs: Pairs<Rule>) -> Result<Self> {
+        let mut dom = Self::default();
         for pair in pairs {
             match pair.as_rule() {
                 Rule::doctype => {
-                    ast.tree_type = AstVariant::DocumentFragment;
+                    dom.tree_type = DomVariant::DocumentFragment;
                 }
                 Rule::node_element => {
                     if let Some(node) = Self::build_node_element(pair.into_inner())? {
-                        ast.nodes.push(node);
+                        dom.nodes.push(node);
                     }
                 }
                 Rule::node_text => {
-                    ast.nodes.push(Node::Text(pair.as_str().to_string()));
+                    dom.nodes.push(Node::Text(pair.as_str().to_string()));
                 }
                 Rule::EOI => break,
-                _ => unreachable!("[build ast] unknown rule: {:?}", pair.as_rule()),
+                _ => unreachable!("[build dom] unknown rule: {:?}", pair.as_rule()),
             };
         }
 
         // TODO: This needs to be cleaned up
         // What logic should apply when parsing fragment vs document?
         // I had some of this logic inside the grammar before, but i thought it would be a bit clearer
-        // to just have everyting here when we construct the ast
-        match ast.nodes.len() {
+        // to just have everyting here when we construct the dom
+        match dom.nodes.len() {
             0 => {
-                ast.tree_type = AstVariant::Empty;
-                Ok(ast)
+                dom.tree_type = DomVariant::Empty;
+                Ok(dom)
             }
-            1 => match ast.nodes[0] {
+            1 => match dom.nodes[0] {
                 Node::Element(ref el) => {
                     let name = el.name.to_lowercase();
                     if name == "html" {
-                        ast.tree_type = AstVariant::Document;
-                        Ok(ast)
-                    } else if ast.tree_type == AstVariant::Document && name != "html" {
+                        dom.tree_type = DomVariant::Document;
+                        Ok(dom)
+                    } else if dom.tree_type == DomVariant::Document && name != "html" {
                         Err(
                             Error::Parsing("A document can only have html as root".to_string())
                                 .into(),
                         )
                     } else {
-                        ast.tree_type = AstVariant::DocumentFragment;
-                        Ok(ast)
+                        dom.tree_type = DomVariant::DocumentFragment;
+                        Ok(dom)
                     }
                 }
                 _ => {
-                    ast.tree_type = AstVariant::DocumentFragment;
-                    Ok(ast)
+                    dom.tree_type = DomVariant::DocumentFragment;
+                    Ok(dom)
                 }
             },
             _ => {
-                ast.tree_type = AstVariant::DocumentFragment;
-                for node in &ast.nodes {
+                dom.tree_type = DomVariant::DocumentFragment;
+                for node in &dom.nodes {
                     if let Node::Element(ref el) = node {
                         let name = el.name.clone().to_lowercase();
                         if name == "html" || name == "body" || name == "head" {
@@ -127,7 +127,7 @@ impl Ast {
                         }
                     }
                 }
-                Ok(ast)
+                Ok(dom)
             }
         }
     }

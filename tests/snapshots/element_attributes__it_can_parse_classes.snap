@@ -1,6 +1,6 @@
 ---
 source: tests/element_attributes.rs
-expression: ast
+expression: dom
 ---
 {
   "treeType": "documentFragment",

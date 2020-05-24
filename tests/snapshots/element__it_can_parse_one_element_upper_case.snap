@@ -1,6 +1,6 @@
 ---
 source: tests/element.rs
-expression: ast
+expression: dom
 ---
 {
   "treeType": "document",

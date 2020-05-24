@@ -6,7 +6,7 @@ edition = "2018"
 repository = "https://github.com/mathiversen/html-parser"
 license = "MIT"
 description = "A simple and general purpose html parser, using Pest."
-keywords = ["html", "parser", "json", "pest", "ast"]
+keywords = ["html", "parser", "json", "pest", "dom"]
 categories = ["parsing", "web-programming"]
 readme = "README.md"
 

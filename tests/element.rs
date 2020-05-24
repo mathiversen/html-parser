@@ -5,50 +5,50 @@ use insta::assert_json_snapshot;
 #[test]
 fn it_can_parse_one_element() -> Result<()> {
     let markup = "<html></html>";
-    let ast = HtmlParser::parse(markup)?;
-    assert_json_snapshot!(ast);
+    let dom = HtmlParser::parse(markup)?;
+    assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
 fn it_can_parse_one_element_upper_case() -> Result<()> {
     let markup = "<HTML></HTML>";
-    let ast = HtmlParser::parse(markup)?;
-    assert_json_snapshot!(ast);
+    let dom = HtmlParser::parse(markup)?;
+    assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
 fn it_can_parse_one_element_mixed_case() -> Result<()> {
     let markup = "<Html></Html>";
-    let ast = HtmlParser::parse(markup)?;
-    assert_json_snapshot!(ast);
+    let dom = HtmlParser::parse(markup)?;
+    assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
 fn it_can_parse_one_element_mixed_case_numbers() -> Result<()> {
     let markup = "<Header1></Header1>";
-    let ast = HtmlParser::parse(markup)?;
-    assert_json_snapshot!(ast);
+    let dom = HtmlParser::parse(markup)?;
+    assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
 fn it_can_parse_one_element_mixed_case_numbers_symbols() -> Result<()> {
     let markup = "<Head_Er-1></Head_Er-1>";
-    let ast = HtmlParser::parse(markup)?;
-    assert_json_snapshot!(ast);
+    let dom = HtmlParser::parse(markup)?;
+    assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
 fn it_can_parse_multiple_elements() -> Result<()> {
     let markup = "<div/><div/>";
-    let ast = HtmlParser::parse(markup)?;
-    assert_json_snapshot!(ast);
+    let dom = HtmlParser::parse(markup)?;
+    assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
 fn it_can_parse_multiple_open_elements() -> Result<()> {
     let markup = "<div></div><div></div>";
-    let ast = HtmlParser::parse(markup)?;
-    assert_json_snapshot!(ast);
+    let dom = HtmlParser::parse(markup)?;
+    assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
@@ -60,8 +60,8 @@ fn it_can_parse_nested_elements() -> Result<()> {
         </div>
     "
     );
-    let ast = HtmlParser::parse(markup)?;
-    assert_json_snapshot!(ast);
+    let dom = HtmlParser::parse(markup)?;
+    assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
@@ -78,8 +78,8 @@ fn it_can_parse_nested_elements_mixed_children() -> Result<()> {
         </div>
     "
     );
-    let ast = HtmlParser::parse(markup)?;
-    assert_json_snapshot!(ast);
+    let dom = HtmlParser::parse(markup)?;
+    assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
@@ -106,8 +106,8 @@ fn it_can_parse_deeply_nested() -> Result<()> {
             </div>
         "#
     );
-    let ast = HtmlParser::parse(markup)?;
-    assert_json_snapshot!(ast);
+    let dom = HtmlParser::parse(markup)?;
+    assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
@@ -141,8 +141,8 @@ fn it_can_parse_script_with_content() -> Result<()> {
             </script>
         "#
     );
-    let ast = HtmlParser::parse(markup)?;
-    assert_json_snapshot!(ast);
+    let dom = HtmlParser::parse(markup)?;
+    assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
@@ -161,8 +161,8 @@ fn it_can_parse_style_with_content() -> Result<()> {
             </style>
         "#
     );
-    let ast = HtmlParser::parse(markup)?;
-    assert_json_snapshot!(ast);
+    let dom = HtmlParser::parse(markup)?;
+    assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
@@ -174,8 +174,8 @@ fn it_skips_dangling_elements() -> Result<()> {
         <div id='321'></div>
     "
     );
-    let ast = HtmlParser::parse(markup)?;
-    assert_json_snapshot!(ast);
+    let dom = HtmlParser::parse(markup)?;
+    assert_json_snapshot!(dom);
     Ok(())
 }
 #[test]
