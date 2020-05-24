@@ -6,30 +6,33 @@
 //!
 //! **WIP - work in progress, use at your own risk**
 //!
-//! A simple and general purpose html parser, using [Pest](https://pest.rs/).
+//! A simple and general purpose html/xhtml parser, using [Pest](https://pest.rs/).
+//!
+//! ## Features
+//! - Parse html & xhtml (not xml processing instructions)
+//! - Parse html-documents
+//! - Parse html-fragments
+//! - Parse empty documents
+//! - Parse with the same api for both documents and fragments
+//! - Parse custom, non-standard, elements; `<cat/>`, `<Cat/>` and `<C4-t/>` are all ok!
+//! - Removes comments
+//! - Removes dangling elements
 //!
 //! ## What is it not
 //!
 //! - It's not a high-performance browser-grade parser
-//! - It's not 100% complient with html
-//! - It's not a parser that includes node selection or dom manipulation
+//! - It's not suitable for html validation
+//! - It's not a parser that includes element selection or dom manipulation
 //!
-//! If your requirements matches any of the above, then you're most likely looking for crates described below:
+//! If your requirements matches any of the above, then you're most likely looking for one of the crates below:
 //!
 //! - [html5ever](https://crates.io/crates/html5ever)
 //! - [kuchiki](https://crates.io/crates/kuchiki)
 //! - [scraper](https://crates.io/crates/scraper)
 //! - or other crates using the `html5ever` parser
 //!
-//! ## Features
-//! - Parse html document
-//! - Parse html fragments
-//! - Parse custom, non-standard, elements
-//! - Doesn't include comments in the Dom (Document Object Model)
-//! - Removed dangling elements
-//!
 //! ## Examples
-//! #### Parse html document
+//! Parse html document
 //!
 //! ```rust
 //!     use html_parser::Dom;
@@ -44,7 +47,7 @@
 //!                 </head>
 //!                 <body>
 //!                     <h1 id="a" class="b c">Hello world</h1>
-//!                     </h1> <!-- dangling nodes are removed -->
+//!                     </h1> <!-- comments & dangling elements are ignored -->
 //!                 </body>
 //!             </html>"#;
 //!
@@ -52,7 +55,7 @@
 //!     }
 //! ```
 //!
-//! #### Parse html fragment
+//! Parse html fragment
 //!
 //! ```rust
 //!     use html_parser::Dom;
@@ -63,7 +66,7 @@
 //!     }
 //! ```
 //!
-//! #### Print to json
+//! Print to json
 //!
 //! ```rust
 //!     use html_parser::{Dom, Result};
@@ -91,4 +94,5 @@ pub use crate::dom::element::{Element, ElementVariant};
 pub use crate::dom::node::Node;
 pub use crate::dom::Dom;
 pub use crate::dom::DomVariant;
+pub use crate::error::Error;
 pub use anyhow::Result;
