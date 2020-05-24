@@ -32,7 +32,7 @@
 //! #### Parse html document
 //!
 //! ```rust
-//!     use html_parser::HtmlParser;
+//!     use html_parser::Dom;
 //!
 //!     fn main() {
 //!         let html = r#"
@@ -48,29 +48,29 @@
 //!                 </body>
 //!             </html>"#;
 //!
-//!         assert!(HtmlParser::parse(html).is_ok());
+//!         assert!(Dom::parse(html).is_ok());
 //!     }
 //! ```
 //!
 //! #### Parse html fragment
 //!
 //! ```rust
-//!     use html_parser::HtmlParser;
+//!     use html_parser::Dom;
 //!
 //!     fn main() {
 //!         let html = "<div id=cat />";
-//!         assert!(HtmlParser::parse(html).is_ok());
+//!         assert!(Dom::parse(html).is_ok());
 //!     }
 //! ```
 //!
 //! #### Print to json
 //!
 //! ```rust
-//!     use html_parser::{HtmlParser, Result};
+//!     use html_parser::{Dom, Result};
 //!
 //!     fn main() -> Result<()> {
 //!         let html = "<div id=cat />";
-//!         let json = HtmlParser::parse(html)?.to_json_pretty()?;
+//!         let json = Dom::parse(html)?.to_json_pretty()?;
 //!         println!("{}", json);
 //!         Ok(())
 //!     }
@@ -89,6 +89,6 @@ use parser::Rule;
 
 pub use crate::dom::element::{Element, ElementVariant};
 pub use crate::dom::node::Node;
-pub use crate::dom::Dom as HtmlParser;
+pub use crate::dom::Dom;
 pub use crate::dom::DomVariant;
 pub use anyhow::Result;

@@ -30,7 +30,7 @@ If your requirements matches any of the above, then you're most likely looking f
 #### Parse html document
 
 ```rust
-    use html_parser::HtmlParser;
+    use html_parser::Dom;
 
     fn main() {
         let html = r#"
@@ -46,29 +46,29 @@ If your requirements matches any of the above, then you're most likely looking f
                 </body>
             </html>"#;
 
-        assert!(HtmlParser::parse(html).is_ok());
+        assert!(Dom::parse(html).is_ok());
     }
 ```
 
 #### Parse html fragment
 
 ```rust
-    use html_parser::HtmlParser;
+    use html_parser::Dom;
 
     fn main() {
         let html = "<div id=cat />";
-        assert!(HtmlParser::parse(html).is_ok());
+        assert!(Dom::parse(html).is_ok());
     }
 ```
 
 #### Print to json
 
 ```rust
-    use html_parser::{HtmlParser, Result};
+    use html_parser::{Dom, Result};
 
     fn main() -> Result<()> {
         let html = "<div id=cat />";
-        let json = HtmlParser::parse(html)?.to_json_pretty()?;
+        let json = Dom::parse(html)?.to_json_pretty()?;
         println!("{}", json);
         Ok(())
     }

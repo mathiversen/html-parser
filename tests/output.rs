@@ -1,16 +1,16 @@
-use html_parser::{HtmlParser, Result};
+use html_parser::{Dom, Result};
 use indoc::indoc;
 use insta::assert_json_snapshot;
 
 #[test]
 fn it_can_output_json() -> Result<()> {
-    assert!(HtmlParser::parse("<div/>")?.to_json().is_ok());
+    assert!(Dom::parse("<div/>")?.to_json().is_ok());
     Ok(())
 }
 
 #[test]
 fn it_can_output_json_pretty() -> Result<()> {
-    assert!(HtmlParser::parse("<div/>")?.to_json_pretty().is_ok());
+    assert!(Dom::parse("<div/>")?.to_json_pretty().is_ok());
     Ok(())
 }
 
@@ -27,7 +27,7 @@ fn it_can_output_complex_html_as_json() -> Result<()> {
             </body>
         </html>"
     );
-    let dom = HtmlParser::parse(markup)?;
+    let dom = Dom::parse(markup)?;
     assert_json_snapshot!(dom);
     Ok(())
 }

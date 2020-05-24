@@ -1,5 +1,5 @@
 use async_std;
-use html_parser::HtmlParser;
+use html_parser::Dom;
 use indoc::indoc;
 use surf;
 
@@ -34,7 +34,7 @@ fn it_can_parse_simple() {
             </html>        
         "#
     );
-    assert!(HtmlParser::parse(markup).is_ok());
+    assert!(Dom::parse(markup).is_ok());
 }
 
 #[async_std::test]
@@ -47,7 +47,7 @@ async fn it_can_parse_mathias() {
             .expect("Could not get site")
     });
     let page = response.await;
-    assert!(HtmlParser::parse(&page).is_ok());
+    assert!(Dom::parse(&page).is_ok());
 }
 
 #[async_std::test]
@@ -60,7 +60,7 @@ async fn it_can_parse_spotify() {
             .expect("Could not get site")
     });
     let page = response.await;
-    assert!(HtmlParser::parse(&page).is_ok());
+    assert!(Dom::parse(&page).is_ok());
 }
 
 #[async_std::test]
@@ -73,7 +73,7 @@ async fn it_can_parse_facebook() {
             .expect("Could not get site")
     });
     let page = response.await;
-    assert!(HtmlParser::parse(&page).is_ok());
+    assert!(Dom::parse(&page).is_ok());
 }
 
 #[async_std::test]
@@ -86,7 +86,7 @@ async fn it_can_parse_amazon() {
             .expect("Could not get site")
     });
     let page = response.await;
-    assert!(HtmlParser::parse(&page).is_ok());
+    assert!(Dom::parse(&page).is_ok());
 }
 
 #[async_std::test]
@@ -99,7 +99,7 @@ async fn it_can_parse_apple() {
             .expect("Could not get site")
     });
     let page = response.await;
-    assert!(HtmlParser::parse(&page).is_ok());
+    assert!(Dom::parse(&page).is_ok());
 }
 
 #[ignore]
@@ -113,5 +113,5 @@ async fn it_can_parse_nytimes() {
             .expect("Could not get site")
     });
     let page = response.await;
-    assert!(HtmlParser::parse(&page).is_ok());
+    assert!(Dom::parse(&page).is_ok());
 }

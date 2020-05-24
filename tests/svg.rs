@@ -1,4 +1,4 @@
-use html_parser::{HtmlParser, Result};
+use html_parser::{Dom, Result};
 use indoc::indoc;
 use insta::assert_json_snapshot;
 
@@ -11,7 +11,7 @@ fn it_can_parse_svg() -> Result<()> {
         </svg>
     "#
     );
-    let dom = HtmlParser::parse(markup)?;
+    let dom = Dom::parse(markup)?;
     assert_json_snapshot!(dom);
     Ok(())
 }
@@ -41,5 +41,5 @@ fn it_can_parse_complex_svg() {
         </svg>
     "#
     );
-    assert!(HtmlParser::parse(&svg).is_ok());
+    assert!(Dom::parse(&svg).is_ok());
 }

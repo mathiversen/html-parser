@@ -1,11 +1,11 @@
-use html_parser::{HtmlParser, Result};
+use html_parser::{Dom, Result};
 use indoc::indoc;
 use insta::assert_json_snapshot;
 
 #[test]
 fn it_can_parse_document_with_just_text() -> Result<()> {
     let markup = "hello world";
-    let dom = HtmlParser::parse(markup)?;
+    let dom = Dom::parse(markup)?;
     assert_json_snapshot!(dom);
     Ok(())
 }
@@ -19,7 +19,7 @@ fn it_can_parse_document_with_text_and_line_breaks() -> Result<()> {
         The end
     "
     );
-    let dom = HtmlParser::parse(markup)?;
+    let dom = Dom::parse(markup)?;
     assert_json_snapshot!(dom);
     Ok(())
 }
@@ -34,7 +34,7 @@ fn it_can_parse_document_with_multiple_text_elements() -> Result<()> {
         The end
     "
     );
-    let dom = HtmlParser::parse(markup)?;
+    let dom = Dom::parse(markup)?;
     assert_json_snapshot!(dom);
     Ok(())
 }
