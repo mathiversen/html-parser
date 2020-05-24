@@ -4,63 +4,63 @@ expression: dom
 ---
 {
   "treeType": "documentFragment",
-  "nodes": [
+  "children": [
     {
       "name": "div",
       "variant": "normal",
       "classes": [
         "1"
       ],
-      "nodes": [
+      "children": [
         {
           "name": "div",
           "variant": "normal",
           "classes": [
             "1"
           ],
-          "nodes": [
+          "children": [
             {
               "name": "div",
               "variant": "normal",
               "classes": [
                 "1"
               ],
-              "nodes": [
+              "children": [
                 {
                   "name": "div",
                   "variant": "normal",
                   "classes": [
                     "1"
                   ],
-                  "nodes": [
+                  "children": [
                     {
                       "name": "div",
                       "variant": "normal",
                       "classes": [
                         "1"
                       ],
-                      "nodes": [
+                      "children": [
                         {
                           "name": "div",
                           "variant": "normal",
                           "classes": [
                             "1"
                           ],
-                          "nodes": [
+                          "children": [
                             {
                               "name": "div",
                               "variant": "normal",
                               "classes": [
                                 "1"
                               ],
-                              "nodes": [
+                              "children": [
                                 {
                                   "name": "div",
                                   "variant": "normal",
                                   "classes": [
                                     "1"
                                   ],
-                                  "nodes": [
+                                  "children": [
                                     "hello world"
                                   ]
                                 }

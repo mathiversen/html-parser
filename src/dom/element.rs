@@ -4,13 +4,17 @@ use serde::{Serialize, Serializer};
 use std::collections::{BTreeMap, HashMap};
 use std::default::Default;
 
+/// Normal: `<div></div>` or Void: `<meta/>`and `<meta>`
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub enum ElementVariant {
+    /// A normal element can have children, ex: <div></div>.
     Normal,
+    /// A void element can't have children, ex: <meta /> and <meta>
     Void,
 }
 
+/// Most of the parsed html nodes are elements, except for text
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Element {
@@ -35,7 +39,7 @@ pub struct Element {
 
     /// All of the elements child nodes
     #[serde(skip_serializing_if = "Vec::is_empty")]
-    pub nodes: Vec<Node>,
+    pub children: Vec<Node>,
 }
 
 impl Default for Element {
@@ -46,7 +50,7 @@ impl Default for Element {
             variant: ElementVariant::Void,
             classes: vec![],
             attributes: HashMap::new(),
-            nodes: vec![],
+            children: vec![],
         }
     }
 }

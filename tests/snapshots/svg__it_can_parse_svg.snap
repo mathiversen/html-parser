@@ -4,7 +4,7 @@ expression: dom
 ---
 {
   "treeType": "documentFragment",
-  "nodes": [
+  "children": [
     {
       "name": "svg",
       "variant": "normal",
@@ -12,7 +12,7 @@ expression: dom
         "xmlns": "http://www.w3.org/2000/svg",
         "xmlns:xlink": "http://www.w3.org/1999/xlink"
       },
-      "nodes": [
+      "children": [
         {
           "name": "rect",
           "variant": "void",

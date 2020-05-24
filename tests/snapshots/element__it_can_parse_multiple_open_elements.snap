@@ -4,7 +4,7 @@ expression: dom
 ---
 {
   "treeType": "documentFragment",
-  "nodes": [
+  "children": [
     {
       "name": "div",
       "variant": "normal"

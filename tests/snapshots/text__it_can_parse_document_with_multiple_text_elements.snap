@@ -4,7 +4,7 @@ expression: dom
 ---
 {
   "treeType": "documentFragment",
-  "nodes": [
+  "children": [
     "hello world\nhere's another line for you!",
     {
       "name": "div",

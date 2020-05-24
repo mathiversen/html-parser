@@ -4,11 +4,11 @@ expression: dom
 ---
 {
   "treeType": "documentFragment",
-  "nodes": [
+  "children": [
     {
       "name": "div",
       "variant": "normal",
-      "nodes": [
+      "children": [
         {
           "name": "div",
           "variant": "void"

@@ -4,11 +4,11 @@ expression: dom
 ---
 {
   "treeType": "documentFragment",
-  "nodes": [
+  "children": [
     {
       "name": "style",
       "variant": "void",
-      "nodes": [
+      "children": [
         ":root {\n        --background-color: black;\n        --text-color: white;\n    }\n    body {\n        background: var(--background-color);\n        color: var(--text-color);\n    }"
       ]
     }

@@ -4,22 +4,22 @@ expression: dom
 ---
 {
   "treeType": "document",
-  "nodes": [
+  "children": [
     {
       "name": "html",
       "variant": "normal",
       "attributes": {
         "lang": "sv"
       },
-      "nodes": [
+      "children": [
         {
           "name": "head",
           "variant": "normal",
-          "nodes": [
+          "children": [
             {
               "name": "title",
               "variant": "normal",
-              "nodes": [
+              "children": [
                 "Här kan man va"
               ]
             }
@@ -28,18 +28,18 @@ expression: dom
         {
           "name": "body",
           "variant": "normal",
-          "nodes": [
+          "children": [
             {
               "name": "h1",
               "variant": "normal",
-              "nodes": [
+              "children": [
                 "Tjena världen!"
               ]
             },
             {
               "name": "p",
               "variant": "normal",
-              "nodes": [
+              "children": [
                 "Tänkte bara informera om att Sverige är bättre än Finland i ishockey."
               ]
             }

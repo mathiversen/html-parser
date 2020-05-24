@@ -14,34 +14,49 @@ pub mod node;
 use element::{Element, ElementVariant};
 use node::Node;
 
-/// These are all of the types that the parsed html tree can have.
+/// Document, DocumentFragment or Empty
 #[derive(Debug, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub enum DomVariant {
-    /// This means that the parsed html had the representation that of an html document. The doctype is optional but a document should only have one root node with the name of html.
+    /// This means that the parsed html had the representation of an html document. The doctype is optional but a document should only have one root node with the name of html.
+    /// Example:
+    /// ```text
+    /// <!doctype html>
+    /// <html>
+    ///     <head></head>
+    ///     <body>
+    ///         <h1>Hello world</h1>
+    ///     </body>
+    /// </html>
+    /// ```
     Document,
-    /// A document fragment means that the parsed html did not have the representation of a document. A fragment can have multiple root nodes of any name except html, body or head.
+    /// A document fragment means that the parsed html did not have the representation of a document. A fragment can have multiple root children of any name except html, body or head.
+    /// Example:
+    /// ```text
+    /// <h1>Hello world</h1>
+    /// ```
     DocumentFragment,
-    /// An empty dom means that no normal or text elements where found inside of the parsed html string
+    /// An empty dom means that the input was empty
     Empty,
 }
 
+/// **The main struct** & the result of the parsed html
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Dom {
     /// The type of the tree that was parsed
     pub tree_type: DomVariant,
 
-    /// All of the root nodes in the tree
+    /// All of the root children in the tree
     #[serde(skip_serializing_if = "Vec::is_empty")]
-    pub nodes: Vec<Node>,
+    pub children: Vec<Node>,
 }
 
 impl Default for Dom {
     fn default() -> Self {
         Self {
             tree_type: DomVariant::Empty,
-            nodes: vec![],
+            children: vec![],
         }
     }
 }
@@ -72,11 +87,11 @@ impl Dom {
                 }
                 Rule::node_element => {
                     if let Some(node) = Self::build_node_element(pair.into_inner())? {
-                        dom.nodes.push(node);
+                        dom.children.push(node);
                     }
                 }
                 Rule::node_text => {
-                    dom.nodes.push(Node::Text(pair.as_str().to_string()));
+                    dom.children.push(Node::Text(pair.as_str().to_string()));
                 }
                 Rule::EOI => break,
                 _ => unreachable!("[build dom] unknown rule: {:?}", pair.as_rule()),
@@ -87,12 +102,12 @@ impl Dom {
         // What logic should apply when parsing fragment vs document?
         // I had some of this logic inside the grammar before, but i thought it would be a bit clearer
         // to just have everyting here when we construct the dom
-        match dom.nodes.len() {
+        match dom.children.len() {
             0 => {
                 dom.tree_type = DomVariant::Empty;
                 Ok(dom)
             }
-            1 => match dom.nodes[0] {
+            1 => match dom.children[0] {
                 Node::Element(ref el) => {
                     let name = el.name.to_lowercase();
                     if name == "html" {
@@ -115,7 +130,7 @@ impl Dom {
             },
             _ => {
                 dom.tree_type = DomVariant::DocumentFragment;
-                for node in &dom.nodes {
+                for node in &dom.children {
                     if let Node::Element(ref el) = node {
                         let name = el.name.clone().to_lowercase();
                         if name == "html" || name == "body" || name == "head" {
@@ -138,11 +153,11 @@ impl Dom {
             match pair.as_rule() {
                 Rule::node_element | Rule::el_raw_text => {
                     if let Some(child_element) = Self::build_node_element(pair.into_inner())? {
-                        element.nodes.push(child_element)
+                        element.children.push(child_element)
                     }
                 }
                 Rule::node_text | Rule::el_raw_text_content => {
-                    element.nodes.push(Node::Text(pair.as_str().to_string()));
+                    element.children.push(Node::Text(pair.as_str().to_string()));
                 }
                 Rule::el_name | Rule::el_void_name | Rule::el_raw_text_name => {
                     element.name = pair.as_str().to_string();
