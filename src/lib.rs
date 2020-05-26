@@ -86,9 +86,9 @@
 
 mod dom;
 mod error;
-mod parser;
+mod grammar;
 
-use parser::Rule;
+use grammar::Rule;
 
 pub use crate::dom::element::{Element, ElementVariant};
 pub use crate::dom::node::Node;

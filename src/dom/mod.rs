@@ -1,10 +1,10 @@
 use anyhow::Result;
-use pest::{iterators::Pairs, Parser as PestParser};
+use pest::{iterators::Pairs, Parser};
 use serde::Serialize;
 use std::default::Default;
 
 use crate::error::Error;
-use crate::parser::Parser;
+use crate::grammar::Grammar;
 use crate::Rule;
 
 pub mod element;
@@ -63,7 +63,7 @@ impl Default for Dom {
 
 impl Dom {
     pub fn parse(input: &str) -> Result<Self> {
-        let pairs = match Parser::parse(Rule::html, input) {
+        let pairs = match Grammar::parse(Rule::html, input) {
             Ok(pairs) => pairs,
             Err(error) => return formatting::error_msg(error),
         };
