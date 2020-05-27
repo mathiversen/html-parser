@@ -159,6 +159,9 @@ impl Dom {
                 Rule::node_text | Rule::el_raw_text_content => {
                     element.children.push(Node::Text(pair.as_str().to_string()));
                 }
+                // TODO: To enable some kind of validation we should probably align this with
+                // https://html.spec.whatwg.org/multipage/syntax.html#elements-2
+                // Also see element variants
                 Rule::el_name | Rule::el_void_name | Rule::el_raw_text_name => {
                     element.name = pair.as_str().to_string();
                 }
@@ -180,7 +183,7 @@ impl Dom {
                         }
                     };
                 }
-                Rule::el_normal_end => {
+                Rule::el_normal_end | Rule::el_raw_text_end => {
                     element.variant = ElementVariant::Normal;
                     break;
                 }

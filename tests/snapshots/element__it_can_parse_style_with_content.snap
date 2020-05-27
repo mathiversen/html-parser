@@ -7,7 +7,7 @@ expression: dom
   "children": [
     {
       "name": "style",
-      "variant": "void",
+      "variant": "normal",
       "children": [
         ":root {\n        --background-color: black;\n        --text-color: white;\n    }\n    body {\n        background: var(--background-color);\n        color: var(--text-color);\n    }"
       ]
