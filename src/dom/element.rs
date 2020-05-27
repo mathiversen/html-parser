@@ -7,6 +7,7 @@ use std::default::Default;
 /// Normal: `<div></div>` or Void: `<meta/>`and `<meta>`
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
+// TODO: Align with: https://html.spec.whatwg.org/multipage/syntax.html#elements-2
 pub enum ElementVariant {
     /// A normal element can have children, ex: <div></div>.
     Normal,

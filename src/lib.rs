@@ -14,7 +14,7 @@
 //! - Parse html-fragments
 //! - Parse empty documents
 //! - Parse with the same api for both documents and fragments
-//! - Parse custom, non-standard, elements; `<cat/>`, `<Cat/>` and `<C4-t/>` are all ok!
+//! - Parse custom, non-standard, elements; `<cat/>`, `<Cat/>` and `<C4-t/>`
 //! - Removes comments
 //! - Removes dangling elements
 //!
