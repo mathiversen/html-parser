@@ -1,6 +1,6 @@
 [package]
 name = "html_parser"
-version = "0.4.1"
+version = "0.4.2"
 authors = ["Mathias Iversen <work@mathiasiversen.com>"]
 edition = "2018"
 repository = "https://github.com/mathiversen/html-parser"

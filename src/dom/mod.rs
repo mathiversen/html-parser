@@ -171,8 +171,7 @@ impl Dom {
                         "id" => element.id = new_attribute.1,
                         "class" => {
                             if let Some(classes) = new_attribute.1 {
-                                let classes =
-                                    classes.split_whitespace().into_iter().collect::<Vec<_>>();
+                                let classes = classes.split_whitespace().collect::<Vec<_>>();
                                 for class in classes {
                                     element.classes.push(class.to_string());
                                 }
