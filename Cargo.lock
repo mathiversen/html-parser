@@ -10,12 +10,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "anyhow"
-version = "1.0.31"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "85bb70cc08ec97ca5450e6eba421deeea5f172c0fc61f78b5357b2a8e8be195f"
-
-[[package]]
 name = "async-attributes"
 version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -521,9 +515,8 @@ dependencies = [
 
 [[package]]
 name = "html_parser"
-version = "0.4.2"
+version = "0.4.3"
 dependencies = [
- "anyhow",
  "async-std",
  "indoc",
  "insta",

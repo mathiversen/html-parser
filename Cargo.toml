@@ -1,6 +1,6 @@
 [package]
 name = "html_parser"
-version = "0.4.2"
+version = "0.4.3"
 authors = ["Mathias Iversen <work@mathiasiversen.com>"]
 edition = "2018"
 repository = "https://github.com/mathiversen/html-parser"
@@ -13,7 +13,6 @@ readme = "README.md"
 [dependencies]
 pest = "2.1"
 pest_derive = "2.1"
-anyhow = "1.0"
 thiserror = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_derive = "1.0"
