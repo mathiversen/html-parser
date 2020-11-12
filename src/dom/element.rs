@@ -1,5 +1,4 @@
 use super::node::Node;
-use anyhow::Result;
 use serde::{Serialize, Serializer};
 use std::collections::{BTreeMap, HashMap};
 use std::default::Default;
@@ -59,7 +58,7 @@ impl Default for Element {
 fn ordered_map<S: Serializer>(
     value: &HashMap<String, Option<String>>,
     serializer: S,
-) -> Result<S::Ok, S::Error> {
+) -> std::result::Result<S::Ok, S::Error> {
     let ordered: BTreeMap<_, _> = value.iter().collect();
     ordered.serialize(serializer)
 }

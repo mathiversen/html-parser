@@ -1,6 +1,6 @@
 use crate::error::Error;
+use crate::Result;
 use crate::Rule;
-use anyhow::Result;
 use pest::error::Error as PestError;
 
 /// This function abstracts the formatting of errors away from the core logic inside parser,
