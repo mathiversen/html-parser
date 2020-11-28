@@ -186,3 +186,33 @@ fn it_errors_when_multiple_elements_dont_match() {
 fn it_errors_when_multiple_nested_elements_dont_match() {
     assert!(Dom::parse("<div><div><div><div></div></div_error></div></div>").is_err());
 }
+#[test]
+fn it_can_clone_node() {
+    let html = indoc!(
+        "
+        <div>one</div>
+        <div>two</div>
+    "
+    );
+    let dom = Dom::parse(html).unwrap();
+    let one = dom.children[0].clone();
+    assert_json_snapshot!(one);
+}
+#[test]
+fn it_can_clone_dom() {
+    let html = indoc!(
+        "
+        <html>
+            <head>
+                <title>Title</title>
+            </head>
+            <body>
+                <h1>Hello world</h1>
+            </body>
+        </html>
+    "
+    );
+    let dom = Dom::parse(html).unwrap();
+    let dom_clone = dom.clone();
+    assert_eq!(dom, dom_clone);
+}

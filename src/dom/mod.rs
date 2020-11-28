@@ -15,7 +15,7 @@ use element::{Element, ElementVariant};
 use node::Node;
 
 /// Document, DocumentFragment or Empty
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub enum DomVariant {
     /// This means that the parsed html had the representation of an html document. The doctype is optional but a document should only have one root node with the name of html.
@@ -41,7 +41,7 @@ pub enum DomVariant {
 }
 
 /// **The main struct** & the result of the parsed html
-#[derive(Debug, Serialize)]
+#[derive(Debug, Clone, Serialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Dom {
     /// The type of the tree that was parsed
