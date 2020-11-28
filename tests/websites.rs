@@ -38,19 +38,6 @@ fn it_can_parse_simple() {
 }
 
 #[async_std::test]
-async fn it_can_parse_mathias() {
-    let response = async_std::task::spawn(async {
-        let url = "http://mathiasiversen.com/";
-        surf::get(url)
-            .recv_string()
-            .await
-            .expect("Could not get site")
-    });
-    let page = response.await;
-    assert!(Dom::parse(&page).is_ok());
-}
-
-#[async_std::test]
 async fn it_can_parse_spotify() {
     let response = async_std::task::spawn(async {
         let bytesafe_url = "https://www.spotify.com/se";

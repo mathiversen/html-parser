@@ -4,7 +4,7 @@ use std::collections::{BTreeMap, HashMap};
 use std::default::Default;
 
 /// Normal: `<div></div>` or Void: `<meta/>`and `<meta>`
-#[derive(Debug, Serialize)]
+#[derive(Debug, Clone, Serialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
 // TODO: Align with: https://html.spec.whatwg.org/multipage/syntax.html#elements-2
 pub enum ElementVariant {
@@ -15,7 +15,7 @@ pub enum ElementVariant {
 }
 
 /// Most of the parsed html nodes are elements, except for text
-#[derive(Debug, Serialize)]
+#[derive(Debug, Clone, Serialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Element {
     /// The id of the element
