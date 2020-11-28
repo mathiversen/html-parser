@@ -50,6 +50,10 @@ pub struct Dom {
     /// All of the root children in the tree
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub children: Vec<Node>,
+
+    /// A collection of all errors during parsing
+    #[serde(skip_serializing)]
+    pub errors: Vec<String>,
 }
 
 impl Default for Dom {
@@ -57,6 +61,7 @@ impl Default for Dom {
         Self {
             tree_type: DomVariant::Empty,
             children: vec![],
+            errors: vec![]
         }
     }
 }
@@ -85,11 +90,16 @@ impl Dom {
                 Rule::doctype => {
                     dom.tree_type = DomVariant::DocumentFragment;
                 }
-                Rule::node_element => {
-                    if let Some(node) = Self::build_node_element(pair.into_inner())? {
-                        dom.children.push(node);
+                Rule::node_element => match Self::build_node_element(pair.into_inner(), &mut dom) {
+                    Ok(el) => {
+                        if let Some(node) = el {
+                            dom.children.push(node);
+                        }
                     }
-                }
+                    Err(error) => {
+                        dom.errors.push(format!("{}", error));
+                    },
+                },
                 Rule::node_text => {
                     dom.children.push(Node::Text(pair.as_str().to_string()));
                 }
@@ -145,14 +155,21 @@ impl Dom {
         }
     }
 
-    fn build_node_element(pairs: Pairs<Rule>) -> Result<Option<Node>> {
+    fn build_node_element(pairs: Pairs<Rule>, dom: &mut Dom) -> Result<Option<Node>> {
         let mut element = Element::default();
         for pair in pairs {
             match pair.as_rule() {
                 Rule::node_element | Rule::el_raw_text => {
-                    if let Some(child_element) = Self::build_node_element(pair.into_inner())? {
-                        element.children.push(child_element)
-                    }
+                    match Self::build_node_element(pair.into_inner(), dom) {
+                        Ok(el) => {
+                            if let Some(child_element) = el {
+                                element.children.push(child_element)
+                            }
+                        }
+                        Err(error) => {
+                            dom.errors.push(format!("{}", error));
+                        },
+                        }
                 }
                 Rule::node_text | Rule::el_raw_text_content => {
                     element.children.push(Node::Text(pair.as_str().to_string()));
@@ -163,30 +180,39 @@ impl Dom {
                 Rule::el_name | Rule::el_void_name | Rule::el_raw_text_name => {
                     element.name = pair.as_str().to_string();
                 }
-                Rule::attr => {
-                    let new_attribute = Self::build_attribute(pair.into_inner())?;
-                    match new_attribute.0.as_str() {
-                        "id" => element.id = new_attribute.1,
-                        "class" => {
-                            if let Some(classes) = new_attribute.1 {
-                                let classes = classes.split_whitespace().collect::<Vec<_>>();
-                                for class in classes {
-                                    element.classes.push(class.to_string());
+                Rule::attr => match Self::build_attribute(pair.into_inner()) {
+                    Ok((attr_key, attr_value)) => {
+                        match attr_key.as_str() {
+                            "id" => element.id = attr_value,
+                            "class" => {
+                                if let Some(classes) = attr_value {
+                                    let classes = classes.split_whitespace().collect::<Vec<_>>();
+                                    for class in classes {
+                                        element.classes.push(class.to_string());
+                                    }
                                 }
                             }
-                        }
-                        _ => {
-                            element.attributes.insert(new_attribute.0, new_attribute.1);
-                        }
-                    };
-                }
+                            _ => {
+                                element.attributes.insert(attr_key, attr_value);
+                            }
+                        };
+                    }
+                    Err(error) => {
+                        dom.errors.push(format!("{}", error));
+                    },
+                },
                 Rule::el_normal_end | Rule::el_raw_text_end => {
                     element.variant = ElementVariant::Normal;
                     break;
                 }
                 Rule::el_dangling => (),
                 Rule::EOI => (),
-                _ => unreachable!("unknown tpl rule: {:?}", pair.as_rule()),
+                _ => {
+                    return Err(Error::Parsing(format!(
+                        "Failed to create element at rule: {:?}",
+                        pair.as_rule()
+                    )))
+                }
             }
         }
         if element.name != "" {
@@ -206,7 +232,12 @@ impl Dom {
                 Rule::attr_value | Rule::attr_non_quoted => {
                     attribute.1 = Some(pair.as_str().to_string());
                 }
-                _ => unreachable!("unknown tpl rule: {:?}", pair.as_rule()),
+                _ => {
+                    return Err(Error::Parsing(format!(
+                        "Failed to create attribute at rule: {:?}",
+                        pair.as_rule()
+                    )))
+                }
             }
         }
         Ok(attribute)

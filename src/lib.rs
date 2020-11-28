@@ -4,7 +4,7 @@
 //!
 //! # Html parser
 //!
-//! A simple and general purpose html/xhtml parser, using [Pest](https://pest.rs/).
+//! A simple and general purpose html/xhtml parser lib/bin, using [Pest](https://pest.rs/).
 //!
 //! ## Features
 //! - Parse html & xhtml (not xml processing instructions)
@@ -29,7 +29,23 @@
 //! - [scraper](https://crates.io/crates/scraper)
 //! - or other crates using the `html5ever` parser
 //!
-//! ## Examples
+//! ## Examples bin
+//! 
+//! Parse html file
+//! 
+//! ```shell
+//! html_parser index.html
+//! 
+//! ```
+//! 
+//! Parse stdin with pretty output
+//! 
+//! ```shell
+//! curl <website> | html_parser -p
+//! ```
+//! 
+//! ## Examples lib
+//! 
 //! Parse html document
 //!
 //! ```rust
