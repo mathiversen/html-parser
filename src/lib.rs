@@ -4,8 +4,6 @@
 //!
 //! # Html parser
 //!
-//! **WIP - work in progress, use at your own risk**
-//!
 //! A simple and general purpose html/xhtml parser, using [Pest](https://pest.rs/).
 //!
 //! ## Features
@@ -78,9 +76,6 @@
 //!         Ok(())
 //!     }
 //! ```
-//!
-//! ## Contributions
-//! I would love to get some feedback if you find my little project useful. Please feel free to highlight issues with my code or submit a PR in case you want to improve it.
 
 #![allow(clippy::needless_doctest_main)]
 

@@ -114,10 +114,9 @@ impl Dom {
                         dom.tree_type = DomVariant::Document;
                         Ok(dom)
                     } else if dom.tree_type == DomVariant::Document && name != "html" {
-                        Err(
-                            Error::Parsing("A document can only have html as root".to_string())
-                                .into(),
-                        )
+                        Err(Error::Parsing(
+                            "A document can only have html as root".to_string(),
+                        ))
                     } else {
                         dom.tree_type = DomVariant::DocumentFragment;
                         Ok(dom)
@@ -137,8 +136,7 @@ impl Dom {
                             return Err(Error::Parsing(format!(
                                 "A document fragment should not include {}",
                                 name
-                            ))
-                            .into());
+                            )));
                         }
                     }
                 }
