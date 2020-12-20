@@ -15,6 +15,7 @@
 //! - Parse custom, non-standard, elements; `<cat/>`, `<Cat/>` and `<C4-t/>`
 //! - Removes comments
 //! - Removes dangling elements
+//! - Iterate over all nodes in the dom three
 //!
 //! ## What is it not
 //!
@@ -30,22 +31,22 @@
 //! - or other crates using the `html5ever` parser
 //!
 //! ## Examples bin
-//! 
+//!
 //! Parse html file
-//! 
+//!
 //! ```shell
 //! html_parser index.html
-//! 
+//!
 //! ```
-//! 
+//!
 //! Parse stdin with pretty output
-//! 
+//!
 //! ```shell
 //! curl <website> | html_parser -p
 //! ```
-//! 
+//!
 //! ## Examples lib
-//! 
+//!
 //! Parse html document
 //!
 //! ```rust

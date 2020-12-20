@@ -76,6 +76,7 @@ async fn it_can_parse_amazon() {
     assert!(Dom::parse(&page).is_ok());
 }
 
+#[ignore]
 #[async_std::test]
 async fn it_can_parse_apple() {
     let response = async_std::task::spawn(async {

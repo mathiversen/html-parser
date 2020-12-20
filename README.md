@@ -12,6 +12,7 @@ A simple and general purpose html/xhtml parser lib/bin, using [Pest](https://pes
 - Parse custom, non-standard, elements; `<cat/>`, `<Cat/>` and `<C4-t/>`
 - Removes comments
 - Removes dangling elements
+- Iterate over all nodes in the dom three
 
 ## What is it not
 

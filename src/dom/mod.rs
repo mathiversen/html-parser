@@ -61,7 +61,7 @@ impl Default for Dom {
         Self {
             tree_type: DomVariant::Empty,
             children: vec![],
-            errors: vec![]
+            errors: vec![],
         }
     }
 }
@@ -98,7 +98,7 @@ impl Dom {
                     }
                     Err(error) => {
                         dom.errors.push(format!("{}", error));
-                    },
+                    }
                 },
                 Rule::node_text => {
                     dom.children.push(Node::Text(pair.as_str().to_string()));
@@ -168,8 +168,8 @@ impl Dom {
                         }
                         Err(error) => {
                             dom.errors.push(format!("{}", error));
-                        },
                         }
+                    }
                 }
                 Rule::node_text | Rule::el_raw_text_content => {
                     element.children.push(Node::Text(pair.as_str().to_string()));
@@ -199,7 +199,7 @@ impl Dom {
                     }
                     Err(error) => {
                         dom.errors.push(format!("{}", error));
-                    },
+                    }
                 },
                 Rule::el_normal_end | Rule::el_raw_text_end => {
                     element.variant = ElementVariant::Normal;
