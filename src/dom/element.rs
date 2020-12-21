@@ -2,6 +2,7 @@ use super::node::Node;
 use serde::{Serialize, Serializer};
 use std::collections::{BTreeMap, HashMap};
 use std::default::Default;
+use std::result::Result;
 
 /// Normal: `<div></div>` or Void: `<meta/>`and `<meta>`
 #[derive(Debug, Clone, Serialize, PartialEq)]
@@ -13,6 +14,8 @@ pub enum ElementVariant {
     /// A void element can't have children, ex: <meta /> and <meta>
     Void,
 }
+
+pub type Attributes = HashMap<String, Option<String>>;
 
 /// Most of the parsed html nodes are elements, except for text
 #[derive(Debug, Clone, Serialize, PartialEq)]
@@ -31,7 +34,7 @@ pub struct Element {
     /// All of the elements attributes, except id and class
     #[serde(skip_serializing_if = "HashMap::is_empty")]
     #[serde(serialize_with = "ordered_map")]
-    pub attributes: HashMap<String, Option<String>>,
+    pub attributes: Attributes,
 
     /// All of the elements classes
     #[serde(skip_serializing_if = "Vec::is_empty")]
@@ -55,10 +58,7 @@ impl Default for Element {
     }
 }
 
-fn ordered_map<S: Serializer>(
-    value: &HashMap<String, Option<String>>,
-    serializer: S,
-) -> std::result::Result<S::Ok, S::Error> {
+fn ordered_map<S: Serializer>(value: &Attributes, serializer: S) -> Result<S::Ok, S::Error> {
     let ordered: BTreeMap<_, _> = value.iter().collect();
     ordered.serialize(serializer)
 }
