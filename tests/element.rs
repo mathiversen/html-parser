@@ -179,12 +179,18 @@ fn it_skips_dangling_elements() -> Result<()> {
     Ok(())
 }
 #[test]
-fn it_errors_when_multiple_elements_dont_match() {
-    assert!(Dom::parse("<div></span><div></div>").is_err());
+fn it_can_parse_broken_html() -> Result<()> {
+    let html = "<div></span><div></div>";
+    let dom = Dom::parse(html)?;
+    assert_json_snapshot!(dom);
+    Ok(())
 }
 #[test]
-fn it_errors_when_multiple_nested_elements_dont_match() {
-    assert!(Dom::parse("<div><div><div><div></div></div_error></div></div>").is_err());
+fn it_errors_when_multiple_nested_elements_dont_match() -> Result<()> {
+    let html = "<div><div><div><div></div></div_error></div></div>";
+    let dom = Dom::parse(html)?;
+    assert_json_snapshot!(dom);
+    Ok(())
 }
 #[test]
 fn it_can_clone_node() {

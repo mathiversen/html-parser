@@ -38,3 +38,11 @@ fn it_can_parse_document_with_multiple_text_elements() -> Result<()> {
     assert_json_snapshot!(dom);
     Ok(())
 }
+
+#[test]
+fn it_can_parse_text_with_chevron() -> Result<()> {
+    let html = indoc!(r"hello <> world");
+    let dom = Dom::parse(html)?;
+    assert_json_snapshot!(dom);
+    Ok(())
+}

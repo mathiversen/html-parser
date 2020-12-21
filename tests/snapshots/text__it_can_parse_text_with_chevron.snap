@@ -1,0 +1,10 @@
+---
+source: tests/text.rs
+expression: dom
+---
+{
+  "treeType": "documentFragment",
+  "children": [
+    "hello <> world"
+  ]
+}
