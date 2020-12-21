@@ -5,7 +5,7 @@ authors = ["Mathias Iversen <work@mathiasiversen.com>"]
 edition = "2018"
 repository = "https://github.com/mathiversen/html-parser"
 license = "MIT"
-description = "A simple and general purpose html/xhtml parser lib/bin"
+description = "A simple and general purpose html/xhtml parser"
 keywords = ["html", "parser", "json", "pest", "dom"]
 categories = ["parsing", "web-programming"]
 readme = "README.md"
@@ -28,8 +28,8 @@ tempfile = "3.1.0"
 criterion = "0.3.3"
 
 [[example]]
-name = "get_anchor_href"
-path = "examples/get_anchor_href/main.rs"
+name = "get_all_href"
+path = "examples/get_all_href/main.rs"
 
 [[bench]]
 name = "bench_wikipedia"
