@@ -9,6 +9,29 @@ pub enum Node {
     Comment(String),
 }
 
+impl Node {
+    pub fn text(&self) -> Option<&str> {
+        match self {
+            Node::Text(t) => Some(t.as_str()),
+            _ => None,
+        }
+    }
+
+    pub fn element(&self) -> Option<&Element> {
+        match self {
+            Node::Element(e) => Some(e),
+            _ => None,
+        }
+    }
+
+    pub fn comment(&self) -> Option<&str> {
+        match self {
+            Node::Comment(t) => Some(t.as_str()),
+            _ => None,
+        }
+    }
+}
+
 impl<'a> IntoIterator for &'a Node {
     type Item = &'a Node;
     type IntoIter = NodeIntoIterator<'a>;
@@ -81,5 +104,31 @@ impl<'a> Iterator for NodeIntoIterator<'a> {
         };
 
         result
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn node_utillity_functions() {
+        let node = Node::Text("test".to_string());
+
+        assert_eq!(node.text(), Some("test"));
+        assert_eq!(node.element(), None);
+        assert_eq!(node.comment(), None);
+
+        let node = Node::Element(Element::default());
+
+        assert_eq!(node.text(), None);
+        assert_eq!(node.element(), Some(&Element::default()));
+        assert_eq!(node.comment(), None);
+
+        let node = Node::Comment("test".to_string());
+
+        assert_eq!(node.text(), None);
+        assert_eq!(node.element(), None);
+        assert_eq!(node.comment(), Some("test"));
     }
 }
