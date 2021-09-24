@@ -103,6 +103,10 @@ impl Dom {
                 Rule::node_text => {
                     dom.children.push(Node::Text(pair.as_str().to_string()));
                 }
+                Rule::node_comment => {
+                    dom.children
+                        .push(Node::Comment(pair.into_inner().as_str().to_string()));
+                }
                 Rule::EOI => break,
                 _ => unreachable!("[build dom] unknown rule: {:?}", pair.as_rule()),
             };
@@ -173,6 +177,11 @@ impl Dom {
                 }
                 Rule::node_text | Rule::el_raw_text_content => {
                     element.children.push(Node::Text(pair.as_str().to_string()));
+                }
+                Rule::node_comment => {
+                    element
+                        .children
+                        .push(Node::Comment(pair.into_inner().as_str().to_string()));
                 }
                 // TODO: To enable some kind of validation we should probably align this with
                 // https://html.spec.whatwg.org/multipage/syntax.html#elements-2
