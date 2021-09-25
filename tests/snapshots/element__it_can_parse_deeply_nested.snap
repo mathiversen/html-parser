@@ -61,6 +61,7 @@ expression: dom
                                     "1"
                                   ],
                                   "children": [
+                                    "this is deep",
                                     "hello world"
                                   ]
                                 }

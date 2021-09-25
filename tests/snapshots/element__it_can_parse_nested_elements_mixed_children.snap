@@ -9,6 +9,7 @@ expression: dom
       "name": "div",
       "variant": "normal",
       "children": [
+        "comment",
         {
           "name": "div",
           "variant": "void"
