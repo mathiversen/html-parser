@@ -85,14 +85,35 @@ impl Dom {
 
     fn build_dom(pairs: Pairs<Rule>) -> Result<Self> {
         let mut dom = Self::default();
+
+        // NOTE: The logic is roughly as follows:
+        // 1) A document containing nothing but comments is DomVariant::Empty even though it will have
+        //    children in this first pass.  We fix this in the next section.  This allows us to use
+        //    DomVariant::Empty to indicate "we haven't decided the type yet".
+        // 2) If the type is DomVariant::Empty _so far_, then it can be changed to DomVariant::Document
+        //    or DomVariant::DocumentFragment.  DomVariant is only selected in this stage if we see a
+        //    DOCTYPE tag.  Comments do not change the type.
+        // 3) If the type is non-empty, we don't re-set the type.  We do look for conflicts between
+        //    the type and the tokens in the next stage.
         for pair in pairs {
             match pair.as_rule() {
+                // A <!DOCTYPE> tag means a full-fledged document.  Note that because of the way
+                // the grammar is written, we will only get this token if the <!DOCTYPE> occurs
+                // before any other tag; otherwise it will be parsed as a custom tag.
                 Rule::doctype => {
-                    dom.tree_type = DomVariant::DocumentFragment;
+                    if dom.tree_type == DomVariant::Empty {
+                        dom.tree_type = DomVariant::Document;
+                    }
                 }
+
+                // If we see an element, build the sub-tree and add it as a child.  If we don't
+                // have a document type yet (i.e. "empty"), select DocumentFragment
                 Rule::node_element => match Self::build_node_element(pair.into_inner(), &mut dom) {
                     Ok(el) => {
                         if let Some(node) = el {
+                            if dom.tree_type == DomVariant::Empty {
+                                dom.tree_type = DomVariant::DocumentFragment;
+                            };
                             dom.children.push(node);
                         }
                     }
@@ -100,63 +121,110 @@ impl Dom {
                         dom.errors.push(format!("{}", error));
                     }
                 },
+
+                // Similar to an element, we add it as a child and select DocumentFragment if we
+                // don't already have a document type.
                 Rule::node_text => {
+                    if dom.tree_type == DomVariant::Empty {
+                        dom.tree_type = DomVariant::DocumentFragment;
+                    }
                     dom.children.push(Node::Text(pair.as_str().to_string()));
                 }
+
+                // Store comments as a child, but it doesn't affect the document type selection
+                // until the next phase (validation).
                 Rule::node_comment => {
                     dom.children
                         .push(Node::Comment(pair.into_inner().as_str().to_string()));
                 }
-                Rule::EOI => break,
+
+                // Ignore 'end of input', which then allows the catch-all unreachable!() arm to
+                // function properly.
+                Rule::EOI => (),
+
+                // This should be unreachable, due to the way the grammar is written
                 _ => unreachable!("[build dom] unknown rule: {:?}", pair.as_rule()),
             };
         }
 
-        // TODO: This needs to be cleaned up
-        // What logic should apply when parsing fragment vs document?
-        // I had some of this logic inside the grammar before, but i thought it would be a bit clearer
-        // to just have everyting here when we construct the dom
-        match dom.children.len() {
-            0 => {
-                dom.tree_type = DomVariant::Empty;
-                Ok(dom)
-            }
-            1 => match dom.children[0] {
-                Node::Element(ref el) => {
-                    let name = el.name.to_lowercase();
-                    if name == "html" {
-                        dom.tree_type = DomVariant::Document;
-                        Ok(dom)
-                    } else if dom.tree_type == DomVariant::Document && name != "html" {
-                        Err(Error::Parsing(
-                            "A document can only have html as root".to_string(),
-                        ))
-                    } else {
-                        dom.tree_type = DomVariant::DocumentFragment;
-                        Ok(dom)
-                    }
-                }
-                _ => {
-                    dom.tree_type = DomVariant::DocumentFragment;
-                    Ok(dom)
-                }
-            },
-            _ => {
-                dom.tree_type = DomVariant::DocumentFragment;
+        // Implement some checks on the generated dom's data and initial type.  The type may be
+        // modified in this section.
+        match dom.tree_type {
+            // A DomVariant::Empty can only have comments. Anything else is an error.
+            DomVariant::Empty => {
                 for node in &dom.children {
-                    if let Node::Element(ref el) = node {
-                        let name = el.name.clone().to_lowercase();
-                        if name == "html" || name == "body" || name == "head" {
-                            return Err(Error::Parsing(format!(
-                                "A document fragment should not include {}",
-                                name
-                            )));
-                        }
+                    if let Node::Comment(_) = node {
+                        // An "empty" document, but it has comments - this is where we cleanup the
+                        // earlier assumption that a document with only comments is "empty".
+                        // Really, it is a "fragment".
+                        dom.tree_type = DomVariant::DocumentFragment
+                    } else {
+                        // Anything else (i.e. Text() or Element() ) can't happen at the top level;
+                        // if we had seen one, we would have set the document type above
+                        unreachable!("[build dom] empty document with an Element {:?}", node)
                     }
                 }
-                Ok(dom)
+            }
+
+            // A DomVariant::Document can only have comments and an <HTML> node at the top level.
+            // Only one <HTML> tag is permitted.
+            DomVariant::Document => {
+                if dom
+                    .children
+                    .iter()
+                    .filter(|x| match x {
+                        Node::Element(el) if el.name.to_lowercase() == "html" => true,
+                        _ => false,
+                    })
+                    .count()
+                    > 1
+                {
+                    return Err(Error::Parsing(format!("Document with multiple HTML tags",)));
+                }
+            }
+
+            // A DomVariant::DocumentFragment should not have <HEAD>, or <BODY> tags at the
+            // top-level.  If we find an <HTML> tag, then we consider this a Document instead (if
+            // it comes before any other elements, and if there is only one <HTML> tag).
+            DomVariant::DocumentFragment => {
+                let mut seen_html = false;
+                let mut seen_elements = false;
+
+                for node in &dom.children {
+                    match node {
+                        // Nodes other than <HTML> - reject <HEAD> and <BODY>
+                        Node::Element(ref el) if el.name.clone().to_lowercase() != "html" => {
+                            if el.name == "head" || el.name == "body" {
+                                return Err(Error::Parsing(format!(
+                                    "A document fragment should not include {}",
+                                    el.name
+                                )));
+                            }
+                            seen_elements = true;
+                        }
+                        // <HTML> Nodes - one (before any other elements) is okay
+                        Node::Element(ref el) if el.name.clone().to_lowercase() == "html" => {
+                            if seen_html || seen_elements {
+                                return Err(Error::Parsing(format!(
+                                    "A document fragment should not include {}",
+                                    el.name
+                                )));
+                            };
+
+                            // A fragment with just an <HTML> tag is a document
+                            dom.tree_type = DomVariant::Document;
+                            seen_html = true;
+                        }
+                        // Comment() and Text() nodes are permitted at the top-level of a
+                        // DocumentFragment
+                        _ => (),
+                    }
+                }
             }
         }
+
+        // The result is the validated tree
+        Ok(dom)
     }
 
     fn build_node_element(pairs: Pairs<Rule>, dom: &mut Dom) -> Result<Option<Node>> {
