@@ -16,12 +16,12 @@ fn it_prints_out_processing_error() -> Result<()> {
     let mut file = NamedTempFile::new()?;
     file.write_all(html.as_bytes())?;
 
-    let output = Command::new("./target/debug/html_parser")
+    let output = Command::new("./target/debug/examples/simple_parser")
         .arg("-d")
         .arg(file.path())
         .output()
         .unwrap();
-       
+
     let stdout = String::from_utf8(output.stdout).unwrap();
 
     assert!(stdout.starts_with("# Failed to create element at rule: el_process_instruct"));
