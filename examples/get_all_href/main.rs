@@ -7,20 +7,13 @@ fn main() -> Result<()> {
     let dom = Dom::parse(html)?;
     let iter = dom.children.get(0).unwrap().into_iter();
 
-    let hrefs = iter.fold(Vec::new(), |mut hrefs, node| match node {
-        Node::Element(ref element) => {
-            if element.name == "a" {
-                hrefs.push(element.attributes["href"].clone().unwrap_or_default());
-                hrefs
-            } else {
-                hrefs
-            }
-        }
-        _ => hrefs,
+    let hrefs = iter.filter_map(|item| match item {
+        Node::Element(ref element) if element.name == "a" => element.attributes["href"].clone(),
+        _ => None,
     });
 
     println!("\nThe following links where found:");
-    for (index, href) in hrefs.iter().enumerate() {
+    for (index, href) in hrefs.enumerate() {
         println!("{}: {}", index + 1, href)
     }
 
