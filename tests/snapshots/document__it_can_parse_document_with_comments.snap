@@ -5,9 +5,18 @@ expression: dom
 {
   "treeType": "document",
   "children": [
+    "comment",
+    "comment",
+    "comment",
+    "comment",
     {
       "name": "html",
-      "variant": "normal"
-    }
+      "variant": "normal",
+      "children": [
+        "comment"
+      ]
+    },
+    "comment",
+    "comment"
   ]
 }

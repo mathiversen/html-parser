@@ -6,6 +6,7 @@ expression: dom
   "treeType": "documentFragment",
   "children": [
     "hello",
+    "world?",
     {
       "name": "div",
       "variant": "void"

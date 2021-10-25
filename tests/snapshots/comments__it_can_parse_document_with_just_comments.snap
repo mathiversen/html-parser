@@ -1,7 +1,12 @@
 ---
 source: tests/comments.rs
-expression: dom
+expression: ast
 ---
 {
-  "treeType": "empty"
+  "treeType": "documentFragment",
+  "children": [
+    "x",
+    "y",
+    "z"
+  ]
 }
