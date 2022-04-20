@@ -306,12 +306,29 @@ impl Dom {
                 Rule::attr_key => {
                     attribute.0 = pair.as_str().to_string();
                 }
-                Rule::attr_value | Rule::attr_non_quoted => {
+                Rule::attr_non_quoted => {
                     attribute.1 = Some(pair.as_str().to_string());
+                }
+                Rule::attr_quoted => {
+                    let inner_pair = pair
+                        .into_inner()
+                        .into_iter()
+                        .next()
+                        .expect("attribute value");
+
+                    match inner_pair.as_rule() {
+                        Rule::attr_value => attribute.1 = Some(inner_pair.as_str().to_string()),
+                        _ => {
+                            return Err(Error::Parsing(format!(
+                                "Failed to parse attr value: {:?}",
+                                inner_pair.as_rule()
+                            )))
+                        }
+                    }
                 }
                 _ => {
                     return Err(Error::Parsing(format!(
-                        "Failed to create attribute at rule: {:?}",
+                        "Failed to parse attr: {:?}",
                         pair.as_rule()
                     )))
                 }

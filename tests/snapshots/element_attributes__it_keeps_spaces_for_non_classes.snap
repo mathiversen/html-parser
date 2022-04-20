@@ -1,0 +1,16 @@
+---
+source: tests/element_attributes.rs
+expression: dom
+---
+{
+  "treeType": "documentFragment",
+  "children": [
+    {
+      "name": "img",
+      "variant": "void",
+      "attributes": {
+        "attr": " a b     \n\t"
+      }
+    }
+  ]
+}
