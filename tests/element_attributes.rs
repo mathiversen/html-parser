@@ -86,3 +86,10 @@ fn it_can_parse_classes() -> Result<()> {
     assert_json_snapshot!(dom);
     Ok(())
 }
+#[test]
+fn it_keeps_spaces_for_non_classes() -> Result<()> {
+    let html = "<img attr=' a b     \n\t'/>";
+    let dom = Dom::parse(html)?;
+    assert_json_snapshot!(dom);
+    Ok(())
+}
