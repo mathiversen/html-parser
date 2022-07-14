@@ -1,5 +1,5 @@
 use crate::Result;
-use pest::{iterators::Pairs, Parser};
+use pest::{iterators::Pairs, iterators::Pair, Parser};
 use serde::Serialize;
 use std::default::Default;
 
@@ -10,9 +10,11 @@ use crate::Rule;
 pub mod element;
 pub mod formatting;
 pub mod node;
+pub mod span;
 
 use element::{Element, ElementVariant};
 use node::Node;
+use crate::dom::span::SourceSpan;
 
 /// Document, DocumentFragment or Empty
 #[derive(Debug, Clone, PartialEq, Serialize)]
@@ -108,7 +110,7 @@ impl Dom {
 
                 // If we see an element, build the sub-tree and add it as a child.  If we don't
                 // have a document type yet (i.e. "empty"), select DocumentFragment
-                Rule::node_element => match Self::build_node_element(pair.into_inner(), &mut dom) {
+                Rule::node_element => match Self::build_node_element(pair, &mut dom) {
                     Ok(el) => {
                         if let Some(node) = el {
                             if dom.tree_type == DomVariant::Empty {
@@ -227,12 +229,30 @@ impl Dom {
         Ok(dom)
     }
 
-    fn build_node_element(pairs: Pairs<Rule>, dom: &mut Dom) -> Result<Option<Node>> {
-        let mut element = Element::default();
-        for pair in pairs {
+    fn build_node_element(pair: Pair<Rule>, dom: &mut Dom) -> Result<Option<Node>> {
+        let source_span = {
+            let pair_span = pair.as_span();
+            let (start_line, start_column) = pair_span.start_pos().line_col();
+            let (end_line, end_column) = pair_span.end_pos().line_col();
+
+            SourceSpan::new(
+                String::from(pair_span.as_str()),
+                start_line,
+                start_column,
+                end_line,
+                end_column
+            )
+        };
+
+        let mut element = Element {
+            source_span,
+            ..Element::default()
+        };
+
+        for pair in pair.into_inner() {
             match pair.as_rule() {
                 Rule::node_element | Rule::el_raw_text => {
-                    match Self::build_node_element(pair.into_inner(), dom) {
+                    match Self::build_node_element(pair, dom) {
                         Ok(el) => {
                             if let Some(child_element) = el {
                                 element.children.push(child_element)
