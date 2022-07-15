@@ -238,8 +238,8 @@ impl Dom {
             SourceSpan::new(
                 String::from(pair_span.as_str()),
                 start_line,
-                start_column,
                 end_line,
+                start_column,
                 end_column
             )
         };
