@@ -1,0 +1,40 @@
+---
+source: tests/text.rs
+expression: dom
+---
+{
+  "treeType": "documentFragment",
+  "children": [
+    {
+      "name": "p",
+      "variant": "normal",
+      "children": [
+        "\n    This is a ",
+        {
+          "name": "b",
+          "variant": "normal",
+          "children": [
+            "para"
+          ]
+        },
+        "gra",
+        {
+          "name": "b",
+          "variant": "normal",
+          "children": [
+            "ph"
+          ]
+        },
+        " with some",
+        {
+          "name": "i",
+          "variant": "normal",
+          "children": [
+            " weird "
+          ]
+        },
+        " formatting.\n"
+      ]
+    }
+  ]
+}

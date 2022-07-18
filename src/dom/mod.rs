@@ -130,7 +130,10 @@ impl Dom {
                     if dom.tree_type == DomVariant::Empty {
                         dom.tree_type = DomVariant::DocumentFragment;
                     }
-                    dom.children.push(Node::Text(pair.as_str().to_string()));
+                    let text = pair.as_str().to_string();
+                    if !text.trim().is_empty() {
+                        dom.children.push(Node::Text(text));
+                    }
                 }
 
                 // Store comments as a child, but it doesn't affect the document type selection
@@ -264,7 +267,10 @@ impl Dom {
                     }
                 }
                 Rule::node_text | Rule::el_raw_text_content => {
-                    element.children.push(Node::Text(pair.as_str().to_string()));
+                    let text = pair.as_str().to_string();
+                    if !text.trim().is_empty() {
+                        element.children.push(Node::Text(text));
+                    }
                 }
                 Rule::node_comment => {
                     element
@@ -324,10 +330,10 @@ impl Dom {
         for pair in pairs {
             match pair.as_rule() {
                 Rule::attr_key => {
-                    attribute.0 = pair.as_str().to_string();
+                    attribute.0 = pair.as_str().trim().to_string();
                 }
                 Rule::attr_non_quoted => {
-                    attribute.1 = Some(pair.as_str().to_string());
+                    attribute.1 = Some(pair.as_str().trim().to_string());
                 }
                 Rule::attr_quoted => {
                     let inner_pair = pair

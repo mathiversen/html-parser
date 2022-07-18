@@ -1,0 +1,45 @@
+---
+source: tests/element.rs
+expression: dom
+---
+{
+  "treeType": "documentFragment",
+  "children": [
+    "Normal case",
+    {
+      "name": "div",
+      "variant": "normal",
+      "children": [
+        " Text "
+      ]
+    },
+    "Whitespaces in opening tag to the left",
+    {
+      "name": "div",
+      "variant": "normal",
+      "children": [
+        " Text "
+      ]
+    },
+    "Whitespaces in opening tag to the right",
+    {
+      "name": "div",
+      "variant": "normal",
+      "children": [
+        " Text "
+      ]
+    },
+    "Whitespaces in closing tag to the left (should not work)",
+    "<div> Text < /div>\n\n",
+    "Whitespaces in closing tag to the right",
+    {
+      "name": "div",
+      "variant": "normal",
+      "children": [
+        " Text "
+      ]
+    },
+    "Whitespaces everywhere (should not work)",
+    "< div > Text < / div >\n"
+  ]
+}

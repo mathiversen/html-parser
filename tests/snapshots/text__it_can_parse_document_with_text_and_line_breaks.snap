@@ -5,6 +5,6 @@ expression: dom
 {
   "treeType": "documentFragment",
   "children": [
-    "hello world\nhere's another line for you!\nThe end"
+    "hello world\nhere's another line for you!\nThe end\n"
   ]
 }
