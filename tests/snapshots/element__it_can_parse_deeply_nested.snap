@@ -62,7 +62,7 @@ expression: dom
                                   ],
                                   "children": [
                                     "this is deep",
-                                    "hello world"
+                                    "hello world\n                            "
                                   ]
                                 }
                               ]

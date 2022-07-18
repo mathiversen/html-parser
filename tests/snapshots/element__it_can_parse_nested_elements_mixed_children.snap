@@ -14,12 +14,12 @@ expression: dom
           "name": "div",
           "variant": "void"
         },
-        "Hello",
+        "\n    Hello\n    ",
         {
           "name": "div",
           "variant": "normal",
           "children": [
-            "World"
+            "\n        World\n    "
           ]
         }
       ]

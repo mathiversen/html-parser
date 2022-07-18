@@ -222,3 +222,30 @@ fn it_can_clone_dom() {
     let dom_clone = dom.clone();
     assert_eq!(dom, dom_clone);
 }
+
+#[test]
+fn it_can_deal_with_weird_whitespaces() {
+    let html = indoc!(
+        "
+        <!-- Normal case -->
+        <div> Text </div>
+
+        <!-- Whitespaces in opening tag to the left -->
+        < div> Text </div>
+
+        <!-- Whitespaces in opening tag to the right -->
+        <div > Text </div>
+
+        <!-- Whitespaces in closing tag to the left (should not work) -->
+        <div> Text < /div>
+
+        <!-- Whitespaces in closing tag to the right -->
+        <div> Text </div >
+
+        <!-- Whitespaces everywhere (should not work) -->
+        < div > Text < / div >
+        "
+    );
+    let dom = Dom::parse(html).unwrap();
+    assert_json_snapshot!(dom);
+}

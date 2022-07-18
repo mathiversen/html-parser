@@ -37,6 +37,13 @@ fn it_can_parse_multiple_attributes_single_quote() -> Result<()> {
     Ok(())
 }
 #[test]
+fn it_can_parse_multiple_attributes_where_whitespace_does_not_matter_for_keys() -> Result<()> {
+    let html = "<div    cat   =  \"mjau\" dog ='  woff  'ape = oh ></div>";
+    let dom = Dom::parse(html)?;
+    assert_json_snapshot!(dom);
+    Ok(())
+}
+#[test]
 fn it_can_parse_multiple_attributes_double_quote() -> Result<()> {
     let html = "<div cat=\"mjau\" dog=\"woff\" ape=\"oh\"></div>";
     let dom = Dom::parse(html)?;

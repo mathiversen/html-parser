@@ -12,14 +12,14 @@ html = _{
 //
 // DOCTYPE
 //
-doctype = { chevron_left_bang ~ ^"doctype" ~ attr* ~ chevron_right_normal}
+doctype = { WSP* ~ chevron_left_bang ~ ^"doctype" ~ WSP* ~ attr* ~ WSP* ~ chevron_right_normal}
 
 //
 // NODES
 //
 node = _{ node_comment | node_element | node_text }
-node_comment = { comment_if | comment_normal }
-node_text = { (!(node_element | comment_tag_start) ~ ANY)+ }
+node_comment = { WSP* ~ (comment_if | comment_normal) ~ WSP* }
+node_text = { (!(node_element | comment_tag_start | chevron_left_bang) ~ ANY)+ }
 node_element = { el_void | el_void_xml | el_process_instruct | el_raw_text | el_normal | el_dangling }
 
 //
@@ -27,8 +27,8 @@ node_element = { el_void | el_void_xml | el_process_instruct | el_raw_text | el_
 //
 comment_normal = _{ comment_tag_start ~ comment_body ~ comment_tag_end }
 comment_body = { (!comment_tag_end ~ ANY)* }
-comment_tag_start = _{ chevron_left_bang ~ "--" }
-comment_tag_end = _{ "--" ~ chevron_right_normal }
+comment_tag_start = _{ chevron_left_bang ~ "--" ~ WSP* }
+comment_tag_end = _{ WSP* ~ "--" ~ chevron_right_normal }
 
 // Compatability with old IE browsers... This is not necessary for newer browsers
 comment_if = _{ comment_if_start ~ comment_if_body ~ comment_if_end }
@@ -39,11 +39,11 @@ comment_if_end = _{ chevron_left_bang ~ "[" ~ ^"endif" ~ "]" ~ comment_tag_end }
 //
 // ATTRIBUTES
 //
-attr = { attr_key ~ (equal ~ (attr_non_quoted | attr_quoted ))? }
+attr = { attr_key ~ (equal ~ WSP* ~ (attr_non_quoted | attr_quoted ))? }
 attr_quoted =  ${PUSH(quote) ~ attr_value ~ POP }
-attr_non_quoted = @{ !quote ~ (!(WHITESPACE | chevron_right) ~ ANY)* }
-attr_key = { ASCII_ALPHA ~ text_chars* }
-attr_value = { WHITESPACE* ~ (!PEEK ~ ANY)* ~ WHITESPACE* }
+attr_non_quoted = @{ !quote ~ (!(WSP | chevron_right) ~ ANY)* }
+attr_key = { WSP* ~ ASCII_ALPHA ~ text_chars* ~ WSP* }
+attr_value = { WSP* ~ (!PEEK ~ ANY)* ~ WSP* }
 
 //
 // ELEMENTS
@@ -79,15 +79,15 @@ el_void_name_svg = @{
     | ^"circle"
 }
 el_void_name = @{ el_void_name_html | el_void_name_svg }
-el_void = _{ chevron_left_normal ~ el_void_name ~ attr* ~ (chevron_right_normal | chevron_right_closed) }
-el_void_xml = _{ chevron_left_normal ~ el_name ~ attr* ~ chevron_right_closed }
+el_void = _{ chevron_left_normal ~ WSP* ~ el_void_name ~ WSP* ~ attr* ~ WSP* ~ (chevron_right_normal | chevron_right_closed) }
+el_void_xml = _{ chevron_left_normal ~ WSP* ~ el_name ~ WSP* ~ attr* ~ WSP* ~ chevron_right_closed }
 
 // Open elements are default element that can take children 
 // and have both a start tag and an end tag
 // Ex: <html lang="en"></html>
 el_normal = _{ el_normal_start ~ (!el_normal_end ~ node)* ~ el_normal_end }
-el_normal_start = _{ chevron_left_normal ~ PUSH(el_name) ~ attr* ~ chevron_right_normal}
-el_normal_end = { chevron_left_closed ~ POP ~ chevron_right_normal}
+el_normal_start = _{ chevron_left_normal ~ WSP* ~ PUSH(el_name) ~ WSP* ~ attr* ~ WSP* ~ chevron_right_normal}
+el_normal_end = { chevron_left_closed ~ WSP* ~ POP ~ WSP* ~ chevron_right_normal}
 
 // Raw text elements are elements with text/script content that
 // might interfere with the normal html syntax
@@ -99,16 +99,16 @@ el_raw_text_name = {
 }
 el_raw_text_content = { (!el_raw_text_end ~ ANY)* }
 el_raw_text = _{ el_raw_text_start ~ el_raw_text_content ~ el_raw_text_end }
-el_raw_text_start = _{ chevron_left_normal ~ PUSH(el_raw_text_name) ~ attr* ~ chevron_right_normal}
-el_raw_text_end = { chevron_left_closed ~ POP ~ chevron_right_normal}
+el_raw_text_start = _{ chevron_left_normal ~ WSP* ~ PUSH(el_raw_text_name) ~ WSP* ~ attr* ~ WSP* ~ chevron_right_normal ~ WSP*}
+el_raw_text_end = { WSP* ~ chevron_left_closed ~ WSP* ~ POP ~ WSP* ~ chevron_right_normal}
 
 // XML processing instruction
 // Ex: <?xml version="1.0" ?>
-el_process_instruct = { chevron_left_question ~ el_name? ~ attr* ~ chevron_right_question }
+el_process_instruct = { chevron_left_question ~ WSP* ~ el_name? ~ WSP* ~ attr* ~ WSP* ~ chevron_right_question }
 
 // Catch dangling elements
 // Ex: <div/></div>
-el_dangling = { chevron_left_closed ~ el_name ~ chevron_right_normal}
+el_dangling = { chevron_left_closed ~ WSP* ~ el_name ~ WSP* ~ chevron_right_normal}
 
 //
 // SYMBOLS / CHARACTERS
@@ -133,4 +133,4 @@ equal = _{ "=" }
 quote_dubble = _{ "\"" }
 quote_single = _{ "'" }
 quote = _{ quote_dubble | quote_single }
-WHITESPACE = _{ " " | "\t" | "\r" | "\n" }
+WSP = _{ " " | "\t" | "\r" | "\n" }

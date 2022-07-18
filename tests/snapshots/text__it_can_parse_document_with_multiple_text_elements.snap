@@ -5,11 +5,11 @@ expression: dom
 {
   "treeType": "documentFragment",
   "children": [
-    "hello world\nhere's another line for you!",
+    "hello world\nhere's another line for you!\n",
     {
       "name": "div",
       "variant": "void"
     },
-    "The end"
+    "\nThe end\n"
   ]
 }

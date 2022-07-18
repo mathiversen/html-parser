@@ -1,0 +1,18 @@
+---
+source: tests/element_attributes.rs
+expression: dom
+---
+{
+  "treeType": "documentFragment",
+  "children": [
+    {
+      "name": "div",
+      "variant": "normal",
+      "attributes": {
+        "ape": "oh",
+        "cat": "mjau",
+        "dog": "  woff  "
+      }
+    }
+  ]
+}
