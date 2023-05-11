@@ -30,6 +30,14 @@ impl Node {
             _ => None,
         }
     }
+
+    pub fn to_html(&self) -> String {
+        match self {
+            Node::Text(t) => t.to_string(),
+            Node::Element(e) => e.to_html(),
+            Node::Comment(c) => c.to_string(),
+        }
+    }
 }
 
 impl<'a> IntoIterator for &'a Node {

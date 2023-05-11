@@ -85,6 +85,25 @@ impl Dom {
         Ok(serde_json::to_string_pretty(self)?)
     }
 
+    pub fn to_html(&self) -> String {
+        let mut html = String::new();
+
+        match self.tree_type {
+            DomVariant::Document => {
+                html.push_str("<!doctype html>");
+            }
+            DomVariant::DocumentFragment => {}
+            DomVariant::Empty => {
+                return html;
+            }
+        }
+
+        for child in self.children.iter() {
+            html.push_str(&child.to_html());
+        }
+        html
+    }
+
     fn build_dom(pairs: Pairs<Rule>) -> Result<Self> {
         let mut dom = Self::default();
 

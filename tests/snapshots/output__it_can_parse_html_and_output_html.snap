@@ -1,0 +1,5 @@
+---
+source: tests/output.rs
+expression: dom
+---
+<template><h1 class="main bg-red mp-12">Header</h1><ul><li title="Item one">Item 1</li><li><button disabled></button></li></ul></template>

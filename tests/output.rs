@@ -1,6 +1,6 @@
 use html_parser::{Dom, Result};
 use indoc::indoc;
-use insta::assert_json_snapshot;
+use insta::{assert_json_snapshot, assert_snapshot};
 
 #[test]
 fn it_can_output_json() -> Result<()> {
@@ -29,5 +29,25 @@ fn it_can_output_complex_html_as_json() -> Result<()> {
     );
     let dom = Dom::parse(html)?;
     assert_json_snapshot!(dom);
+    Ok(())
+}
+
+#[test]
+fn it_can_parse_html_and_output_html() -> Result<()> {
+    let html = indoc!(
+        r#"
+        <template>
+            <h1 class="main bg-red mp-12">Header</h1>
+            <ul>
+                <li title="Item one">Item 1</li>
+                </br>
+                <li><button disabled></button></li>
+            </ul>
+        </template>
+
+    "#
+    );
+    let dom = Dom::parse(html)?.to_html();
+    assert_snapshot!(dom);
     Ok(())
 }

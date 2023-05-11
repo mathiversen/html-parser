@@ -47,7 +47,70 @@ pub struct Element {
 
     /// Span of the element in the parsed source
     #[serde(skip)]
-    pub source_span: SourceSpan
+    pub source_span: SourceSpan,
+}
+
+impl Element {
+    pub fn to_html(&self) -> String {
+        let mut html = String::new();
+
+        match self.variant {
+            ElementVariant::Normal => {
+                html.push_str("<");
+                html.push_str(&self.name);
+                html.push_str(&Self::class_to_html(&self.classes));
+                html.push_str(&Self::attr_to_html(&self.attributes));
+                html.push_str(">");
+
+                for child in self.children.iter() {
+                    html.push_str(&child.to_html());
+                }
+                html.push_str(format!("</{}>", self.name).as_str())
+            }
+            ElementVariant::Void => {
+                html.push_str("<");
+                html.push_str(&self.name);
+                html.push_str(&Self::class_to_html(&self.classes));
+                html.push_str(&Self::attr_to_html(&self.attributes));
+                html.push_str("/>");
+            }
+        }
+
+        html
+    }
+
+    fn class_to_html(classes: &Vec<String>) -> String {
+        let mut html = String::new();
+
+        let classes_len = classes.len();
+        for (index, class) in classes.iter().enumerate() {
+            if index == 0 {
+                html.push_str(&format!(" class=\"{}", class));
+            } else {
+                html.push_str(&format!(" {}", class));
+            }
+
+            if classes_len == index + 1 {
+                html.push_str("\"");
+            }
+        }
+
+        html
+    }
+
+    fn attr_to_html(attributes: &Attributes) -> String {
+        let mut html = String::new();
+
+        for attr in attributes.iter() {
+            if let Some(value) = attr.1.as_ref() {
+                html.push_str(&format!(" {}=\"{}\"", attr.0, value));
+            } else {
+                html.push_str(&format!(" {}", attr.0));
+            }
+        }
+
+        html
+    }
 }
 
 impl Default for Element {
@@ -59,7 +122,7 @@ impl Default for Element {
             classes: vec![],
             attributes: HashMap::new(),
             children: vec![],
-            source_span: SourceSpan::default()
+            source_span: SourceSpan::default(),
         }
     }
 }
