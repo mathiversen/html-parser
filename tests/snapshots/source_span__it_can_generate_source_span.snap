@@ -1,0 +1,70 @@
+---
+source: tests/source_span.rs
+expression: dom
+---
+Dom {
+    tree_type: DocumentFragment,
+    children: [
+        Element(
+            Element {
+                id: None,
+                name: "template",
+                variant: Normal,
+                attributes: {},
+                classes: [],
+                children: [
+                    Element(
+                        Element {
+                            id: None,
+                            name: "h1",
+                            variant: Normal,
+                            attributes: {},
+                            classes: [],
+                            children: [
+                                Text(
+                                    "Header",
+                                ),
+                            ],
+                            source_span: SourceSpan {
+                                text: "<h1>Header</h1>",
+                                start_line: 2,
+                                end_line: 2,
+                                start_column: 5,
+                                end_column: 20,
+                            },
+                        },
+                    ),
+                    Element(
+                        Element {
+                            id: None,
+                            name: "p",
+                            variant: Normal,
+                            attributes: {},
+                            classes: [],
+                            children: [
+                                Text(
+                                    "Paragraph",
+                                ),
+                            ],
+                            source_span: SourceSpan {
+                                text: "<p>Paragraph</p>",
+                                start_line: 3,
+                                end_line: 3,
+                                start_column: 5,
+                                end_column: 21,
+                            },
+                        },
+                    ),
+                ],
+                source_span: SourceSpan {
+                    text: "<template>\n    <h1>Header</h1>\n    <p>Paragraph</p>\n</template>",
+                    start_line: 1,
+                    end_line: 4,
+                    start_column: 1,
+                    end_column: 12,
+                },
+            },
+        ),
+    ],
+    errors: [],
+}
