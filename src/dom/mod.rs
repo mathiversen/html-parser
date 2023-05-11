@@ -1,5 +1,5 @@
 use crate::Result;
-use pest::{iterators::Pairs, iterators::Pair, Parser};
+use pest::{iterators::Pair, iterators::Pairs, Parser};
 use serde::Serialize;
 use std::default::Default;
 
@@ -12,9 +12,9 @@ pub mod formatting;
 pub mod node;
 pub mod span;
 
+use crate::dom::span::SourceSpan;
 use element::{Element, ElementVariant};
 use node::Node;
-use crate::dom::span::SourceSpan;
 
 /// Document, DocumentFragment or Empty
 #[derive(Debug, Clone, PartialEq, Serialize)]
@@ -243,7 +243,7 @@ impl Dom {
                 start_line,
                 end_line,
                 start_column,
-                end_column
+                end_column,
             )
         };
 

@@ -1,19 +1,19 @@
+use clap::Parser;
 use html_parser::{Dom, Result};
 use std::{
     fs::File,
     io::{self, Read},
     path::PathBuf,
 };
-use structopt::StructOpt;
 
-#[derive(Debug, StructOpt)]
+#[derive(Debug, Parser)]
 /// A simple and general purpose html/xhtml parser.
 struct Opt {
-    #[structopt(short, long)]
+    #[arg(short, long)]
     /// Pretty-print the output.
     pretty_print: bool,
 
-    #[structopt(short, long)]
+    #[arg(short, long)]
     /// Debug the parser, this will print errors to the console.
     debug: bool,
 
@@ -22,12 +22,11 @@ struct Opt {
     /// This argument can either be a path to the html-file that you would like to parse or the
     /// result of stdin. Note: Content over stdin needs to be finite, for now, as it is collected
     /// into a string and then processed by the parser.
-    #[structopt(parse(from_os_str))]
     input: Option<PathBuf>,
 }
 
 fn main() -> Result<()> {
-    let opt = Opt::from_args();
+    let opt = Opt::parse();
 
     let mut content = String::with_capacity(100_000);
 
