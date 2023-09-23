@@ -131,7 +131,7 @@ impl Dom {
                         dom.tree_type = DomVariant::DocumentFragment;
                     }
                     let text = pair.as_str().to_string();
-                    if !text.trim().is_empty() {
+                    if !text.is_empty() {
                         dom.children.push(Node::Text(text));
                     }
                 }
@@ -268,7 +268,7 @@ impl Dom {
                 }
                 Rule::node_text | Rule::el_raw_text_content => {
                     let text = pair.as_str().to_string();
-                    if !text.trim().is_empty() {
+                    if !text.is_empty() {
                         element.children.push(Node::Text(text));
                     }
                 }
