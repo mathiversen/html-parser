@@ -17,7 +17,21 @@ impl Node {
         }
     }
 
+    pub fn text_mut(&mut self) -> Option<&mut String> {
+        match self {
+            Node::Text(t) => Some(t),
+            _ => None
+        }
+    }
+
     pub fn element(&self) -> Option<&Element> {
+        match self {
+            Node::Element(e) => Some(e),
+            _ => None,
+        }
+    }
+
+    pub fn element_mut(&mut self) -> Option<&mut Element> {
         match self {
             Node::Element(e) => Some(e),
             _ => None,
@@ -27,6 +41,13 @@ impl Node {
     pub fn comment(&self) -> Option<&str> {
         match self {
             Node::Comment(t) => Some(t.as_str()),
+            _ => None,
+        }
+    }
+
+    pub fn comment_mut(&mut self) -> Option<&mut String> {
+        match self {
+            Node::Comment(t) => Some(t),
             _ => None,
         }
     }
