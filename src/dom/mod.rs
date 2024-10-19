@@ -130,8 +130,12 @@ impl Dom {
                     if dom.tree_type == DomVariant::Empty {
                         dom.tree_type = DomVariant::DocumentFragment;
                     }
+
                     let text = pair.as_str().to_string();
-                    if !text.trim().is_empty() {
+                    if !text
+                        .trim_matches(|c: char| c.is_whitespace() && c != ' ')
+                        .is_empty()
+                    {
                         dom.children.push(Node::Text(text));
                     }
                 }
