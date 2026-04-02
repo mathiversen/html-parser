@@ -1,24 +1,35 @@
-use crate::Result;
-use pest::{iterators::Pair, iterators::Pairs, Parser};
+use ownable::{IntoOwned, ToBorrowed, ToOwned};
+use pest::{Parser, iterators::Pair, iterators::Pairs};
+#[cfg(feature = "test")]
 use serde::Serialize;
+use std::borrow::Cow;
 use std::default::Default;
 
+use crate::Rule;
 use crate::error::Error;
 use crate::grammar::Grammar;
-use crate::Rule;
+use crate::{Attribute, Result, Text};
 
 pub mod element;
 pub mod formatting;
+pub mod html;
 pub mod node;
+#[cfg(feature = "source-span")]
 pub mod span;
+pub mod vecmap;
+pub mod vecset;
 
+use crate::dom::node::write_html_list;
+#[cfg(feature = "source-span")]
 use crate::dom::span::SourceSpan;
+use crate::for_each::ForEach;
 use element::{Element, ElementVariant};
 use node::Node;
 
 /// Document, DocumentFragment or Empty
-#[derive(Debug, Clone, PartialEq, Serialize)]
-#[serde(rename_all = "camelCase")]
+#[derive(Clone, Copy, PartialEq)]
+#[cfg_attr(feature = "test", derive(Debug, Serialize))]
+#[cfg_attr(feature = "test", serde(rename_all = "camelCase"))]
 pub enum DomVariant {
     /// This means that the parsed html had the representation of an html document. The doctype is optional but a document should only have one root node with the name of html.
     /// Example:
@@ -43,22 +54,25 @@ pub enum DomVariant {
 }
 
 /// **The main struct** & the result of the parsed html
-#[derive(Debug, Clone, Serialize, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub struct Dom {
+#[derive(PartialEq, ToBorrowed, ToOwned, IntoOwned)]
+#[cfg_attr(feature = "test", derive(Debug, Serialize))]
+#[cfg_attr(feature = "test", serde(rename_all = "camelCase"))]
+pub struct Dom<'a> {
     /// The type of the tree that was parsed
+    #[ownable(clone)]
     pub tree_type: DomVariant,
 
     /// All of the root children in the tree
-    #[serde(skip_serializing_if = "Vec::is_empty")]
-    pub children: Vec<Node>,
+    #[cfg_attr(feature = "test", serde(skip_serializing_if = "Vec::is_empty"))]
+    pub children: Vec<Node<'a>>,
 
     /// A collection of all errors during parsing
-    #[serde(skip_serializing)]
+    #[cfg_attr(feature = "test", serde(skip_serializing))]
+    #[ownable(clone)]
     pub errors: Vec<String>,
 }
 
-impl Default for Dom {
+impl<'a> Default for Dom<'a> {
     fn default() -> Self {
         Self {
             tree_type: DomVariant::Empty,
@@ -68,8 +82,8 @@ impl Default for Dom {
     }
 }
 
-impl Dom {
-    pub fn parse(input: &str) -> Result<Self> {
+impl<'a> Dom<'a> {
+    pub fn parse(input: &'a str) -> Result<Self> {
         let pairs = match Grammar::parse(Rule::html, input) {
             Ok(pairs) => pairs,
             Err(error) => return formatting::error_msg(error),
@@ -77,15 +91,17 @@ impl Dom {
         Self::build_dom(pairs)
     }
 
+    #[cfg(feature = "test")]
     pub fn to_json(&self) -> Result<String> {
         Ok(serde_json::to_string(self)?)
     }
 
+    #[cfg(feature = "test")]
     pub fn to_json_pretty(&self) -> Result<String> {
         Ok(serde_json::to_string_pretty(self)?)
     }
 
-    fn build_dom(pairs: Pairs<Rule>) -> Result<Self> {
+    fn build_dom(pairs: Pairs<'a, Rule>) -> Result<Self> {
         let mut dom = Self::default();
 
         // NOTE: The logic is roughly as follows:
@@ -130,9 +146,9 @@ impl Dom {
                     if dom.tree_type == DomVariant::Empty {
                         dom.tree_type = DomVariant::DocumentFragment;
                     }
-                    let text = pair.as_str().to_string();
+                    let text = pair.as_str();
                     if !text.trim().is_empty() {
-                        dom.children.push(Node::Text(text));
+                        dom.children.push(Node::Text(Text(text.into())));
                     }
                 }
 
@@ -140,7 +156,7 @@ impl Dom {
                 // until the next phase (validation).
                 Rule::node_comment => {
                     dom.children
-                        .push(Node::Comment(pair.into_inner().as_str().to_string()));
+                        .push(Node::Comment(Text(pair.into_inner().as_str().into())));
                 }
 
                 // Ignore 'end of input', which then allows the catch-all unreachable!() arm to
@@ -166,7 +182,10 @@ impl Dom {
                     } else {
                         // Anything else (i.e. Text() or Element() ) can't happen at the top level;
                         // if we had seen one, we would have set the document type above
-                        unreachable!("[build dom] empty document with an Element {:?}", node)
+                        unreachable!(
+                            "[build dom] empty document with an Element {:?}",
+                            node.to_html()
+                        )
                     }
                 }
             }
@@ -177,14 +196,13 @@ impl Dom {
                 if dom
                     .children
                     .iter()
-                    .filter(|x| match x {
-                        Node::Element(el) if el.name.to_lowercase() == "html" => true,
-                        _ => false,
-                    })
+                    .filter(|x| matches!(x, Node::Element(el) if el.name.to_lowercase() == "html"))
                     .count()
                     > 1
                 {
-                    return Err(Error::Parsing(format!("Document with multiple HTML tags",)));
+                    return Err(Error::Parsing(
+                        "Document with multiple HTML tags".to_string(),
+                    ));
                 }
             }
 
@@ -198,7 +216,7 @@ impl Dom {
                 for node in &dom.children {
                     match node {
                         // Nodes other than <HTML> - reject <HEAD> and <BODY>
-                        Node::Element(ref el) if el.name.clone().to_lowercase() != "html" => {
+                        Node::Element(el) if el.name.clone().to_lowercase() != "html" => {
                             if el.name == "head" || el.name == "body" {
                                 return Err(Error::Parsing(format!(
                                     "A document fragment should not include {}",
@@ -208,7 +226,7 @@ impl Dom {
                             seen_elements = true;
                         }
                         // <HTML> Nodes - one (before any other elements) is okay
-                        Node::Element(ref el) if el.name.clone().to_lowercase() == "html" => {
+                        Node::Element(el) if el.name.clone().to_lowercase() == "html" => {
                             if seen_html || seen_elements {
                                 return Err(Error::Parsing(format!(
                                     "A document fragment should not include {}",
@@ -232,23 +250,22 @@ impl Dom {
         Ok(dom)
     }
 
-    fn build_node_element(pair: Pair<Rule>, dom: &mut Dom) -> Result<Option<Node>> {
-        let source_span = {
-            let pair_span = pair.as_span();
-            let (start_line, start_column) = pair_span.start_pos().line_col();
-            let (end_line, end_column) = pair_span.end_pos().line_col();
-
-            SourceSpan::new(
-                String::from(pair_span.as_str()),
-                start_line,
-                end_line,
-                start_column,
-                end_column,
-            )
-        };
-
+    fn build_node_element(pair: Pair<'a, Rule>, dom: &mut Dom) -> Result<Option<Node<'a>>> {
         let mut element = Element {
-            source_span,
+            #[cfg(feature = "source-span")]
+            source_span: {
+                let pair_span = pair.as_span();
+                let (start_line, start_column) = pair_span.start_pos().line_col();
+                let (end_line, end_column) = pair_span.end_pos().line_col();
+
+                SourceSpan::new(
+                    pair_span.as_str(),
+                    start_line,
+                    end_line,
+                    start_column,
+                    end_column,
+                )
+            },
             ..Element::default()
         };
 
@@ -267,36 +284,39 @@ impl Dom {
                     }
                 }
                 Rule::node_text | Rule::el_raw_text_content => {
-                    let text = pair.as_str().to_string();
+                    let text = pair.as_str();
                     if !text.trim().is_empty() {
-                        element.children.push(Node::Text(text));
+                        element.children.push(Node::Text(Text(text.into())));
                     }
                 }
                 Rule::node_comment => {
                     element
                         .children
-                        .push(Node::Comment(pair.into_inner().as_str().to_string()));
+                        .push(Node::Comment(Text(pair.into_inner().as_str().into())));
                 }
                 // TODO: To enable some kind of validation we should probably align this with
                 // https://html.spec.whatwg.org/multipage/syntax.html#elements-2
                 // Also see element variants
                 Rule::el_name | Rule::el_void_name | Rule::el_raw_text_name => {
-                    element.name = pair.as_str().to_string();
+                    element.name = pair.as_str().into();
                 }
                 Rule::attr => match Self::build_attribute(pair.into_inner()) {
                     Ok((attr_key, attr_value)) => {
-                        match attr_key.as_str() {
-                            "id" => element.id = attr_value,
+                        match attr_key {
+                            "id" => element.id = attr_value.map(|s| Attribute(s.into())),
                             "class" => {
                                 if let Some(classes) = attr_value {
                                     let classes = classes.split_whitespace().collect::<Vec<_>>();
                                     for class in classes {
-                                        element.classes.push(class.to_string());
+                                        element.classes.insert(Attribute(class.into()));
                                     }
                                 }
                             }
                             _ => {
-                                element.attributes.insert(attr_key, attr_value);
+                                element.attributes.insert(
+                                    Cow::Borrowed(attr_key),
+                                    attr_value.map(|s| Attribute(s.into())),
+                                );
                             }
                         };
                     }
@@ -314,41 +334,37 @@ impl Dom {
                     return Err(Error::Parsing(format!(
                         "Failed to create element at rule: {:?}",
                         pair.as_rule()
-                    )))
+                    )));
                 }
             }
         }
-        if element.name != "" {
+        if !element.name.is_empty() {
             Ok(Some(Node::Element(element)))
         } else {
             Ok(None)
         }
     }
 
-    fn build_attribute(pairs: Pairs<Rule>) -> Result<(String, Option<String>)> {
-        let mut attribute = ("".to_string(), None);
+    fn build_attribute(pairs: Pairs<'_, Rule>) -> Result<(&str, Option<&str>)> {
+        let mut attribute = ("", None);
         for pair in pairs {
             match pair.as_rule() {
                 Rule::attr_key => {
-                    attribute.0 = pair.as_str().trim().to_string();
+                    attribute.0 = pair.as_str().trim();
                 }
                 Rule::attr_non_quoted => {
-                    attribute.1 = Some(pair.as_str().trim().to_string());
+                    attribute.1 = Some(pair.as_str().trim());
                 }
                 Rule::attr_quoted => {
-                    let inner_pair = pair
-                        .into_inner()
-                        .into_iter()
-                        .next()
-                        .expect("attribute value");
+                    let inner_pair = pair.into_inner().next().expect("attribute value");
 
                     match inner_pair.as_rule() {
-                        Rule::attr_value => attribute.1 = Some(inner_pair.as_str().to_string()),
+                        Rule::attr_value => attribute.1 = Some(inner_pair.as_str()),
                         _ => {
                             return Err(Error::Parsing(format!(
                                 "Failed to parse attr value: {:?}",
                                 inner_pair.as_rule()
-                            )))
+                            )));
                         }
                     }
                 }
@@ -356,10 +372,34 @@ impl Dom {
                     return Err(Error::Parsing(format!(
                         "Failed to parse attr: {:?}",
                         pair.as_rule()
-                    )))
+                    )));
                 }
             }
         }
         Ok(attribute)
+    }
+
+    #[inline(always)]
+    pub fn to_html(&self) -> String {
+        let mut result = String::new();
+        self.write_html(&mut result);
+        result
+    }
+
+    #[inline(always)]
+    pub fn write_html(&self, writer: &mut String) {
+        write_html_list(writer, self.children.as_slice());
+    }
+}
+
+impl<'a> ForEach<'a> for Dom<'a> {
+    #[inline]
+    fn root(&self) -> &[Node<'a>] {
+        self.children.as_slice()
+    }
+
+    #[inline]
+    fn root_mut(&mut self) -> &mut [Node<'a>] {
+        self.children.as_mut_slice()
     }
 }

@@ -1,5 +1,6 @@
 ---
 source: tests/element_attributes.rs
+assertion_line: 36
 expression: dom
 ---
 {
@@ -9,9 +10,9 @@ expression: dom
       "name": "div",
       "variant": "normal",
       "attributes": {
-        "ape": "oh",
         "cat": "mjau",
-        "dog": "woff"
+        "dog": "woff",
+        "ape": "oh"
       }
     }
   ]

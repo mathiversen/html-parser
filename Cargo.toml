@@ -2,7 +2,7 @@
 name = "html_parser"
 version = "0.7.0"
 authors = ["Mathias Iversen <work@mathiasiversen.com>"]
-edition = "2018"
+edition = "2024"
 repository = "https://github.com/mathiversen/html-parser"
 license = "MIT"
 description = "A simple and general purpose html/xhtml parser"
@@ -14,14 +14,19 @@ readme = "README.md"
 pest = "2.5.7"
 pest_derive = "2.5.7"
 thiserror = "1.0.40"
-serde = { version = "1.0.159", features = ["derive"] }
-serde_derive = "1.0.159"
-serde_json = "1.0.95"
-doc-comment = "0.3.3"
+serde = { version = "1.0.159", features = ["derive"], optional = true }
+serde_json = { version = "1.0.95", optional = true }
+html-escape = "0.2"
+ownable = "1.0.0"
+
+[features]
+default = ["source-span"]
+source-span = []
+test = ["dep:serde", "dep:serde_json"]
 
 [dev-dependencies]
 indoc = "2.0.1"
-insta = { version = "1.29.0", features = ["json"]}
+insta = { version = "1.29.0", features = ["json"] }
 tempfile = "3.5.0"
 criterion = "0.4.0"
 reqwest = { version = "0.11.16", features = ["blocking", "rustls-tls"] }

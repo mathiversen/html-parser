@@ -1,3 +1,4 @@
+#![cfg(feature = "test")]
 use html_parser::{Dom, Result};
 use indoc::indoc;
 use insta::assert_json_snapshot;
@@ -41,5 +42,5 @@ fn it_can_parse_complex_svg() {
         </svg>
     "#
     );
-    assert!(Dom::parse(&svg).is_ok());
+    assert!(Dom::parse(svg).is_ok());
 }

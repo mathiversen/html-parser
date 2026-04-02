@@ -17,10 +17,10 @@ fn it_can_iter_1() -> Result<()> {
             </body>
         </html>
     "};
-    let dom = Dom::parse(&html)?;
-    let root = dom.children.get(0).unwrap().into_iter();
+    let dom = Dom::parse(html)?;
+    let root = dom.children.first().unwrap().into_iter();
     let num_li = root.into_iter().fold(0, |mut acc, curr| match curr {
-        Node::Element(ref e) => {
+        Node::Element(e) => {
             if e.name == "li" {
                 acc += 1;
             }

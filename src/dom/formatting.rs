@@ -1,11 +1,11 @@
-use crate::error::Error;
 use crate::Result;
 use crate::Rule;
+use crate::error::Error;
 use pest::error::Error as PestError;
 
 /// This function abstracts the formatting of errors away from the core logic inside parser,
 /// so that the file is easier to read.
-pub fn error_msg(error: PestError<Rule>) -> Result<super::Dom> {
+pub fn error_msg(error: PestError<Rule>) -> Result<super::Dom<'static>> {
     let message = error.renamed_rules(|rule| match *rule {
         Rule::EOI => "end of input".to_string(),
         Rule::doctype => "doctype element".to_string(),

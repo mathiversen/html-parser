@@ -1,5 +1,6 @@
 ---
 source: tests/svg.rs
+assertion_line: 15
 expression: dom
 ---
 {
@@ -17,11 +18,11 @@ expression: dom
           "name": "rect",
           "variant": "void",
           "attributes": {
-            "height": "100",
-            "style": "stroke:#ff0000; fill: #0000ff",
-            "width": "100",
             "x": "10",
-            "y": "10"
+            "y": "10",
+            "height": "100",
+            "width": "100",
+            "style": "stroke:#ff0000; fill: #0000ff"
           }
         }
       ]

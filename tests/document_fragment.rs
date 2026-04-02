@@ -1,3 +1,4 @@
+#![cfg(feature = "test")]
 use html_parser::{Dom, Result};
 use insta::assert_json_snapshot;
 

@@ -1,3 +1,4 @@
+#![cfg(feature = "test")]
 use html_parser::{Dom, Result};
 use indoc::indoc;
 use insta::assert_debug_snapshot;

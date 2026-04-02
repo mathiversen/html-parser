@@ -1,4 +1,4 @@
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
 use html_parser::Dom;
 
 static HTML: &'static str = include_str!("./wikipedia-2020-12-21.html");
