@@ -1,0 +1,18 @@
+---
+source: tests/element_attributes.rs
+assertion_line: 37
+expression: dom
+---
+{
+  "treeType": "documentFragment",
+  "children": [
+    {
+      "name": "vue-style",
+      "variant": "normal",
+      "attributes": {
+        ":bindings": "are_not_supported",
+        "@attributes": "or"
+      }
+    }
+  ]
+}
