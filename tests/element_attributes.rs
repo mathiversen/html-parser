@@ -29,6 +29,15 @@ fn it_can_parse_attribute_key_mixed_case_symbols() -> Result<()> {
     assert_json_snapshot!(dom);
     Ok(())
 }
+
+#[test]
+fn it_can_parse_vue_style_attribute_shorthand() -> Result<()> {
+    let html = "<vue-style @attributes=\"or\" :bindings=\"are_not_supported\"></vue-style>";
+    let dom = Dom::parse(html)?;
+    assert_json_snapshot!(dom);
+    Ok(())
+}
+
 #[test]
 fn it_can_parse_multiple_attributes_single_quote() -> Result<()> {
     let html = "<div cat='mjau' dog='woff' ape=oh></div>";
